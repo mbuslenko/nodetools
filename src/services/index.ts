@@ -1,0 +1,1 @@
+export * as translator from './translator/translator.service';

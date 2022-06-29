@@ -1,7 +1,6 @@
 import { app, BrowserWindow, globalShortcut, clipboard } from 'electron';
 import * as path from 'path';
-import { keyTap } from 'robotjs';
-import axios from 'axios';
+import * as domains from './domains';
 
 function createWindow() {
   // Create the browser window.
@@ -20,55 +19,16 @@ function createWindow() {
   mainWindow.webContents.openDevTools();
 }
 
-const translate = async (text: string) => {
-  const encodedParams = new URLSearchParams();
-encodedParams.append("to", "en");
-encodedParams.append("text", text);
-
-const options = {
-  method: 'POST',
-  url: 'https://translo.p.rapidapi.com/api/v3/translate',
-  headers: {
-    'content-type': 'application/x-www-form-urlencoded',
-    'X-RapidAPI-Key': 'bf894bec23msha5bef7181df062ap11d0c3jsncec1e59dab77',
-    'X-RapidAPI-Host': 'translo.p.rapidapi.com'
-  },
-  data: encodedParams
-};
-
-  return axios.request(options);
-};
-
-const getSelectedText = async () => {
-  clipboard.clear();
-  keyTap('c', process.platform === 'darwin' ? 'command' : 'control');
-  await new Promise((resolve) => setTimeout(resolve, 200)); // add a delay before checking clipboard
-  const selectedText = clipboard.readText();
-
-  return selectedText;
-};
-
-async function read() {
-  console.log(clipboard.readText())
-
-  const previousRes = await clipboard.readText()
-  const selectedText = await getSelectedText()
-  console.log(selectedText)
-  const translatedText = await translate(selectedText)
-  console.log(translatedText.data)
-  clipboard.writeText(translatedText.data.translated_text)
-  keyTap("v", process.platform === "darwin" ? "command" : "control");
-  await new Promise((resolve) => setTimeout(resolve, 200));
-
-  clipboard.writeText(previousRes)
-}
-
 app
   .whenReady()
   .then(() => {
+    // * translate shortcut
     globalShortcut.register('Control+I', async () => {
-      await read();
+      const InlineDomain = new domains.inline.InlineDomain()
+      await InlineDomain.translateText({ to: 'en' })
     });
+
+    
   })
   .then(createWindow);
 

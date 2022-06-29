@@ -22,13 +22,17 @@ function createWindow() {
 app
   .whenReady()
   .then(() => {
+    const InlineDomain = new domains.inline.InlineDomain()
+
     // * translate shortcut
     globalShortcut.register('Control+I', async () => {
-      const InlineDomain = new domains.inline.InlineDomain()
       await InlineDomain.translateText({ to: 'en' })
     });
 
-    
+    // * transliterator shortcut
+    globalShortcut.register('Control+T', async () => {
+      await InlineDomain.transliterateText()
+    })
   })
   .then(createWindow);
 

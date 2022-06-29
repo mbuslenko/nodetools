@@ -2,15 +2,12 @@ import { clipboard } from 'electron';
 import { keyTap } from 'robotjs';
 import { TranslatorService } from '../../services/translator/translator.service';
 import * as types from './inline.types';
-import createDebug from 'debug';
 
 export class InlineDomain {
   private readonly translatorService: TranslatorService;
-  private readonly debug: any;
 
   constructor() {
     this.translatorService = new TranslatorService();
-    this.debug = createDebug('inline:domain');
   }
 
   /**

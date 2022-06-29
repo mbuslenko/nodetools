@@ -3,11 +3,15 @@ import {
   BrowserWindow,
   globalShortcut,
   ipcMain,
+  Menu,
+  nativeImage,
+  Tray,
 } from 'electron';
 import * as path from 'path';
 import * as domains from './domains';
 import { Currency } from './services/currencies-convertor/currencies-convertor.types';
 import settings from './settings/settings.module';
+import { openWebURL } from './shared/utils/open-website';
 
 function createWindow() {
   // Create the browser window.
@@ -25,7 +29,7 @@ function createWindow() {
   mainWindow.loadFile(path.join(__dirname, '../index.html'));
 
   // Open the DevTools.
-  mainWindow.webContents.openDevTools();
+  //mainWindow.webContents.openDevTools();
 }
 
 ipcMain.on('call-mainjsfunction', (event, arg) => {
@@ -74,19 +78,67 @@ app
       }
     );
   })
-  .then(createWindow);
 
+// * Disabled for now
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
-app.on('ready', () => {
-  createWindow();
+// app.on('ready', () => {
+//   createWindow();
 
-  app.on('activate', function () {
-    // On macOS it's common to re-create a window in the app when the
-    // dock icon is clicked and there are no other windows open.
-    if (BrowserWindow.getAllWindows().length === 0) createWindow();
-  });
+//   app.on('activate', function () {
+//     // On macOS it's common to re-create a window in the app when the
+//     // dock icon is clicked and there are no other windows open.
+//     if (BrowserWindow.getAllWindows().length === 0) createWindow();
+//   });
+// });
+
+let tray;
+app.whenReady().then(() => {
+  const icon = nativeImage.createFromPath(
+    path.join(__dirname, '../src/assets/tray-icon.png')
+  );
+  tray = new Tray(icon);
+
+  const contextMenu = Menu.buildFromTemplate([
+    { label: 'About', role: 'about' },
+    {
+      label: '🆕 Update Nodetools',
+      icon: nativeImage.createFromPath(path.join(__dirname, '../src/assets/update.png')),
+      click: () => openWebURL('https://google.com'),
+    },
+    {
+      label: 'Separator',
+      type: 'separator',
+    },
+    {
+      label: 'Preferences',
+      submenu: [
+        { label: 'Shortcuts', role: 'window', click: () => createWindow() },
+        {
+          label: 'Translate options',
+          role: 'window',
+          click: () => createWindow(),
+        },
+        {
+          label: 'Currency converter options',
+          role: 'window',
+          click: () => createWindow(),
+        },
+      ],
+    },
+    { label: 'Separator', type: 'separator' },
+    {
+      label: 'FAQ',
+      role: 'window',
+      click: () => openWebURL('https://google.com'),
+    },
+    { label: 'Quit', role: 'quit', click: () => app.quit() },
+  ]);
+
+  tray.setContextMenu(contextMenu);
+
+  tray.setToolTip('Nodetools');
 });
 
 // Quit when all windows are closed, except on macOS. There, it's common

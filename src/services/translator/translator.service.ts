@@ -31,7 +31,7 @@ export class TranslatorService {
 
       return response.translated_text;
     } catch (e) {
-      utils.handleError(e);
+      utils.handleError(e, 'api:translator');
 
       return undefined;
     }

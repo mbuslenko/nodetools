@@ -1,15 +1,20 @@
 import { clipboard } from 'electron';
 import { keyTap } from 'robotjs';
-import { translator, trasnliterator } from '../../services';
+import { translator, trasnliterator, currencyConvertor } from '../../services';
+import { ConvertOptions } from '../../services/currencies-convertor/currencies-convertor.types';
+import { utils } from '../../shared';
 import * as types from './inline.types';
 
 export class InlineDomain {
   private readonly translatorService: translator.TranslatorService;
   private readonly transliteratorService: trasnliterator.TransliterationService;
+  private readonly currencyConvertorService: currencyConvertor.CurrencyConvertorService;
 
   constructor() {
     this.translatorService = new translator.TranslatorService();
     this.transliteratorService = new trasnliterator.TransliterationService();
+    this.currencyConvertorService =
+      new currencyConvertor.CurrencyConvertorService();
   }
 
   /**
@@ -56,16 +61,17 @@ export class InlineDomain {
     clipboard.writeText(previousClipboardText);
   }
 
- /**
-  * It saves the current clipboard contents, gets the selected text, transliterates it, pastes the
-  * transliterated text, and then restores the previous clipboard contents
-  */
+  /**
+   * It saves the current clipboard contents, gets the selected text, transliterates it, pastes the
+   * transliterated text, and then restores the previous clipboard contents
+   */
   async transliterateText(): Promise<void> {
     // save current clipboard contents
     const previousClipboardText = clipboard.readText();
 
     const selectedText = await this.getSelectedText();
-    const transliteratedText = this.transliteratorService.transliterate(selectedText);
+    const transliteratedText =
+      this.transliteratorService.transliterate(selectedText);
 
     if (transliteratedText) {
       clipboard.writeText(transliteratedText);
@@ -76,6 +82,59 @@ export class InlineDomain {
       // wait for the clipboard to be updated
       await new Promise((resolve) => setTimeout(resolve, 200));
     }
+
+    // restore previous clipboard contents
+    clipboard.writeText(previousClipboardText);
+  }
+
+  /**
+   * It gets the selected text, converts it to a number, converts it to the target currency, and pastes
+   * the converted text
+   * @param options - Omit<ConvertOptions, 'amount'>
+   */
+  async convertCurrency(
+    options: Omit<ConvertOptions, 'amount'>
+  ): Promise<void> {
+    // save current clipboard contents
+    const previousClipboardText = clipboard.readText();
+
+    const selectedText = await this.getSelectedText();
+
+    if (!isNaN(+selectedText)) {
+      const convertedText = await this.currencyConvertorService.convert({
+        ...options,
+        amount: +selectedText,
+      });
+
+      if (convertedText) {
+        clipboard.writeText(convertedText.toString());
+
+        // paste converted text
+        keyTap('v', process.platform === 'darwin' ? 'command' : 'control');
+
+        // wait for the clipboard to be updated
+        await new Promise((resolve) => setTimeout(resolve, 200));
+      }
+    }
+
+    // restore previous clipboard contents
+    clipboard.writeText(previousClipboardText);
+  }
+
+  async humanizeText(): Promise<void> {
+    // save current clipboard contents
+    const previousClipboardText = clipboard.readText();
+
+    const selectedText = await this.getSelectedText();
+    const humanizedText = utils.humanizeString(selectedText);
+
+    clipboard.writeText(humanizedText);
+
+    // paste converted text
+    keyTap('v', process.platform === 'darwin' ? 'command' : 'control');
+
+    // wait for the clipboard to be updated
+    await new Promise((resolve) => setTimeout(resolve, 200));
 
     // restore previous clipboard contents
     clipboard.writeText(previousClipboardText);

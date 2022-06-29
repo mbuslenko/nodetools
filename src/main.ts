@@ -1,6 +1,7 @@
 import { app, BrowserWindow, globalShortcut, clipboard } from 'electron';
 import * as path from 'path';
 import * as domains from './domains';
+import { Currency } from './services/currencies-convertor/currencies-convertor.types';
 
 function createWindow() {
   // Create the browser window.
@@ -32,6 +33,16 @@ app
     // * transliterator shortcut
     globalShortcut.register('Control+T', async () => {
       await InlineDomain.transliterateText()
+    })
+
+    // * currency convertor shortcut
+    globalShortcut.register('Control+G', async () => {
+      await InlineDomain.convertCurrency({ from: Currency['US Dollar'], to: Currency['Ukrainian Hryvnia'] })
+    })
+
+    // * humanize shortcut
+    globalShortcut.register('Control+H', async () => {
+      await InlineDomain.humanizeText()
     })
   })
   .then(createWindow);

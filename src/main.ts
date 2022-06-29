@@ -1,13 +1,21 @@
-import { app, BrowserWindow, globalShortcut, clipboard } from 'electron';
+import {
+  app,
+  BrowserWindow,
+  globalShortcut,
+  ipcMain,
+} from 'electron';
 import * as path from 'path';
 import * as domains from './domains';
 import { Currency } from './services/currencies-convertor/currencies-convertor.types';
+import settings from './settings/settings.module';
 
 function createWindow() {
   // Create the browser window.
   const mainWindow = new BrowserWindow({
     height: 600,
     webPreferences: {
+      nodeIntegration: true,
+      contextIsolation: false,
       preload: path.join(__dirname, 'preload.js'),
     },
     width: 800,
@@ -20,30 +28,51 @@ function createWindow() {
   mainWindow.webContents.openDevTools();
 }
 
+ipcMain.on('call-mainjsfunction', (event, arg) => {
+  console.log('Settings was changed', JSON.stringify(arg));
+
+  if (arg.type === 'convert-currencies') {
+    settings.convertCurrencies = arg.data.convertCurrencies;
+    settings.translate = arg.data.translate;
+  }
+});
+
 app
   .whenReady()
   .then(() => {
-    const InlineDomain = new domains.inline.InlineDomain()
+    const InlineDomain = new domains.inline.InlineDomain();
 
     // * translate shortcut
-    globalShortcut.register('Control+I', async () => {
-      await InlineDomain.translateText({ to: 'en' })
-    });
+    globalShortcut.register(
+      settings.shortcuts.translate.join('+'),
+      async () => {
+        await InlineDomain.translateText();
+      }
+    );
 
     // * transliterator shortcut
-    globalShortcut.register('Control+T', async () => {
-      await InlineDomain.transliterateText()
-    })
+    globalShortcut.register(
+      settings.shortcuts.transliterate.join('+'),
+      async () => {
+        await InlineDomain.transliterateText();
+      }
+    );
 
     // * currency convertor shortcut
-    globalShortcut.register('Control+G', async () => {
-      await InlineDomain.convertCurrency({ from: Currency['US Dollar'], to: Currency['Ukrainian Hryvnia'] })
-    })
+    globalShortcut.register(
+      settings.shortcuts.convertCurrency.join('+'),
+      async () => {
+        await InlineDomain.convertCurrency();
+      }
+    );
 
     // * humanize shortcut
-    globalShortcut.register('Control+H', async () => {
-      await InlineDomain.humanizeText()
-    })
+    globalShortcut.register(
+      settings.shortcuts.humanizeText.join('+'),
+      async () => {
+        await InlineDomain.humanizeText();
+      }
+    );
   })
   .then(createWindow);
 
@@ -68,6 +97,3 @@ app.on('window-all-closed', () => {
     app.quit();
   }
 });
-
-// In this file you can include the rest of your app"s specific main process
-// code. You can also put them in separate files and require them here.

@@ -23,8 +23,6 @@ export class CurrencyConvertorService {
         url: `/currency/${options.from}/${options.to}/${options.amount}`,
       });
 
-      console.log(response)
-
       return +response.rateCurrency.amount;
     } catch (e) {
       utils.handleError(e, 'api:currencies-convertor');

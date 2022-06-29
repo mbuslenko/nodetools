@@ -2,6 +2,7 @@ import { clipboard } from 'electron';
 import { keyTap } from 'robotjs';
 import { translator, trasnliterator, currencyConvertor } from '../../services';
 import { ConvertOptions } from '../../services/currencies-convertor/currencies-convertor.types';
+import settings from '../../settings/settings.module';
 import { utils } from '../../shared';
 import * as types from './inline.types';
 
@@ -37,7 +38,9 @@ export class InlineDomain {
    * waits for the clipboard to be updated, and then restores the previous clipboard contents
    * @param options - types.TranslateOptions
    */
-  async translateText(options: types.TranslateOptions): Promise<void> {
+  async translateText(): Promise<void> {
+    const options: types.TranslateOptions = settings.translate;
+
     // save current clipboard contents
     const previousClipboardText = clipboard.readText();
 
@@ -92,9 +95,9 @@ export class InlineDomain {
    * the converted text
    * @param options - Omit<ConvertOptions, 'amount'>
    */
-  async convertCurrency(
-    options: Omit<ConvertOptions, 'amount'>
-  ): Promise<void> {
+  async convertCurrency(): Promise<void> {
+    const options: Omit<ConvertOptions, 'amount'> = settings.convertCurrencies;
+
     // save current clipboard contents
     const previousClipboardText = clipboard.readText();
 

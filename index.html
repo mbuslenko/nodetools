@@ -2,24 +2,71 @@
 <html>
   <head>
     <meta charset="UTF-8" />
-    <title>Hello World!</title>
-    <!-- https://developer.mozilla.org/en-US/docs/Web/HTTP/CSP -->
-    <meta
-      http-equiv="Content-Security-Policy"
-      content="default-src 'self'; script-src 'self'"
-    />
-    <meta
-      http-equiv="X-Content-Security-Policy"
-      content="default-src 'self'; script-src 'self'"
-    />
+    <title>nodetools</title>
+    <style>
+      * {
+          font-family: sans-serif;
+      }
+  </style>
   </head>
   <body>
-    <h1>Hello World!</h1>
+    <h1>NODETOOLS</h1>
     We are using Node.js <span id="node-version"></span>, Chromium
     <span id="chrome-version"></span>, and Electron
     <span id="electron-version"></span>.
+    <div>
+      <h1>Shortcuts</h1>
+      <p>Translate text</p>
+      <textarea id="shortcut-translate" rows="1" cols="100"></textarea>
+
+      <p>Transliterate text</p>
+      <textarea id="shortcut-transliterate" rows="1" cols="100"></textarea>
+
+      <p>Convert currency</p>
+      <textarea id="shortcut-convert-currency" rows="1" cols="100"></textarea>
+
+      <p>Humanize text</p>
+      <textarea id="shortcut-humanize" rows="1" cols="100"></textarea>
+    </div>
+
+    <div>
+      <h1>Currencies Convertor Options</h1>
+      <p>From</p>
+      <textarea id="currency-from" rows="1" cols="100"></textarea>
+
+      <p>To</p>
+      <textarea id="currency-to" rows="1" cols="100"></textarea>
+    </div>
+
+    <div>
+      <h1>Translate Options</h1>
+      <p>Set the language in which the text will be translated</p>
+      <select id="translate-to"></select>
+    </div>
+
+    <button id="refresh-settings">Refresh Settings</button>
 
     <!-- You can also require other files to run in this process -->
     <script src="./dist/renderer.js"></script>
+    <script>
+      const { ipcRenderer } = require('electron');
+
+      document.getElementById('refresh-settings').onclick = async () => {
+        const data = {
+          convertCurrencies: {
+            from: document.getElementById('currency-from').value,
+            to: document.getElementById('currency-to').value,
+          },
+          translate: {
+            to: document.getElementById('translate-to').value,
+          },
+        };
+
+        ipcRenderer.send('call-mainjsfunction', {
+          type: 'convert-currencies',
+          data,
+        });
+      };
+    </script>
   </body>
 </html>

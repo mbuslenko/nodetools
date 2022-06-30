@@ -22,6 +22,7 @@
   "homepage": "https://github.com/mbuslenko/node-toolkit#readme",
   "dependencies": {
     "axios": "^0.27.2",
+    "electron-store": "^8.0.2",
     "robotjs": "^0.6.0"
   },
   "devDependencies": {

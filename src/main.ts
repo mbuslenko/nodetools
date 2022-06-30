@@ -9,8 +9,11 @@ import {
 } from 'electron';
 import * as path from 'path';
 import * as domains from './domains';
-import settings from './settings/settings.module';
+import { changeSettings, initSettings } from './settings';
 import { openWebURL } from './shared/utils/open-website';
+import settings from './settings'
+import { ShortcutsSettings } from './settings/settings.types';
+
 
 function createWindow() {
   // Create the browser window.
@@ -26,30 +29,27 @@ function createWindow() {
 
   // and load the index.html of the app.
   mainWindow.loadFile(path.join(__dirname, '../index.html'));
-
-  // Open the DevTools.
-  //mainWindow.webContents.openDevTools();
 }
 
 ipcMain.on('change-settings', (event, arg) => {
   console.log('Settings was changed', JSON.stringify(arg));
 
-  settings.convertCurrencies = arg.data.convertCurrencies;
-  settings.translate = arg.data.translate;
-  settings.shortcuts = arg.data.shortcuts
+  changeSettings(arg.data);
 });
 
 app.whenReady().then(() => {
+  initSettings();
+  const shortcuts = settings.get('shortcuts') as ShortcutsSettings;
   const InlineDomain = new domains.inline.InlineDomain();
 
   // * translate shortcut
-  globalShortcut.register(settings.shortcuts.translate.join('+'), async () => {
+  globalShortcut.register(shortcuts.translate.join('+'), async () => {
     await InlineDomain.translateText();
   });
 
   // * transliterator shortcut
   globalShortcut.register(
-    settings.shortcuts.transliterate.join('+'),
+    shortcuts.transliterate.join('+'),
     async () => {
       await InlineDomain.transliterateText();
     }
@@ -57,7 +57,7 @@ app.whenReady().then(() => {
 
   // * currency convertor shortcut
   globalShortcut.register(
-    settings.shortcuts.convertCurrency.join('+'),
+    shortcuts.convertCurrency.join('+'),
     async () => {
       await InlineDomain.convertCurrency();
     }
@@ -65,14 +65,14 @@ app.whenReady().then(() => {
 
   // * humanize shortcut
   globalShortcut.register(
-    settings.shortcuts.humanizeText.join('+'),
+    shortcuts.humanizeText.join('+'),
     async () => {
       await InlineDomain.humanizeText();
     }
   );
 
   // * spell checker shortcut
-  globalShortcut.register(settings.shortcuts.spellCheck.join('+'), async () => {
+  globalShortcut.register(shortcuts.spellCheck.join('+'), async () => {
     await InlineDomain.spellCheck();
   });
 });
@@ -93,6 +93,9 @@ app.whenReady().then(() => {
 
 let tray;
 app.whenReady().then(() => {
+  app.dock.hide();
+  const shortcuts = settings.get('shortcuts') as ShortcutsSettings;
+
   const InlineDomain = new domains.inline.InlineDomain();
 
   const icon = nativeImage.createFromPath(
@@ -132,43 +135,43 @@ app.whenReady().then(() => {
     { label: 'Separator', type: 'separator' },
     {
       label: 'Translate',
-      accelerator: settings.shortcuts.translate.join('+'),
+      accelerator: shortcuts.translate.join('+'),
       role: 'help',
       click: async () => {
         await InlineDomain.translateText();
-      }
+      },
     },
     {
       label: 'Transliterate',
-      accelerator: settings.shortcuts.transliterate.join('+'),
+      accelerator: shortcuts.transliterate.join('+'),
       role: 'help',
       click: async () => {
         await InlineDomain.transliterateText();
-      }
+      },
     },
     {
       label: 'Humanize',
-      accelerator: settings.shortcuts.translate.join('+'),
+      accelerator: shortcuts.translate.join('+'),
       role: 'help',
       click: async () => {
         await InlineDomain.humanizeText();
-      }
+      },
     },
     {
       label: 'Fix spelling',
-      accelerator: settings.shortcuts.spellCheck.join('+'),
+      accelerator: shortcuts.spellCheck.join('+'),
       role: 'help',
       click: async () => {
         await InlineDomain.spellCheck();
-      }
+      },
     },
     {
       label: 'Convert currencies',
-      accelerator: settings.shortcuts.translate.join('+'),
+      accelerator: shortcuts.translate.join('+'),
       role: 'help',
       click: async () => {
         await InlineDomain.convertCurrency();
-      }
+      },
     },
     { label: 'Separator', type: 'separator' },
     {
@@ -188,7 +191,5 @@ app.whenReady().then(() => {
 // for applications and their menu bar to stay active until the user quits
 // explicitly with Cmd + Q.
 app.on('window-all-closed', () => {
-  if (process.platform !== 'darwin') {
-    app.quit();
-  }
+  app.dock.hide();
 });

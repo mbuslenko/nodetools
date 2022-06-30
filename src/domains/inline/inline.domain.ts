@@ -7,9 +7,10 @@ import {
   spellChecker,
 } from '../../services';
 import { ConvertOptions } from '../../services/currencies-convertor/currencies-convertor.types';
-import settings from '../../settings/settings.module';
+import { Settings } from '../../settings/settings.types';
 import { utils } from '../../shared';
 import * as types from './inline.types';
+import settings from '../../settings';
 
 export class InlineDomain {
   private readonly translatorService: translator.TranslatorService;
@@ -46,7 +47,7 @@ export class InlineDomain {
    * @param options - types.TranslateOptions
    */
   async translateText(): Promise<void> {
-    const options: types.TranslateOptions = settings.translate;
+    const options: types.TranslateOptions = settings.get('translate') as types.TranslateOptions;
 
     // save current clipboard contents
     const previousClipboardText = clipboard.readText();
@@ -103,7 +104,8 @@ export class InlineDomain {
    * @param options - Omit<ConvertOptions, 'amount'>
    */
   async convertCurrency(): Promise<void> {
-    const options: Omit<ConvertOptions, 'amount'> = settings.convertCurrencies;
+    const options: Omit<ConvertOptions, 'amount'> =
+      settings.get('convertCurrencies') as Omit<ConvertOptions, 'amount'>;
 
     // save current clipboard contents
     const previousClipboardText = clipboard.readText();
@@ -131,10 +133,10 @@ export class InlineDomain {
     clipboard.writeText(previousClipboardText);
   }
 
- /**
-  * It gets the selected text, converts it to humanized text, pastes the converted text, and then
-  * restores the previous clipboard contents
-  */
+  /**
+   * It gets the selected text, converts it to humanized text, pastes the converted text, and then
+   * restores the previous clipboard contents
+   */
   async humanizeText(): Promise<void> {
     // save current clipboard contents
     const previousClipboardText = clipboard.readText();

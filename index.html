@@ -27,6 +27,9 @@
 
       <p>Humanize text</p>
       <textarea id="shortcut-humanize" rows="1" cols="100"></textarea>
+
+      <p>Fix spelling</p>
+      <textarea id="shortcut-spell-check" rows="1" cols="100"></textarea>
     </div>
 
     <div>
@@ -53,7 +56,7 @@
 
       ipcRenderer.on('handle-error', (event, error) => {
         console.error(error);
-        
+
         const previousErrors = window.localStorage.getItem('errors') ?? [];
         const newErrors = previousErrors.push(error);
 
@@ -69,10 +72,26 @@
           translate: {
             to: document.getElementById('translate-to').value,
           },
+          shortcuts: {
+            translate: document
+              .getElementById('shortcut-translate')
+              .value.split('+'),
+            transliterate: document
+              .getElementById('shortcut-transliterate')
+              .value.split('+'),
+            convertCurrency: document
+              .getElementById('shortcut-convert-currency')
+              .value.split('+'),
+            humanize: document
+              .getElementById('shortcut-humanize')
+              .value.split('+'),
+            spellCheck: document
+              .getElementById('shortcut-spell-check')
+              .value.split('+'),
+          },
         };
 
-        ipcRenderer.send('call-mainjsfunction', {
-          type: 'convert-currencies',
+        ipcRenderer.send('change-settings', {
           data,
         });
       };

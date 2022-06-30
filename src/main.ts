@@ -31,13 +31,12 @@ function createWindow() {
   //mainWindow.webContents.openDevTools();
 }
 
-ipcMain.on('call-mainjsfunction', (event, arg) => {
+ipcMain.on('change-settings', (event, arg) => {
   console.log('Settings was changed', JSON.stringify(arg));
 
-  if (arg.type === 'convert-currencies') {
-    settings.convertCurrencies = arg.data.convertCurrencies;
-    settings.translate = arg.data.translate;
-  }
+  settings.convertCurrencies = arg.data.convertCurrencies;
+  settings.translate = arg.data.translate;
+  settings.shortcuts = arg.data.shortcuts
 });
 
 app.whenReady().then(() => {
@@ -94,6 +93,8 @@ app.whenReady().then(() => {
 
 let tray;
 app.whenReady().then(() => {
+  const InlineDomain = new domains.inline.InlineDomain();
+
   const icon = nativeImage.createFromPath(
     path.join(__dirname, '../src/assets/tray-icon.png')
   );
@@ -127,6 +128,47 @@ app.whenReady().then(() => {
           click: () => createWindow(),
         },
       ],
+    },
+    { label: 'Separator', type: 'separator' },
+    {
+      label: 'Translate',
+      accelerator: settings.shortcuts.translate.join('+'),
+      role: 'help',
+      click: async () => {
+        await InlineDomain.translateText();
+      }
+    },
+    {
+      label: 'Transliterate',
+      accelerator: settings.shortcuts.transliterate.join('+'),
+      role: 'help',
+      click: async () => {
+        await InlineDomain.transliterateText();
+      }
+    },
+    {
+      label: 'Humanize',
+      accelerator: settings.shortcuts.translate.join('+'),
+      role: 'help',
+      click: async () => {
+        await InlineDomain.humanizeText();
+      }
+    },
+    {
+      label: 'Fix spelling',
+      accelerator: settings.shortcuts.spellCheck.join('+'),
+      role: 'help',
+      click: async () => {
+        await InlineDomain.spellCheck();
+      }
+    },
+    {
+      label: 'Convert currencies',
+      accelerator: settings.shortcuts.translate.join('+'),
+      role: 'help',
+      click: async () => {
+        await InlineDomain.convertCurrency();
+      }
     },
     { label: 'Separator', type: 'separator' },
     {

@@ -10,6 +10,7 @@ const settings = {
     transliterate: ['Control', 'T'],
     convertCurrency: ['Control', 'G'],
     humanizeText: ['Control', 'H'],
+    spellCheck: ['Control', 'S'],
   },
 };
 
@@ -190,3 +191,7 @@ document.getElementById('shortcut-transliterate').value =
 // @ts-ignore
 document.getElementById('shortcut-humanize').value =
   settings.shortcuts.humanizeText.join('+');
+
+// @ts-ignore
+document.getElementById('shortcut-spell-check').value = 
+    settings.shortcuts.spellCheck.join('+');

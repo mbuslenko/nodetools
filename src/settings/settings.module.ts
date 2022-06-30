@@ -7,6 +7,7 @@ const settings = {
     transliterate: ['Control', 'T'],
     convertCurrency: ['Control', 'G'],
     humanizeText: ['Control', 'H'],
+    spellCheck: ['Control', 'S'],
   },
   convertCurrencies: {
     from: Currency['US Dollar'],

@@ -5,9 +5,9 @@
     <title>nodetools</title>
     <style>
       * {
-          font-family: sans-serif;
+        font-family: sans-serif;
       }
-  </style>
+    </style>
   </head>
   <body>
     <h1>NODETOOLS</h1>
@@ -50,6 +50,15 @@
     <script src="./dist/renderer.js"></script>
     <script>
       const { ipcRenderer } = require('electron');
+
+      ipcRenderer.on('handle-error', (event, error) => {
+        console.error(error);
+        
+        const previousErrors = window.localStorage.getItem('errors') ?? [];
+        const newErrors = previousErrors.push(error);
+
+        window.localStorage.setItem('errors', newErrors);
+      });
 
       document.getElementById('refresh-settings').onclick = async () => {
         const data = {

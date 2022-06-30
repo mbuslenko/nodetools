@@ -9,7 +9,6 @@ import {
 } from 'electron';
 import * as path from 'path';
 import * as domains from './domains';
-import { Currency } from './services/currencies-convertor/currencies-convertor.types';
 import settings from './settings/settings.module';
 import { openWebURL } from './shared/utils/open-website';
 
@@ -41,43 +40,43 @@ ipcMain.on('call-mainjsfunction', (event, arg) => {
   }
 });
 
-app
-  .whenReady()
-  .then(() => {
-    const InlineDomain = new domains.inline.InlineDomain();
+app.whenReady().then(() => {
+  const InlineDomain = new domains.inline.InlineDomain();
 
-    // * translate shortcut
-    globalShortcut.register(
-      settings.shortcuts.translate.join('+'),
-      async () => {
-        await InlineDomain.translateText();
-      }
-    );
+  // * translate shortcut
+  globalShortcut.register(settings.shortcuts.translate.join('+'), async () => {
+    await InlineDomain.translateText();
+  });
 
-    // * transliterator shortcut
-    globalShortcut.register(
-      settings.shortcuts.transliterate.join('+'),
-      async () => {
-        await InlineDomain.transliterateText();
-      }
-    );
+  // * transliterator shortcut
+  globalShortcut.register(
+    settings.shortcuts.transliterate.join('+'),
+    async () => {
+      await InlineDomain.transliterateText();
+    }
+  );
 
-    // * currency convertor shortcut
-    globalShortcut.register(
-      settings.shortcuts.convertCurrency.join('+'),
-      async () => {
-        await InlineDomain.convertCurrency();
-      }
-    );
+  // * currency convertor shortcut
+  globalShortcut.register(
+    settings.shortcuts.convertCurrency.join('+'),
+    async () => {
+      await InlineDomain.convertCurrency();
+    }
+  );
 
-    // * humanize shortcut
-    globalShortcut.register(
-      settings.shortcuts.humanizeText.join('+'),
-      async () => {
-        await InlineDomain.humanizeText();
-      }
-    );
-  })
+  // * humanize shortcut
+  globalShortcut.register(
+    settings.shortcuts.humanizeText.join('+'),
+    async () => {
+      await InlineDomain.humanizeText();
+    }
+  );
+
+  // * spell checker shortcut
+  globalShortcut.register(settings.shortcuts.spellCheck.join('+'), async () => {
+    await InlineDomain.spellCheck();
+  });
+});
 
 // * Disabled for now
 // This method will be called when Electron has finished
@@ -104,7 +103,9 @@ app.whenReady().then(() => {
     { label: 'About', role: 'about' },
     {
       label: '🆕 Update Nodetools',
-      icon: nativeImage.createFromPath(path.join(__dirname, '../src/assets/update.png')),
+      icon: nativeImage.createFromPath(
+        path.join(__dirname, '../src/assets/update.png')
+      ),
       click: () => openWebURL('https://google.com'),
     },
     {

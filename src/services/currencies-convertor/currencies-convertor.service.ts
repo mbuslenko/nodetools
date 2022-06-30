@@ -3,7 +3,7 @@ import { utils } from '../../shared';
 import * as types from './currencies-convertor.types';
 
 export class CurrencyConvertorService {
-  private axiosInstance = axios.create({
+  protected axiosInstance = axios.create({
     baseURL: 'https://global-currency.p.rapidapi.com',
     headers: {
       // ! TODO: CHANGE CREDENTIALS STORING IN ENVIRONMENT VARIABLES

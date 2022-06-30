@@ -4,7 +4,7 @@ import * as types from './translator.types';
 import { utils } from '../../shared';
 
 export class TranslatorService {
-  private axiosInstance = axios.create({
+  protected axiosInstance = axios.create({
     baseURL: 'https://translo.p.rapidapi.com/api/v3/',
     headers: {
       'content-type': 'application/x-www-form-urlencoded',

@@ -10,6 +10,7 @@ export type Settings = {
   translate: {
     to: Language;
   }
+  restartToApplyChanges?: boolean;
 }
 
 export type ShortcutsSettings = {

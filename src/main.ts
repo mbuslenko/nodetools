@@ -11,9 +11,8 @@ import * as path from 'path';
 import * as domains from './domains';
 import { changeSettings, initSettings } from './settings';
 import { openWebURL } from './shared/utils/open-website';
-import settings from './settings'
+import settings from './settings';
 import { ShortcutsSettings } from './settings/settings.types';
-
 
 function createWindow() {
   // Create the browser window.
@@ -48,28 +47,19 @@ app.whenReady().then(() => {
   });
 
   // * transliterator shortcut
-  globalShortcut.register(
-    shortcuts.transliterate.join('+'),
-    async () => {
-      await InlineDomain.transliterateText();
-    }
-  );
+  globalShortcut.register(shortcuts.transliterate.join('+'), async () => {
+    await InlineDomain.transliterateText();
+  });
 
   // * currency convertor shortcut
-  globalShortcut.register(
-    shortcuts.convertCurrency.join('+'),
-    async () => {
-      await InlineDomain.convertCurrency();
-    }
-  );
+  globalShortcut.register(shortcuts.convertCurrency.join('+'), async () => {
+    await InlineDomain.convertCurrency();
+  });
 
   // * humanize shortcut
-  globalShortcut.register(
-    shortcuts.humanizeText.join('+'),
-    async () => {
-      await InlineDomain.humanizeText();
-    }
-  );
+  globalShortcut.register(shortcuts.humanizeText.join('+'), async () => {
+    await InlineDomain.humanizeText();
+  });
 
   // * spell checker shortcut
   globalShortcut.register(shortcuts.spellCheck.join('+'), async () => {
@@ -91,17 +81,17 @@ app.whenReady().then(() => {
 //   });
 // });
 
-let tray;
+let tray: Tray;
 app.whenReady().then(() => {
   app.dock.hide();
-  const shortcuts = settings.get('shortcuts') as ShortcutsSettings;
-
-  const InlineDomain = new domains.inline.InlineDomain();
 
   const icon = nativeImage.createFromPath(
     path.join(__dirname, '../src/assets/tray-icon.png')
   );
   tray = new Tray(icon);
+
+  const shortcuts = settings.get('shortcuts') as ShortcutsSettings;
+  const InlineDomain = new domains.inline.InlineDomain();
 
   const contextMenu = Menu.buildFromTemplate([
     { label: 'About', role: 'about' },
@@ -181,11 +171,15 @@ app.whenReady().then(() => {
     },
     { label: 'Quit', role: 'quit', click: () => app.quit() },
   ]);
-
   tray.setContextMenu(contextMenu);
 
   tray.setToolTip('Nodetools');
 });
+
+export const relaunchApp = () => {
+  app.relaunch();
+  app.exit();
+};
 
 // Quit when all windows are closed, except on macOS. There, it's common
 // for applications and their menu bar to stay active until the user quits

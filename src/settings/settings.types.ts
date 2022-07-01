@@ -20,4 +20,5 @@ export type ShortcutsSettings = {
   humanizeText: string[];
   spellCheck: string[];
   shortenUrl: string[];
+  calculate: string[];
 }

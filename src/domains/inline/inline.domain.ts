@@ -47,7 +47,6 @@ export class InlineDomain {
   /**
    * It saves the current clipboard contents, translates the selected text, pastes the translated text,
    * waits for the clipboard to be updated, and then restores the previous clipboard contents
-   * @param options - types.TranslateOptions
    */
   async translateText(): Promise<void> {
     const options: types.TranslateOptions = settings.get(
@@ -106,7 +105,6 @@ export class InlineDomain {
   /**
    * It gets the selected text, converts it to a number, converts it to the target currency, and pastes
    * the converted text
-   * @param options - Omit<ConvertOptions, 'amount'>
    */
   async convertCurrency(): Promise<void> {
     const options: Omit<ConvertOptions, 'amount'> = settings.get(
@@ -190,6 +188,11 @@ export class InlineDomain {
     clipboard.writeText(previousClipboardText);
   }
 
+/**
+ * It saves the current clipboard contents, gets the selected text, shortens the URL, writes the
+ * shortened URL to the clipboard, pastes the shortened URL, waits for the clipboard to be updated, and
+ * then restores the previous clipboard contents
+ */
   async shortenUrl(): Promise<void> {
     // save current clipboard contents
     const previousClipboardText = clipboard.readText();
@@ -213,6 +216,40 @@ export class InlineDomain {
     await new Promise((resolve) => setTimeout(resolve, 200));
 
     // restore previous clipboard contents
+    clipboard.writeText(previousClipboardText);
+  }
+
+  /**
+   * It gets the selected text, removes all non-numeric characters except *,/,+,-,. and then evaluates
+   * the result. If the result is a number, it replaces the clipboard contents with the result and then
+   * pastes it
+   */
+  async calculate(): Promise<void> {
+    // save current clipboard contents
+    const previousClipboardText = clipboard.readText();
+
+    const selectedText = await this.getSelectedText();
+
+    // remove from text all non-numeric characters except *,/,+,-,.
+    const cleanedText = selectedText.replace(/[^-()\d/*+.]/g, '');
+    let result: number;
+
+    try {
+      result = eval(cleanedText);
+    } catch (e) {
+      return clipboard.writeText(previousClipboardText);
+    }
+
+    if (!isNaN(result)) {
+      clipboard.writeText(result.toString());
+
+      // paste converted text
+      keyTap('v', process.platform === 'darwin' ? 'command' : 'control');
+
+      // wait for the clipboard to be updated
+      await new Promise((resolve) => setTimeout(resolve, 200));
+    }
+
     clipboard.writeText(previousClipboardText);
   }
 }

@@ -12,6 +12,7 @@ const defaultSettings: Settings = {
     humanizeText: ['Control', 'H'],
     spellCheck: ['Control', 'S'],
     shortenUrl: ['Control', 'U'],
+    calculate: ['Control', 'K'],
   },
   convertCurrencies: {
     from: Currency['US Dollar'],
@@ -28,9 +29,9 @@ const settings = new Store();
 export const initSettings = () => {
   let currentSettings = settings.store as Settings;
 
-  if (!currentSettings.shortcuts) {
+  //if (!currentSettings.shortcuts) {
     settings.store = defaultSettings;
-  }
+  //}
 
   settings.set('restartToApplyChanges', false);
 };

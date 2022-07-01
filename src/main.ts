@@ -70,6 +70,11 @@ app.whenReady().then(() => {
   globalShortcut.register(shortcuts.shortenUrl.join('+'), async () => {
     await InlineDomain.shortenUrl();
   });
+
+  // * calculate shortcut
+  globalShortcut.register(shortcuts.calculate.join('+'), async () => {
+    await InlineDomain.calculate();
+  });
 });
 
 // * Disabled for now
@@ -158,6 +163,14 @@ app.whenReady().then(() => {
       role: 'help',
       click: async () => {
         await InlineDomain.spellCheck();
+      },
+    },
+    {
+      label: 'Calculate',
+      accelerator: shortcuts.calculate.join('+'),
+      role: 'help',
+      click: async () => {
+        await InlineDomain.calculate();
       },
     },
     {

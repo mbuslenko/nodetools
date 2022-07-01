@@ -65,6 +65,11 @@ app.whenReady().then(() => {
   globalShortcut.register(shortcuts.spellCheck.join('+'), async () => {
     await InlineDomain.spellCheck();
   });
+
+  // * url shortener shortcut
+  globalShortcut.register(shortcuts.shortenUrl.join('+'), async () => {
+    await InlineDomain.shortenUrl();
+  });
 });
 
 // * Disabled for now
@@ -161,6 +166,14 @@ app.whenReady().then(() => {
       role: 'help',
       click: async () => {
         await InlineDomain.convertCurrency();
+      },
+    },
+    {
+      label: 'Shorten URL',
+      accelerator: shortcuts.shortenUrl.join('+'),
+      role: 'help',
+      click: async () => {
+        await InlineDomain.shortenUrl();
       },
     },
     { label: 'Separator', type: 'separator' },

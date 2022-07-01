@@ -11,6 +11,7 @@ const defaultSettings: Settings = {
     convertCurrency: ['Control', 'G'],
     humanizeText: ['Control', 'H'],
     spellCheck: ['Control', 'S'],
+    shortenUrl: ['Control', 'U'],
   },
   convertCurrencies: {
     from: Currency['US Dollar'],

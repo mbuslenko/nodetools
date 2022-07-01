@@ -5,18 +5,20 @@ import {
   trasnliterator,
   currencyConvertor,
   spellChecker,
+  urlShortener,
 } from '../../services';
 import { ConvertOptions } from '../../services/currencies-convertor/currencies-convertor.types';
-import { Settings } from '../../settings/settings.types';
 import { utils } from '../../shared';
 import * as types from './inline.types';
 import settings from '../../settings';
+import { UrlShortenerService } from '../../services/url-shortener/url-shortener.service';
 
 export class InlineDomain {
   private readonly translatorService: translator.TranslatorService;
   private readonly transliteratorService: trasnliterator.TransliterationService;
   private readonly currencyConvertorService: currencyConvertor.CurrencyConvertorService;
   private readonly spellCheckerService: spellChecker.SpellCheckerService;
+  private readonly urlShortenerService: UrlShortenerService;
 
   constructor() {
     this.translatorService = new translator.TranslatorService();
@@ -24,6 +26,7 @@ export class InlineDomain {
     this.currencyConvertorService =
       new currencyConvertor.CurrencyConvertorService();
     this.spellCheckerService = new spellChecker.SpellCheckerService();
+    this.urlShortenerService = new UrlShortenerService();
   }
 
   /**
@@ -47,7 +50,9 @@ export class InlineDomain {
    * @param options - types.TranslateOptions
    */
   async translateText(): Promise<void> {
-    const options: types.TranslateOptions = settings.get('translate') as types.TranslateOptions;
+    const options: types.TranslateOptions = settings.get(
+      'translate'
+    ) as types.TranslateOptions;
 
     // save current clipboard contents
     const previousClipboardText = clipboard.readText();
@@ -104,8 +109,9 @@ export class InlineDomain {
    * @param options - Omit<ConvertOptions, 'amount'>
    */
   async convertCurrency(): Promise<void> {
-    const options: Omit<ConvertOptions, 'amount'> =
-      settings.get('convertCurrencies') as Omit<ConvertOptions, 'amount'>;
+    const options: Omit<ConvertOptions, 'amount'> = settings.get(
+      'convertCurrencies'
+    ) as Omit<ConvertOptions, 'amount'>;
 
     // save current clipboard contents
     const previousClipboardText = clipboard.readText();
@@ -173,6 +179,32 @@ export class InlineDomain {
     }
 
     clipboard.writeText(fixedText);
+
+    // paste converted text
+    keyTap('v', process.platform === 'darwin' ? 'command' : 'control');
+
+    // wait for the clipboard to be updated
+    await new Promise((resolve) => setTimeout(resolve, 200));
+
+    // restore previous clipboard contents
+    clipboard.writeText(previousClipboardText);
+  }
+
+  async shortenUrl(): Promise<void> {
+    // save current clipboard contents
+    const previousClipboardText = clipboard.readText();
+
+    const selectedText = await this.getSelectedText();
+    const shortenedUrl = await this.urlShortenerService.shortenUrl(
+      selectedText
+    );
+
+    if (!shortenedUrl) {
+      // restore previous clipboard contents
+      return clipboard.writeText(previousClipboardText);
+    }
+
+    clipboard.writeText(shortenedUrl);
 
     // paste converted text
     keyTap('v', process.platform === 'darwin' ? 'command' : 'control');

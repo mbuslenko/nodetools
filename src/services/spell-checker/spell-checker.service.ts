@@ -14,7 +14,7 @@ export class SpellCheckerService {
     },
   });
 
-  async check(text: string): Promise<string | undefined> {
+  async check(text: string): Promise<string> {
     const data = {
       language: 'enUS',
       fieldvalues: text,

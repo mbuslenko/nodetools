@@ -12,13 +12,16 @@ import { utils } from '../../shared';
 import * as types from './inline.types';
 import settings from '../../settings';
 import { UrlShortenerService } from '../../services/url-shortener/url-shortener.service';
+import ErrorsHandler from '../../errors/errors.module';
 
 export class InlineDomain {
-  private readonly translatorService: translator.TranslatorService;
-  private readonly transliteratorService: trasnliterator.TransliterationService;
-  private readonly currencyConvertorService: currencyConvertor.CurrencyConvertorService;
-  private readonly spellCheckerService: spellChecker.SpellCheckerService;
-  private readonly urlShortenerService: UrlShortenerService;
+  protected readonly translatorService: translator.TranslatorService;
+  protected readonly transliteratorService: trasnliterator.TransliterationService;
+  protected readonly currencyConvertorService: currencyConvertor.CurrencyConvertorService;
+  protected readonly spellCheckerService: spellChecker.SpellCheckerService;
+  protected readonly urlShortenerService: UrlShortenerService;
+
+  protected errorsHandler = new ErrorsHandler();
 
   constructor() {
     this.translatorService = new translator.TranslatorService();
@@ -116,21 +119,29 @@ export class InlineDomain {
 
     const selectedText = await this.getSelectedText();
 
-    if (!isNaN(+selectedText)) {
-      const convertedText = await this.currencyConvertorService.convert({
-        ...options,
-        amount: +selectedText,
+    if (isNaN(+selectedText)) {
+      this.errorsHandler.handleError({
+        message:
+          'Please specify only numeric characters and ".", convertion was failed',
+        environment: 'Currencies convertor',
+        trace: null,
+        date: new Date(),
       });
+    }
 
-      if (convertedText) {
-        clipboard.writeText(convertedText.toString());
+    const convertedText = await this.currencyConvertorService.convert({
+      ...options,
+      amount: +selectedText,
+    });
 
-        // paste converted text
-        keyTap('v', process.platform === 'darwin' ? 'command' : 'control');
+    if (convertedText) {
+      clipboard.writeText(convertedText.toString());
 
-        // wait for the clipboard to be updated
-        await new Promise((resolve) => setTimeout(resolve, 200));
-      }
+      // paste converted text
+      keyTap('v', process.platform === 'darwin' ? 'command' : 'control');
+
+      // wait for the clipboard to be updated
+      await new Promise((resolve) => setTimeout(resolve, 200));
     }
 
     // restore previous clipboard contents
@@ -188,11 +199,11 @@ export class InlineDomain {
     clipboard.writeText(previousClipboardText);
   }
 
-/**
- * It saves the current clipboard contents, gets the selected text, shortens the URL, writes the
- * shortened URL to the clipboard, pastes the shortened URL, waits for the clipboard to be updated, and
- * then restores the previous clipboard contents
- */
+  /**
+   * It saves the current clipboard contents, gets the selected text, shortens the URL, writes the
+   * shortened URL to the clipboard, pastes the shortened URL, waits for the clipboard to be updated, and
+   * then restores the previous clipboard contents
+   */
   async shortenUrl(): Promise<void> {
     // save current clipboard contents
     const previousClipboardText = clipboard.readText();
@@ -232,6 +243,15 @@ export class InlineDomain {
 
     // remove from text all non-numeric characters except *,/,+,-,.
     const cleanedText = selectedText.replace(/[^-()\d/*+.]/g, '');
+    if (cleanedText.length === 0) {
+      return this.errorsHandler.handleError({
+        message: 'No numeric characters found',
+        environment: 'Calculator',
+        date: new Date(),
+        trace: null,
+      });
+    }
+
     let result: number;
 
     try {

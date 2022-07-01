@@ -1,5 +1,5 @@
 import axios from 'axios';
-import ErrorsHandler from '../../shared/errors/errors.module';
+import ErrorsHandler from '../../errors/errors.module';
 import * as spellCheckerTypes from './spell-checker.types';
 
 export class SpellCheckerService {

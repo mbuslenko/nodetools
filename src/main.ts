@@ -13,8 +13,9 @@ import { changeSettings, initSettings } from './settings';
 import { openWebURL } from './shared/utils/open-website';
 import settings from './settings';
 import { ShortcutsSettings } from './settings/settings.types';
+import ErrorsHandler from './errors/errors.module';
 
-function createWindow() {
+function createWindow(pathToHtmlFile: string) {
   // Create the browser window.
   const mainWindow = new BrowserWindow({
     height: 600,
@@ -27,13 +28,17 @@ function createWindow() {
   });
 
   // and load the index.html of the app.
-  mainWindow.loadFile(path.join(__dirname, '../index.html'));
+  mainWindow.loadFile(path.join(__dirname, pathToHtmlFile));
 }
 
 ipcMain.on('change-settings', (event, arg) => {
   console.log('Settings was changed', JSON.stringify(arg));
 
   changeSettings(arg.data);
+});
+
+ipcMain.handle('get-errors', (event, arg) => {
+  return settings.get('errorsStorage');
 });
 
 app.whenReady().then(() => {
@@ -119,16 +124,25 @@ app.whenReady().then(() => {
     {
       label: 'Preferences',
       submenu: [
-        { label: 'Shortcuts', role: 'window', click: () => createWindow() },
+        {
+          label: 'Shortcuts',
+          role: 'window',
+          click: () => createWindow('../index.html'),
+        },
         {
           label: 'Translate options',
           role: 'window',
-          click: () => createWindow(),
+          click: () => createWindow('../index.html'),
         },
         {
           label: 'Currency converter options',
           role: 'window',
-          click: () => createWindow(),
+          click: () => createWindow('../index.html'),
+        },
+        {
+          label: 'Errors',
+          role: 'window',
+          click: () => createWindow('../errors-list.html'),
         },
       ],
     },

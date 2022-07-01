@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <title>nodetools</title>
+    <style>
+      * {
+        font-family: sans-serif;
+      }
+
+      table {
+        border-collapse: collapse;
+        width: 100%;
+      }
+
+      td,
+      th {
+        border: 1px solid #dddddd;
+        text-align: left;
+        padding: 8px;
+      }
+
+      tr:nth-child(even) {
+        background-color: #dddddd;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Errors</h1>
+    Prealpha v<span id="app-version"></span>, Experimental release.
+
+    <table id="errors-table">
+      <tr>
+        <th>Datetime</th>
+        <th>Environment</th>
+        <th>Message</th>
+      </tr>
+    </table>
+
+    <script>
+      const packageJson = require('./package.json');
+
+      window.addEventListener('DOMContentLoaded', () => {
+        const replaceText = (selector, text) => {
+          const element = document.getElementById(selector);
+          if (element) {
+            element.innerText = text;
+          }
+        };
+
+        for (const type of ['app-version']) {
+          replaceText(`${type}`, packageJson.version);
+        }
+
+        const { ipcRenderer } = require('electron');
+        ipcRenderer.invoke('get-errors').then((result) => {
+          localStorage.setItem('errors', JSON.stringify(result));
+
+          var table = document.getElementById('errors-table');
+
+          result.forEach((el) => {
+            row = table.insertRow(-1);
+            cell1 = row.insertCell(0);
+            cell2 = row.insertCell(1);
+            cell3 = row.insertCell(2);
+            cell1.innerHTML = el.date;
+            cell2.innerHTML = el.environment;
+            cell3.innerHTML = el.message;
+          });
+        });
+      });
+    </script>
+  </body>
+  <script></script>
+</html>

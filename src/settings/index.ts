@@ -3,6 +3,7 @@ import { Language } from '../services/translator/translator.types';
 import * as Store from 'electron-store';
 import { Settings } from './settings.types';
 import { relaunchApp } from '../main';
+import { ErrorStructure } from '../errors/errors.types';
 
 const defaultSettings: Settings = {
   shortcuts: {
@@ -22,6 +23,7 @@ const defaultSettings: Settings = {
     to: Language.English,
   },
   restartToApplyChanges: false,
+  errorsStorage: [],
 };
 
 const settings = new Store();
@@ -29,9 +31,9 @@ const settings = new Store();
 export const initSettings = () => {
   let currentSettings = settings.store as Settings;
 
-  //if (!currentSettings.shortcuts) {
+  if (!currentSettings.shortcuts) {
     settings.store = defaultSettings;
-  //}
+  }
 
   settings.set('restartToApplyChanges', false);
 };
@@ -49,6 +51,21 @@ export const changeSettings = (newSettings: Settings) => {
 
     relaunchApp();
   }
+};
+
+export const addErrorToStorage = (error: ErrorStructure) => {
+  const errors = settings.get('errorsStorage') as ErrorStructure[];
+  errors.push(error);
+
+  settings.set('errorsStorage', errors);
+};
+
+export const removeErrorFromStorage = (id: string) => {
+  const errorsStorage = settings.get('errorsStorage') as ErrorStructure[];
+
+  const newErrorsStorage = errorsStorage.filter((error) => error.id !== id);
+
+  settings.set('errorsStorage', newErrorsStorage);
 };
 
 export default settings;

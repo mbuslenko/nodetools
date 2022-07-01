@@ -1,7 +1,10 @@
+import ErrorsHandler from '../../errors/errors.module';
 import { config } from './config';
 
 export class TransliterationService {
-  private normalize(str: string) {
+  protected errorsHandler = new ErrorsHandler();
+
+  protected normalize(str: string) {
     str = str
       .replace(/(Ю\s|Б\s|Ь\s)/g, (s) => {
         // TODO: refactor to avoid ts-ignore
@@ -14,7 +17,7 @@ export class TransliterationService {
     return str;
   }
 
-  private fix(str: string) {
+  protected fix(str: string) {
     let obj = config.dictionary.retranslit;
     Object.keys(obj).map(function (key, v) {
       let reg = new RegExp('(' + key + ')', 'g');
@@ -27,7 +30,7 @@ export class TransliterationService {
     return str;
   }
 
-  private flip(trans: object) {
+  protected flip(trans: object) {
     let key,
       tmp = {};
     for (key in trans) {
@@ -40,57 +43,65 @@ export class TransliterationService {
   }
 
   transliterate(text: string, normalize?: boolean): string {
-    const cyrillicPattern = /^\p{Script=Cyrillic}+$/u;
+    try {
+      const cyrillicPattern = /^\p{Script=Cyrillic}+$/u;
 
-    let type: string;
-    if (cyrillicPattern.test(text)) {
-      type = 'rueng';
-    } else {
-      type = 'engru';
-    }
-
-    switch (type) {
-      case 'rueng': {
-        config.default = config.dictionary.keys;
-        break;
-      }
-      case 'engru': {
-        config.default = this.flip(config.dictionary.keys);
-        break;
-      }
-      case 'translit': {
-        config.default = config.dictionary.translit;
-        break;
-      }
-      case 'retranslit': {
-        config.default = this.flip(config.dictionary.translit);
-        text = this.fix(text);
-        break;
-      }
-      default: {
-        config.default = this.flip(config.dictionary.keys);
-        break;
-      }
-    }
-
-    let textToArray = text.split('');
-    const result: any[] = [];
-    let obj = config.default;
-
-    textToArray.forEach(function (sym, i) {
-      if (obj.hasOwnProperty(textToArray[i])) {
-        // TODO: refactor to avoid ts-ignore
-        //@ts-ignore
-        result.push(obj[textToArray[i]]);
+      let type: string;
+      if (cyrillicPattern.test(text)) {
+        type = 'rueng';
       } else {
-        result.push(sym);
+        type = 'engru';
       }
-    });
 
-    if (normalize) {
-      return this.normalize(result.join(''));
-    } else {
-      return result.join('');
+      switch (type) {
+        case 'rueng': {
+          config.default = config.dictionary.keys;
+          break;
+        }
+        case 'engru': {
+          config.default = this.flip(config.dictionary.keys);
+          break;
+        }
+        case 'translit': {
+          config.default = config.dictionary.translit;
+          break;
+        }
+        case 'retranslit': {
+          config.default = this.flip(config.dictionary.translit);
+          text = this.fix(text);
+          break;
+        }
+        default: {
+          config.default = this.flip(config.dictionary.keys);
+          break;
+        }
+      }
+
+      let textToArray = text.split('');
+      const result: any[] = [];
+      let obj = config.default;
+
+      textToArray.forEach(function (sym, i) {
+        if (obj.hasOwnProperty(textToArray[i])) {
+          // TODO: refactor to avoid ts-ignore
+          //@ts-ignore
+          result.push(obj[textToArray[i]]);
+        } else {
+          result.push(sym);
+        }
+      });
+
+      if (normalize) {
+        return this.normalize(result.join(''));
+      } else {
+        return result.join('');
+      }
+    } catch (e) {
+      this.errorsHandler.handleError({
+        environment: 'Transliteration',
+        message: `An error occurred while transliterating the text, got ${text}`,
+        trace: e,
+      });
     }
   }
 }

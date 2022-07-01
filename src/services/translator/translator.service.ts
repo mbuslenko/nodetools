@@ -1,9 +1,11 @@
 import axios from 'axios';
 import { URLSearchParams } from 'url';
 import * as types from './translator.types';
-import { utils } from '../../shared';
+import ErrorsHandler from '../../errors/errors.module';
 
 export class TranslatorService {
+  protected errorsHandler = new ErrorsHandler();
+
   protected axiosInstance = axios.create({
     baseURL: 'https://translo.p.rapidapi.com/api/v3/',
     headers: {
@@ -31,7 +33,11 @@ export class TranslatorService {
 
       return response.translated_text;
     } catch (e) {
-      utils.handleError(e, 'api:translator');
+      this.errorsHandler.handleError({
+        environment: 'Translator',
+        message: `An error occurred while translating the text. Please check that provided text is valid, got ${options.text}`,
+        trace: e,
+      });
 
       return undefined;
     }

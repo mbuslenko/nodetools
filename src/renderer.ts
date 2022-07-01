@@ -4,7 +4,7 @@
 // nodeIntegration is set to true in webPreferences.
 // Use preload.js to selectively enable features
 
-const settings = {
+let settings = {
   shortcuts: {
     translate: ['Control', 'I'],
     transliterate: ['Control', 'T'],

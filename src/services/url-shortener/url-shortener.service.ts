@@ -1,8 +1,11 @@
 import axios from 'axios';
+import ErrorsHandler from '../../errors/errors.module';
 import { utils } from '../../shared';
 
 export class UrlShortenerService {
-  private axiosInstance = axios.create({
+  protected errorsHandler = new ErrorsHandler();
+  
+  protected axiosInstance = axios.create({
     baseURL: 'https://url-shortener20.p.rapidapi.com',
     headers: {
       'content-type': 'application/json',
@@ -27,7 +30,11 @@ export class UrlShortenerService {
 
       return response.short_link;
     } catch (e) {
-      utils.handleError(e, 'api:url-shortener');
+      this.errorsHandler.handleError({
+        environment: 'Url shortener',
+        message: `An error occurred while shortening the url. Please check that provided URL is valid, got ${url}`,
+        trace: e,
+      });
 
       return undefined;
     }

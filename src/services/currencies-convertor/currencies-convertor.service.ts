@@ -1,8 +1,11 @@
 import axios from 'axios';
+import ErrorsHandler from '../../errors/errors.module';
 import { utils } from '../../shared';
 import * as types from './currencies-convertor.types';
 
 export class CurrencyConvertorService {
+  protected errorsHandler = new ErrorsHandler();
+
   protected axiosInstance = axios.create({
     baseURL: 'https://global-currency.p.rapidapi.com',
     headers: {
@@ -25,7 +28,11 @@ export class CurrencyConvertorService {
 
       return +response.rateCurrency.amount;
     } catch (e) {
-      utils.handleError(e, 'api:currencies-convertor');
+      this.errorsHandler.handleError({
+        environment: 'Currency converter',
+        message: `An error occured while converting ${options.amount} ${options.from} to ${options.to}`,
+        trace: e,
+      });
 
       return undefined;
     }

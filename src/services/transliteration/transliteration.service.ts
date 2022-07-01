@@ -17,19 +17,6 @@ export class TransliterationService {
     return str;
   }
 
-  protected fix(str: string) {
-    let obj = config.dictionary.retranslit;
-    Object.keys(obj).map(function (key, v) {
-      let reg = new RegExp('(' + key + ')', 'g');
-      str = str.replace(reg, (s) => {
-        // TODO: refactor to avoid ts-ignore
-        //@ts-ignore
-        return obj[s];
-      });
-    });
-    return str;
-  }
-
   protected flip(trans: object) {
     let key,
       tmp = {};
@@ -53,26 +40,28 @@ export class TransliterationService {
         type = 'engru';
       }
 
+      // TODO: refactor to not change config.default
       switch (type) {
         case 'rueng': {
-          config.default = config.dictionary.keys;
+          if (process.platform == 'darwin') {
+            config.default = config.dictionary.macRuEng;
+          } else {
+            config.default = config.dictionary.winRuEn;
+          }
+
           break;
         }
         case 'engru': {
-          config.default = this.flip(config.dictionary.keys);
-          break;
-        }
-        case 'translit': {
-          config.default = config.dictionary.translit;
-          break;
-        }
-        case 'retranslit': {
-          config.default = this.flip(config.dictionary.translit);
-          text = this.fix(text);
+          if (process.platform == 'darwin') {
+            config.default = this.flip(config.dictionary.macRuEng);
+          } else {
+            config.default = this.flip(config.dictionary.winRuEn);
+          }
+
           break;
         }
         default: {
-          config.default = this.flip(config.dictionary.keys);
+          config.default = this.flip(config.dictionary.winRuEn);
           break;
         }
       }

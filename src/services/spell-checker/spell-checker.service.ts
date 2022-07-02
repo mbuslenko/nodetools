@@ -50,7 +50,6 @@ export class SpellCheckerService {
 
       const typeErrors = response.elements[0].errors;
 
-      // TODO: Refactor to change only one word instead of all similar
       typeErrors.forEach((el) => {
         text = text.replace(el.word, el.suggestions[0]);
       });

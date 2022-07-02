@@ -13,7 +13,6 @@ import { changeSettings, initSettings } from './settings';
 import { openWebURL } from './shared/utils/open-website';
 import settings from './settings';
 import { ShortcutsSettings } from './settings/settings.types';
-import ErrorsHandler from './errors/errors.module';
 
 function createWindow(pathToHtmlFile: string) {
   // Create the browser window.
@@ -29,6 +28,7 @@ function createWindow(pathToHtmlFile: string) {
 
   // and load the index.html of the app.
   mainWindow.loadFile(path.join(__dirname, pathToHtmlFile));
+  mainWindow.setResizable(false);
 }
 
 ipcMain.on('change-settings', (event, arg) => {

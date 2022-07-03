@@ -24,6 +24,7 @@ function createWindow(pathToHtmlFile: string) {
       preload: path.join(__dirname, 'preload.js'),
     },
     width: 800,
+    icon: '../src/assets/app-icon.png'
   });
 
   // and load the index.html of the app.

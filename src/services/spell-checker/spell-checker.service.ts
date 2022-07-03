@@ -1,42 +1,22 @@
 import axios from 'axios';
 import ErrorsHandler from '../../errors/errors.module';
+import { axiosInstance } from '../../shared/axios';
 import * as spellCheckerTypes from './spell-checker.types';
 
 export class SpellCheckerService {
   protected errorHandler = new ErrorsHandler();
 
-  protected axiosInstace = axios.create({
-    baseURL: 'https://jspell-checker.p.rapidapi.com',
-    headers: {
-      'content-type': 'application/json',
-      'X-RapidAPI-Key': 'bf894bec23msha5bef7181df062ap11d0c3jsncec1e59dab77',
-      'X-RapidAPI-Host': 'jspell-checker.p.rapidapi.com',
-    },
-  });
-
   async check(text: string): Promise<string> {
     try {
-      const data = {
-        language: 'enUS',
-        fieldvalues: text,
-        config: {
-          forceUpperCase: false,
-          ignoreIrregularCaps: false,
-          ignoreFirstCaps: false,
-          ignoreNumbers: true,
-          ignoreUpper: false,
-          ignoreDouble: false,
-          ignoreWordsWithNumbers: true,
-        },
-      };
-
-      const { data: response } = await this.axiosInstace.request<
+      const { data: response } = await axiosInstance.request<
         unknown,
         { data: spellCheckerTypes.SpellCheckerResponse }
       >({
-        method: 'POST',
-        url: '/check',
-        data,
+        method: 'GET',
+        url: '/spell-check',
+        params: {
+          text,
+        },
       });
 
       if (!response.elements) {

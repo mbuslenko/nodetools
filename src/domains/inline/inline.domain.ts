@@ -135,7 +135,7 @@ export class InlineDomain {
     });
 
     if (convertedText) {
-      clipboard.writeText(convertedText.toString());
+      clipboard.writeText(convertedText);
 
       // paste converted text
       keyTap('v', process.platform === 'darwin' ? 'command' : 'control');

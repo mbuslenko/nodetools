@@ -4,6 +4,7 @@ import * as Store from 'electron-store';
 import { Settings } from './settings.types';
 import { relaunchApp } from '../main';
 import { ErrorStructure } from '../errors/errors.types';
+import { ipcMain } from 'electron';
 
 const defaultSettings: Settings = {
   shortcuts: {
@@ -31,9 +32,9 @@ const settings = new Store();
 export const initSettings = () => {
   let currentSettings = settings.store as Settings;
 
-  if (!currentSettings.shortcuts) {
+  //if (!currentSettings.shortcuts) {
     settings.store = defaultSettings;
-  }
+  //}
 
   settings.set('restartToApplyChanges', false);
 };
@@ -58,6 +59,8 @@ export const addErrorToStorage = (error: ErrorStructure) => {
   errors.push(error);
 
   settings.set('errorsStorage', errors);
+
+  ipcMain.emit('handle-error', errors)
 };
 
 export const removeErrorFromStorage = (id: string) => {

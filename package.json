@@ -1,7 +1,7 @@
 {
-  "name": "toolkit",
+  "name": "nodetools",
   "version": "0.0.9",
-  "description": "",
+  "description": "Personal all-hands assistant.",
   "main": "main.js",
   "scripts": {
     "build": "tsc",

@@ -15,11 +15,11 @@ export class TransliterationService {
     return str;
   }
 
-  protected flip(trans: object) {
+  protected flip(trans: { [key: string]: any }) {
     let key,
       tmp: { [key: string]: any } = {};
     for (key in trans) {
-      tmp.trans[key] = key;
+      tmp[trans[key]] = key;
     }
 
     return tmp;

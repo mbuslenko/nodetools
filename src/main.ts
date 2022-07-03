@@ -14,6 +14,10 @@ import { openWebURL } from './shared/utils/open-website';
 import settings from './settings';
 import { ShortcutsSettings } from './settings/settings.types';
 
+require('update-electron-app')({
+  repo: 'mbuslenko/nodetools'
+})
+
 function createWindow(pathToHtmlFile: string) {
   // Create the browser window.
   const mainWindow = new BrowserWindow({
@@ -84,20 +88,6 @@ app.whenReady().then(() => {
   });
 });
 
-// * Disabled for now
-// This method will be called when Electron has finished
-// initialization and is ready to create browser windows.
-// Some APIs can only be used after this event occurs.
-// app.on('ready', () => {
-//   createWindow();
-
-//   app.on('activate', function () {
-//     // On macOS it's common to re-create a window in the app when the
-//     // dock icon is clicked and there are no other windows open.
-//     if (BrowserWindow.getAllWindows().length === 0) createWindow();
-//   });
-// });
-
 let tray: Tray;
 app.whenReady().then(() => {
   app.dock.hide();
@@ -111,18 +101,6 @@ app.whenReady().then(() => {
   const InlineDomain = new domains.inline.InlineDomain();
 
   const contextMenu = Menu.buildFromTemplate([
-    { label: 'About', role: 'about' },
-    {
-      label: '🆕 Update Nodetools',
-      icon: nativeImage.createFromPath(
-        path.join(__dirname, '../src/assets/update.png')
-      ),
-      click: () => openWebURL('https://google.com'),
-    },
-    {
-      label: 'Separator',
-      type: 'separator',
-    },
     {
       label: 'Preferences',
       submenu: [

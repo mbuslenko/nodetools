@@ -6,7 +6,6 @@ import * as types from './currencies-convertor.types';
 export class CurrencyConvertorService {
   protected errorsHandler = new ErrorsHandler();
 
-  // TODO: Add validation to options enum
   async convert(options: types.ConvertOptions) {
     try {
       const { data: response } = await axiosInstance.request<

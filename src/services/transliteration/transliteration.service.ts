@@ -7,9 +7,7 @@ export class TransliterationService {
   protected normalize(str: string) {
     str = str
       .replace(/(Ю\s|Б\s|Ь\s)/g, (s) => {
-        // TODO: refactor to avoid ts-ignore
-        //@ts-ignore
-        return config.words[s];
+        return config.words[s as keyof typeof config.words];
       })
       .replace(/\s{2,}/g, ' ')
       .trim();
@@ -19,11 +17,9 @@ export class TransliterationService {
 
   protected flip(trans: object) {
     let key,
-      tmp = {};
+      tmp: { [key: string]: any } = {};
     for (key in trans) {
-      // TODO: refactor to avoid ts-ignore
-      //@ts-ignore
-      tmp[trans[key]] = key;
+      tmp.trans[key] = key;
     }
 
     return tmp;
@@ -68,12 +64,10 @@ export class TransliterationService {
 
       let textToArray = text.split('');
       const result: any[] = [];
-      let obj = config.default;
+      let obj = config.default as { [key: string]: any };
 
       textToArray.forEach(function (sym, i) {
         if (obj.hasOwnProperty(textToArray[i])) {
-          // TODO: refactor to avoid ts-ignore
-          //@ts-ignore
           result.push(obj[textToArray[i]]);
         } else {
           result.push(sym);

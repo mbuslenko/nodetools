@@ -2,7 +2,7 @@ import { Currency } from '../services/currencies-convertor/currencies-convertor.
 import { Language } from '../services/translator/translator.types';
 import * as Store from 'electron-store';
 import { Settings } from './settings.types';
-import { relaunchApp } from '../main';
+import { relaunchApp } from '../electron';
 import { ErrorStructure } from '../errors/errors.types';
 import { ipcMain } from 'electron';
 

@@ -145,7 +145,7 @@ app.whenReady().then(() => {
     },
     {
       label: 'Humanize',
-      accelerator: shortcuts.translate.join('+'),
+      accelerator: shortcuts.humanizeText.join('+'),
       role: 'help',
       click: async () => {
         await InlineDomain.humanizeText();
@@ -169,7 +169,7 @@ app.whenReady().then(() => {
     },
     {
       label: 'Convert currencies',
-      accelerator: shortcuts.translate.join('+'),
+      accelerator: shortcuts.convertCurrency.join('+'),
       role: 'help',
       click: async () => {
         await InlineDomain.convertCurrency();

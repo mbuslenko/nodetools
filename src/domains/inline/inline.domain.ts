@@ -1,5 +1,4 @@
 import { clipboard } from 'electron';
-import { keyTap } from 'robotjs';
 import {
   translator,
   trasnliterator,
@@ -11,15 +10,15 @@ import { ConvertOptions } from '../../services/currencies-convertor/currencies-c
 import { utils } from '../../shared';
 import * as types from './inline.types';
 import settings from '../../settings';
-import { UrlShortenerService } from '../../services/url-shortener/url-shortener.service';
 import ErrorsHandler from '../../errors/errors.module';
+import { Key, keyboard } from '@nut-tree/nut-js';
 
 export class InlineDomain {
   protected readonly translatorService: translator.TranslatorService;
   protected readonly transliteratorService: trasnliterator.TransliterationService;
   protected readonly currencyConvertorService: currencyConvertor.CurrencyConvertorService;
   protected readonly spellCheckerService: spellChecker.SpellCheckerService;
-  protected readonly urlShortenerService: UrlShortenerService;
+  protected readonly urlShortenerService: urlShortener.UrlShortenerService;
 
   protected errorsHandler = new ErrorsHandler();
 
@@ -29,7 +28,7 @@ export class InlineDomain {
     this.currencyConvertorService =
       new currencyConvertor.CurrencyConvertorService();
     this.spellCheckerService = new spellChecker.SpellCheckerService();
-    this.urlShortenerService = new UrlShortenerService();
+    this.urlShortenerService = new urlShortener.UrlShortenerService();
   }
 
   /**
@@ -40,7 +39,7 @@ export class InlineDomain {
   private async getSelectedText(): Promise<string> {
     clipboard.clear();
 
-    keyTap('c', process.platform === 'darwin' ? 'command' : 'control');
+    await keyboard.pressKey(process.platform === 'darwin' ? Key.LeftSuper : Key.LeftControl, Key.C)
     await new Promise((resolve) => setTimeout(resolve, 200)); // add a delay before checking clipboard
     const selectedText = clipboard.readText();
 
@@ -69,7 +68,7 @@ export class InlineDomain {
       clipboard.writeText(translatedText);
 
       // paste translated text
-      keyTap('v', process.platform === 'darwin' ? 'command' : 'control');
+      await keyboard.pressKey(process.platform === 'darwin' ? Key.LeftSuper : Key.LeftControl, Key.V)
 
       // wait for the clipboard to be updated
       await new Promise((resolve) => setTimeout(resolve, 200));
@@ -95,7 +94,7 @@ export class InlineDomain {
       clipboard.writeText(transliteratedText);
 
       // paste translated text
-      keyTap('v', process.platform === 'darwin' ? 'command' : 'control');
+      await keyboard.pressKey(process.platform === 'darwin' ? Key.LeftSuper : Key.LeftControl, Key.V)
 
       // wait for the clipboard to be updated
       await new Promise((resolve) => setTimeout(resolve, 200));
@@ -138,7 +137,7 @@ export class InlineDomain {
       clipboard.writeText(convertedText);
 
       // paste converted text
-      keyTap('v', process.platform === 'darwin' ? 'command' : 'control');
+      await keyboard.pressKey(process.platform === 'darwin' ? Key.LeftSuper : Key.LeftControl, Key.V)
 
       // wait for the clipboard to be updated
       await new Promise((resolve) => setTimeout(resolve, 200));
@@ -162,7 +161,7 @@ export class InlineDomain {
     clipboard.writeText(humanizedText);
 
     // paste converted text
-    keyTap('v', process.platform === 'darwin' ? 'command' : 'control');
+    await keyboard.pressKey(process.platform === 'darwin' ? Key.LeftSuper : Key.LeftControl, Key.V)
 
     // wait for the clipboard to be updated
     await new Promise((resolve) => setTimeout(resolve, 200));
@@ -190,7 +189,7 @@ export class InlineDomain {
     clipboard.writeText(fixedText);
 
     // paste converted text
-    keyTap('v', process.platform === 'darwin' ? 'command' : 'control');
+    await keyboard.pressKey(process.platform === 'darwin' ? Key.LeftSuper : Key.LeftControl, Key.V)
 
     // wait for the clipboard to be updated
     await new Promise((resolve) => setTimeout(resolve, 200));
@@ -221,7 +220,7 @@ export class InlineDomain {
     clipboard.writeText(shortenedUrl);
 
     // paste converted text
-    keyTap('v', process.platform === 'darwin' ? 'command' : 'control');
+    await keyboard.pressKey(process.platform === 'darwin' ? Key.LeftSuper : Key.LeftControl, Key.V)
 
     // wait for the clipboard to be updated
     await new Promise((resolve) => setTimeout(resolve, 200));
@@ -264,7 +263,7 @@ export class InlineDomain {
       clipboard.writeText(result.toString());
 
       // paste converted text
-      keyTap('v', process.platform === 'darwin' ? 'command' : 'control');
+      await keyboard.pressKey(process.platform === 'darwin' ? Key.LeftSuper : Key.LeftControl, Key.V)
 
       // wait for the clipboard to be updated
       await new Promise((resolve) => setTimeout(resolve, 200));

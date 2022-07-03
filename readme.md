@@ -76,8 +76,8 @@ Fast converter supporting more than 180 currencies.
 ## TODO
 Current roadmap for future versions of the app
 
-### v0.0.10-alpha
-- Auto updater
+### v0.0.10-alpha (current)
+- ~~Auto updater~~
 - ~~Code refactoring~~
 - ~~RU/ENG transliteration fix for MacOS~~
 - ~~Better error handling~~

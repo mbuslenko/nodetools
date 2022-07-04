@@ -91,7 +91,7 @@ app.whenReady().then(() => {
 
 let tray: Tray;
 app.whenReady().then(() => {
-  if (process.platform === 'darwin') {
+  if (process.platform === "darwin") {
     app.dock.hide();
   }
 
@@ -186,8 +186,8 @@ app.whenReady().then(() => {
         await InlineDomain.shortenUrl();
       },
     },
-    { label: 'Separator', type: 'separator' },
-    { label: 'Quit', role: 'quit', click: () => app.quit() },
+    { label: "Separator", type: "separator" },
+    { label: "Quit", role: "quit", click: () => app.quit() },
   ]);
   tray.setContextMenu(contextMenu);
 
@@ -202,8 +202,8 @@ export const relaunchApp = () => {
 // Quit when all windows are closed, except on macOS. There, it's common
 // for applications and their menu bar to stay active until the user quits
 // explicitly with Cmd + Q.
-app.on('window-all-closed', () => {
-  if (process.platform !== 'darwin') {
+app.on("window-all-closed", () => {
+  if (process.platform !== "darwin") {
     app.quit();
   }
 });

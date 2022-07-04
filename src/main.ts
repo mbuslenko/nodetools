@@ -15,8 +15,8 @@ import settings from './settings';
 import { ShortcutsSettings } from './settings/settings.types';
 
 require('update-electron-app')({
-  repo: 'mbuslenko/nodetools'
-})
+  repo: 'mbuslenko/nodetools',
+});
 
 function createWindow(pathToHtmlFile: string) {
   // Create the browser window.
@@ -28,7 +28,7 @@ function createWindow(pathToHtmlFile: string) {
       preload: path.join(__dirname, 'preload.js'),
     },
     width: 800,
-    icon: '../src/assets/app-icon.png'
+    icon: '../src/assets/app-icon.png',
   });
 
   // and load the index.html of the app.
@@ -90,7 +90,9 @@ app.whenReady().then(() => {
 
 let tray: Tray;
 app.whenReady().then(() => {
-  app.dock.hide();
+  if (process.platform === 'darwin') {
+    app.dock.hide();
+  }
 
   const icon = nativeImage.createFromPath(
     path.join(__dirname, '../src/assets/tray-icon.png')
@@ -205,5 +207,7 @@ export const relaunchApp = () => {
 // for applications and their menu bar to stay active until the user quits
 // explicitly with Cmd + Q.
 app.on('window-all-closed', () => {
-  app.dock.hide();
+  if (process.platform !== 'darwin') {
+    app.quit();
+  }
 });

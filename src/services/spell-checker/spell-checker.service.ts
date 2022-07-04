@@ -30,7 +30,7 @@ export class SpellCheckerService {
 
       const typeErrors = response.elements[0].errors;
 
-      typeErrors.forEach((el) => {
+      typeErrors.forEach((el: any) => {
         text = text.replace(el.word, el.suggestions[0]);
       });
 

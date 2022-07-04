@@ -52,46 +52,46 @@
     <!-- You can also require other files to run in this process -->
     <script src="./dist/renderer.js"></script>
     <script>
-      const { ipcRenderer } = require('electron');
+      const { ipcRenderer } = require("electron");
 
-      ipcRenderer.on('handle-error', (event, error) => {
+      ipcRenderer.on("handle-error", (event, error) => {
         console.error(error);
 
-        const previousErrors = window.localStorage.getItem('errors') ?? [];
+        const previousErrors = window.localStorage.getItem("errors") ?? [];
         const newErrors = previousErrors.push(error);
 
-        window.localStorage.setItem('errors', newErrors);
+        window.localStorage.setItem("errors", newErrors);
       });
 
-      document.getElementById('refresh-settings').onclick = async () => {
+      document.getElementById("refresh-settings").onclick = async () => {
         const data = {
           convertCurrencies: {
-            from: document.getElementById('currency-from').value,
-            to: document.getElementById('currency-to').value,
+            from: document.getElementById("currency-from").value,
+            to: document.getElementById("currency-to").value,
           },
           translate: {
-            to: document.getElementById('translate-to').value,
+            to: document.getElementById("translate-to").value,
           },
           shortcuts: {
             translate: document
-              .getElementById('shortcut-translate')
-              .value.split('+'),
+              .getElementById("shortcut-translate")
+              .value.split("+"),
             transliterate: document
-              .getElementById('shortcut-transliterate')
-              .value.split('+'),
+              .getElementById("shortcut-transliterate")
+              .value.split("+"),
             convertCurrency: document
-              .getElementById('shortcut-convert-currency')
-              .value.split('+'),
+              .getElementById("shortcut-convert-currency")
+              .value.split("+"),
             humanizeText: document
-              .getElementById('shortcut-humanize')
-              .value.split('+'),
+              .getElementById("shortcut-humanize")
+              .value.split("+"),
             spellCheck: document
-              .getElementById('shortcut-spell-check')
-              .value.split('+'),
+              .getElementById("shortcut-spell-check")
+              .value.split("+"),
           },
         };
 
-        ipcRenderer.send('change-settings', {
+        ipcRenderer.send("change-settings", {
           data,
         });
       };

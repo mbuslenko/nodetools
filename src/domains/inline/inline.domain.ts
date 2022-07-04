@@ -39,9 +39,15 @@ export class InlineDomain {
   private async getSelectedText(): Promise<string> {
     clipboard.clear();
 
-    await keyboard.pressKey(process.platform === 'darwin' ? Key.LeftSuper : Key.LeftControl, Key.C)
-    await keyboard.releaseKey(process.platform === 'darwin' ? Key.LeftSuper : Key.LeftControl, Key.C)
-    
+    await keyboard.pressKey(
+      process.platform === "darwin" ? Key.LeftSuper : Key.LeftControl,
+      Key.C
+    );
+    await keyboard.releaseKey(
+      process.platform === "darwin" ? Key.LeftSuper : Key.LeftControl,
+      Key.C
+    );
+
     await new Promise((resolve) => setTimeout(resolve, 200)); // add a delay before checking clipboard
     const selectedText = clipboard.readText();
 
@@ -70,8 +76,14 @@ export class InlineDomain {
       clipboard.writeText(translatedText);
 
       // paste translated text
-      await keyboard.pressKey(process.platform === 'darwin' ? Key.LeftSuper : Key.LeftControl, Key.V)
-      await keyboard.releaseKey(process.platform === 'darwin' ? Key.LeftSuper : Key.LeftControl, Key.V)
+      await keyboard.pressKey(
+        process.platform === "darwin" ? Key.LeftSuper : Key.LeftControl,
+        Key.V
+      );
+      await keyboard.releaseKey(
+        process.platform === "darwin" ? Key.LeftSuper : Key.LeftControl,
+        Key.V
+      );
 
       // wait for the clipboard to be updated
       await new Promise((resolve) => setTimeout(resolve, 200));
@@ -97,9 +109,15 @@ export class InlineDomain {
       clipboard.writeText(transliteratedText);
 
       // paste translated text
-      await keyboard.pressKey(process.platform === 'darwin' ? Key.LeftSuper : Key.LeftControl, Key.V)
-      await keyboard.releaseKey(process.platform === 'darwin' ? Key.LeftSuper : Key.LeftControl, Key.V)
-      
+      await keyboard.pressKey(
+        process.platform === "darwin" ? Key.LeftSuper : Key.LeftControl,
+        Key.V
+      );
+      await keyboard.releaseKey(
+        process.platform === "darwin" ? Key.LeftSuper : Key.LeftControl,
+        Key.V
+      );
+
       // wait for the clipboard to be updated
       await new Promise((resolve) => setTimeout(resolve, 200));
     }
@@ -141,8 +159,14 @@ export class InlineDomain {
       clipboard.writeText(convertedText);
 
       // paste converted text
-      await keyboard.pressKey(process.platform === 'darwin' ? Key.LeftSuper : Key.LeftControl, Key.V)
-      await keyboard.releaseKey(process.platform === 'darwin' ? Key.LeftSuper : Key.LeftControl, Key.V)
+      await keyboard.pressKey(
+        process.platform === "darwin" ? Key.LeftSuper : Key.LeftControl,
+        Key.V
+      );
+      await keyboard.releaseKey(
+        process.platform === "darwin" ? Key.LeftSuper : Key.LeftControl,
+        Key.V
+      );
 
       // wait for the clipboard to be updated
       await new Promise((resolve) => setTimeout(resolve, 200));
@@ -166,8 +190,14 @@ export class InlineDomain {
     clipboard.writeText(humanizedText);
 
     // paste converted text
-    await keyboard.pressKey(process.platform === 'darwin' ? Key.LeftSuper : Key.LeftControl, Key.V)
-    await keyboard.releaseKey(process.platform === 'darwin' ? Key.LeftSuper : Key.LeftControl, Key.V)
+    await keyboard.pressKey(
+      process.platform === "darwin" ? Key.LeftSuper : Key.LeftControl,
+      Key.V
+    );
+    await keyboard.releaseKey(
+      process.platform === "darwin" ? Key.LeftSuper : Key.LeftControl,
+      Key.V
+    );
 
     // wait for the clipboard to be updated
     await new Promise((resolve) => setTimeout(resolve, 200));
@@ -195,8 +225,14 @@ export class InlineDomain {
     clipboard.writeText(fixedText);
 
     // paste converted text
-    await keyboard.pressKey(process.platform === 'darwin' ? Key.LeftSuper : Key.LeftControl, Key.V)
-    await keyboard.releaseKey(process.platform === 'darwin' ? Key.LeftSuper : Key.LeftControl, Key.V)
+    await keyboard.pressKey(
+      process.platform === "darwin" ? Key.LeftSuper : Key.LeftControl,
+      Key.V
+    );
+    await keyboard.releaseKey(
+      process.platform === "darwin" ? Key.LeftSuper : Key.LeftControl,
+      Key.V
+    );
 
     // wait for the clipboard to be updated
     await new Promise((resolve) => setTimeout(resolve, 200));
@@ -227,8 +263,14 @@ export class InlineDomain {
     clipboard.writeText(shortenedUrl);
 
     // paste converted text
-    await keyboard.pressKey(process.platform === 'darwin' ? Key.LeftSuper : Key.LeftControl, Key.V)
-    await keyboard.releaseKey(process.platform === 'darwin' ? Key.LeftSuper : Key.LeftControl, Key.V)
+    await keyboard.pressKey(
+      process.platform === "darwin" ? Key.LeftSuper : Key.LeftControl,
+      Key.V
+    );
+    await keyboard.releaseKey(
+      process.platform === "darwin" ? Key.LeftSuper : Key.LeftControl,
+      Key.V
+    );
 
     // wait for the clipboard to be updated
     await new Promise((resolve) => setTimeout(resolve, 200));
@@ -271,8 +313,14 @@ export class InlineDomain {
       clipboard.writeText(result.toString());
 
       // paste converted text
-      await keyboard.pressKey(process.platform === 'darwin' ? Key.LeftSuper : Key.LeftControl, Key.V)
-      await keyboard.releaseKey(process.platform === 'darwin' ? Key.LeftSuper : Key.LeftControl, Key.V)
+      await keyboard.pressKey(
+        process.platform === "darwin" ? Key.LeftSuper : Key.LeftControl,
+        Key.V
+      );
+      await keyboard.releaseKey(
+        process.platform === "darwin" ? Key.LeftSuper : Key.LeftControl,
+        Key.V
+      );
 
       // wait for the clipboard to be updated
       await new Promise((resolve) => setTimeout(resolve, 200));

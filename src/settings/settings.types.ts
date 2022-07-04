@@ -1,6 +1,6 @@
-import { Currency } from '../services/currencies-convertor/currencies-convertor.types';
-import { Language } from '../services/translator/translator.types';
-import { ErrorStructure } from '../errors/errors.types';
+import { Currency } from "../services/currencies-convertor/currencies-convertor.types";
+import { Language } from "../services/translator/translator.types";
+import { ErrorStructure } from "../errors/errors.types";
 
 export type Settings = {
   shortcuts: ShortcutsSettings;

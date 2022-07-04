@@ -5,13 +5,11 @@ import {
   ipcMain,
   Menu,
   nativeImage,
-  systemPreferences,
   Tray,
 } from "electron";
 import * as path from "path";
 import * as domains from "./domains";
 import { changeSettings, initSettings } from "./settings";
-import { openWebURL } from "./shared/utils/open-website";
 import settings from "./settings";
 import { ShortcutsSettings } from "./settings/settings.types";
 

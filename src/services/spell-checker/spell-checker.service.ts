@@ -1,7 +1,6 @@
-import axios from "axios";
-import ErrorsHandler from "../../errors/errors.module";
-import { axiosInstance } from "../../shared/axios";
-import * as spellCheckerTypes from "./spell-checker.types";
+import ErrorsHandler from '../../errors/errors.module';
+import { axiosInstance } from '../../shared/axios';
+import * as spellCheckerTypes from './spell-checker.types';
 
 export class SpellCheckerService {
   protected errorHandler = new ErrorsHandler();
@@ -12,8 +11,8 @@ export class SpellCheckerService {
         unknown,
         { data: spellCheckerTypes.SpellCheckerResponse }
       >({
-        method: "GET",
-        url: "/spell-check",
+        method: 'GET',
+        url: '/spell-check',
         params: {
           text,
         },
@@ -29,13 +28,15 @@ export class SpellCheckerService {
       }
 
       const typeErrors = response.elements[0].errors;
+      type errorType =
+        spellCheckerTypes.SpellCheckerResponse['elements'][0]['errors'][0];
 
-      typeErrors.forEach((el: any) => {
+      typeErrors.forEach((el: errorType) => {
         text = text.replace(el.word, el.suggestions[0]);
       });
 
-      if (!text || text == "undefined") {
-        return this.handleError(new Error("No text was returned"));
+      if (!text || text == 'undefined') {
+        return this.handleError(new Error('No text was returned'));
       }
 
       return text;
@@ -46,10 +47,10 @@ export class SpellCheckerService {
 
   private handleError(e: any): undefined {
     this.errorHandler.handleError({
-      environment: "Spell checker",
+      environment: 'Spell checker',
       date: new Date(),
       message:
-        "An error occurred while checking the spelling of the text. Note that this feature only works with English.",
+        'An error occurred while checking the spelling of the text. Note that this feature only works with English.',
       trace: e,
     });
 

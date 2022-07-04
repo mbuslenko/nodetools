@@ -1,4 +1,3 @@
-import axios from "axios";
 import ErrorsHandler from "../../errors/errors.module";
 import { axiosInstance } from "../../shared/axios";
 import * as spellCheckerTypes from "./spell-checker.types";
@@ -29,8 +28,10 @@ export class SpellCheckerService {
       }
 
       const typeErrors = response.elements[0].errors;
+      type errorType =
+        spellCheckerTypes.SpellCheckerResponse["elements"][0]["errors"][0];
 
-      typeErrors.forEach((el) => {
+      typeErrors.forEach((el: errorType) => {
         text = text.replace(el.word, el.suggestions[0]);
       });
 

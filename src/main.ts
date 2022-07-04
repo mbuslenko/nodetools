@@ -10,7 +10,6 @@ import {
 import * as path from "path";
 import * as domains from "./domains";
 import { changeSettings, initSettings } from "./settings";
-import { openWebURL } from "./shared/utils/open-website";
 import settings from "./settings";
 import { ShortcutsSettings } from "./settings/settings.types";
 
@@ -90,7 +89,9 @@ app.whenReady().then(() => {
 
 let tray: Tray;
 app.whenReady().then(() => {
-  app.dock.hide();
+  if (process.platform === "darwin") {
+    app.dock.hide();
+  }
 
   const icon = nativeImage.createFromPath(
     path.join(__dirname, "../src/assets/tray-icon.png")
@@ -184,11 +185,6 @@ app.whenReady().then(() => {
       },
     },
     { label: "Separator", type: "separator" },
-    {
-      label: "FAQ",
-      role: "window",
-      click: () => openWebURL("https://google.com"),
-    },
     { label: "Quit", role: "quit", click: () => app.quit() },
   ]);
   tray.setContextMenu(contextMenu);
@@ -205,5 +201,7 @@ export const relaunchApp = () => {
 // for applications and their menu bar to stay active until the user quits
 // explicitly with Cmd + Q.
 app.on("window-all-closed", () => {
-  app.dock.hide();
+  if (process.platform !== "darwin") {
+    app.quit();
+  }
 });

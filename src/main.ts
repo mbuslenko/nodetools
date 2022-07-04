@@ -5,6 +5,7 @@ import {
   ipcMain,
   Menu,
   nativeImage,
+  systemPreferences,
   Tray,
 } from 'electron';
 import * as path from 'path';
@@ -186,11 +187,6 @@ app.whenReady().then(() => {
       },
     },
     { label: 'Separator', type: 'separator' },
-    {
-      label: 'FAQ',
-      role: 'window',
-      click: () => openWebURL('https://google.com'),
-    },
     { label: 'Quit', role: 'quit', click: () => app.quit() },
   ]);
   tray.setContextMenu(contextMenu);

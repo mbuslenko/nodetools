@@ -1,6 +1,6 @@
 {
   "name": "nodetools",
-  "version": "0.0.9",
+  "version": "0.0.10",
   "description": "Personal all-hands assistant.",
   "main": "./dist/main.js",
   "scripts": {

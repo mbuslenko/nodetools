@@ -10,7 +10,7 @@ export type SpellCheckerResponse = {
 };
 
 export type SpellCheckerErrorResponse = {
-    errorMessage: string;
-    errorType: string;
-    stackTrace: string[]
-}
+  errorMessage: string;
+  errorType: string;
+  stackTrace: string[];
+};

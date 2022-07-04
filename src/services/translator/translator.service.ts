@@ -1,8 +1,8 @@
-import axios from 'axios';
-import { URLSearchParams } from 'url';
-import * as types from './translator.types';
-import ErrorsHandler from '../../errors/errors.module';
-import { axiosInstance } from '../../shared/axios';
+import axios from "axios";
+import { URLSearchParams } from "url";
+import * as types from "./translator.types";
+import ErrorsHandler from "../../errors/errors.module";
+import { axiosInstance } from "../../shared/axios";
 
 export class TranslatorService {
   protected errorsHandler = new ErrorsHandler();
@@ -13,8 +13,8 @@ export class TranslatorService {
         any,
         { data: types.TranslateResponse }
       >({
-        method: 'GET',
-        url: '/translate',
+        method: "GET",
+        url: "/translate",
         params: {
           to: options.to,
           text: options.text,
@@ -24,7 +24,7 @@ export class TranslatorService {
       return response.translated_text;
     } catch (e) {
       this.errorsHandler.handleError({
-        environment: 'Translator',
+        environment: "Translator",
         message: `An error occurred while translating the text. Please check that provided text is valid, got ${options.text}`,
         trace: e,
       });

@@ -1,5 +1,5 @@
-import ErrorsHandler from '../../errors/errors.module';
-import { config } from './config';
+import ErrorsHandler from "../../errors/errors.module";
+import { config } from "./config";
 
 export class TransliterationService {
   protected errorsHandler = new ErrorsHandler();
@@ -9,7 +9,7 @@ export class TransliterationService {
       .replace(/(Ю\s|Б\s|Ь\s)/g, (s) => {
         return config.words[s as keyof typeof config.words];
       })
-      .replace(/\s{2,}/g, ' ')
+      .replace(/\s{2,}/g, " ")
       .trim();
 
     return str;
@@ -31,15 +31,15 @@ export class TransliterationService {
 
       let type: string;
       if (cyrillicPattern.test(text)) {
-        type = 'rueng';
+        type = "rueng";
       } else {
-        type = 'engru';
+        type = "engru";
       }
 
       // TODO: refactor to not change config.default
       switch (type) {
-        case 'rueng': {
-          if (process.platform == 'darwin') {
+        case "rueng": {
+          if (process.platform == "darwin") {
             config.default = config.dictionary.macRuEng;
           } else {
             config.default = config.dictionary.winRuEn;
@@ -47,8 +47,8 @@ export class TransliterationService {
 
           break;
         }
-        case 'engru': {
-          if (process.platform == 'darwin') {
+        case "engru": {
+          if (process.platform == "darwin") {
             config.default = this.flip(config.dictionary.macRuEng);
           } else {
             config.default = this.flip(config.dictionary.winRuEn);
@@ -62,7 +62,7 @@ export class TransliterationService {
         }
       }
 
-      let textToArray = text.split('');
+      let textToArray = text.split("");
       const result: any[] = [];
       let obj = config.default as { [key: string]: any };
 
@@ -75,13 +75,13 @@ export class TransliterationService {
       });
 
       if (normalize) {
-        return this.normalize(result.join(''));
+        return this.normalize(result.join(""));
       } else {
-        return result.join('');
+        return result.join("");
       }
     } catch (e) {
       this.errorsHandler.handleError({
-        environment: 'Transliteration',
+        environment: "Transliteration",
         message: `An error occurred while transliterating the text, got ${text}`,
         trace: e,
       });

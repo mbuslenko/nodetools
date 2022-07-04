@@ -38,9 +38,9 @@
     </table>
 
     <script>
-      const packageJson = require('./package.json');
+      const packageJson = require("./package.json");
 
-      window.addEventListener('DOMContentLoaded', () => {
+      window.addEventListener("DOMContentLoaded", () => {
         const replaceText = (selector, text) => {
           const element = document.getElementById(selector);
           if (element) {
@@ -48,15 +48,15 @@
           }
         };
 
-        for (const type of ['app-version']) {
+        for (const type of ["app-version"]) {
           replaceText(`${type}`, packageJson.version);
         }
 
-        const { ipcRenderer } = require('electron');
-        ipcRenderer.invoke('get-errors').then((result) => {
-          localStorage.setItem('errors', JSON.stringify(result));
+        const { ipcRenderer } = require("electron");
+        ipcRenderer.invoke("get-errors").then((result) => {
+          localStorage.setItem("errors", JSON.stringify(result));
 
-          var table = document.getElementById('errors-table');
+          var table = document.getElementById("errors-table");
 
           result.forEach((el) => {
             row = table.insertRow(-1);

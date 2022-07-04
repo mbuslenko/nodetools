@@ -1,17 +1,17 @@
-import { clipboard } from 'electron';
+import { clipboard } from "electron";
 import {
   translator,
   trasnliterator,
   currencyConvertor,
   spellChecker,
   urlShortener,
-} from '../../services';
-import { ConvertOptions } from '../../services/currencies-convertor/currencies-convertor.types';
-import { utils } from '../../shared';
-import * as types from './inline.types';
-import settings from '../../settings';
-import ErrorsHandler from '../../errors/errors.module';
-import { Key, keyboard } from '@nut-tree/nut-js';
+} from "../../services";
+import { ConvertOptions } from "../../services/currencies-convertor/currencies-convertor.types";
+import { utils } from "../../shared";
+import * as types from "./inline.types";
+import settings from "../../settings";
+import ErrorsHandler from "../../errors/errors.module";
+import { Key, keyboard } from "@nut-tree/nut-js";
 
 export class InlineDomain {
   protected readonly translatorService: translator.TranslatorService;
@@ -41,7 +41,7 @@ export class InlineDomain {
 
     await keyboard.pressKey(process.platform === 'darwin' ? Key.LeftSuper : Key.LeftControl, Key.C)
     await keyboard.releaseKey(process.platform === 'darwin' ? Key.LeftSuper : Key.LeftControl, Key.C)
-
+    
     await new Promise((resolve) => setTimeout(resolve, 200)); // add a delay before checking clipboard
     const selectedText = clipboard.readText();
 
@@ -54,7 +54,7 @@ export class InlineDomain {
    */
   async translateText(): Promise<void> {
     const options: types.TranslateOptions = settings.get(
-      'translate'
+      "translate"
     ) as types.TranslateOptions;
 
     // save current clipboard contents
@@ -113,9 +113,9 @@ export class InlineDomain {
    * the converted text
    */
   async convertCurrency(): Promise<void> {
-    const options: Omit<ConvertOptions, 'amount'> = settings.get(
-      'convertCurrencies'
-    ) as Omit<ConvertOptions, 'amount'>;
+    const options: Omit<ConvertOptions, "amount"> = settings.get(
+      "convertCurrencies"
+    ) as Omit<ConvertOptions, "amount">;
 
     // save current clipboard contents
     const previousClipboardText = clipboard.readText();
@@ -126,7 +126,7 @@ export class InlineDomain {
       this.errorsHandler.handleError({
         message:
           'Please specify only numeric characters and ".", convertion was failed',
-        environment: 'Currencies convertor',
+        environment: "Currencies convertor",
         trace: null,
         date: new Date(),
       });
@@ -249,11 +249,11 @@ export class InlineDomain {
     const selectedText = await this.getSelectedText();
 
     // remove from text all non-numeric characters except *,/,+,-,.
-    const cleanedText = selectedText.replace(/[^-()\d/*+.]/g, '');
+    const cleanedText = selectedText.replace(/[^-()\d/*+.]/g, "");
     if (cleanedText.length === 0) {
       return this.errorsHandler.handleError({
-        message: 'No numeric characters found',
-        environment: 'Calculator',
+        message: "No numeric characters found",
+        environment: "Calculator",
         date: new Date(),
         trace: null,
       });

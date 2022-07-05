@@ -6,13 +6,13 @@ Personal all-hands assistant for MacOS, Windows 10+, Ubuntu, Debian and many mor
 
 ## Features
 
-- Inline translator
-- Inline transliterator
-- Inline text humanizer
-- Inline spell fixer
-- Inline calculator
-- Inline URL shortener
-- Inline currencies convertor
+- [Inline translator](###-inline-translator)
+- [Inline transliterator](###-inline-transliterator)
+- [Inline text humanizer](###-inline-text-humanizer)
+- [Inline spell fixer](###-inline-spell-fixer)
+- [Inline calculator](###-inline-calculator)
+- [Inline URL shortener](###-inline-url-shortener)
+- [Inline currencies convertor](###-inline-currencies-convertor)
 
 ## Installation
 

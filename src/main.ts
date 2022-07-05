@@ -12,6 +12,7 @@ import * as domains from "./domains";
 import { changeSettings, initSettings } from "./settings";
 import settings from "./settings";
 import { ShortcutsSettings } from "./settings/settings.types";
+import { openWebURL } from './shared/utils/open-website';
 
 require("update-electron-app")({
   repo: "mbuslenko/nodetools",
@@ -102,6 +103,11 @@ app.whenReady().then(() => {
   const InlineDomain = new domains.inline.InlineDomain();
 
   const contextMenu = Menu.buildFromTemplate([
+    {
+      label: "About",
+      role: "about",
+      click: () => openWebURL('https://nodetools.app/about'),
+    },
     {
       label: "Preferences",
       submenu: [

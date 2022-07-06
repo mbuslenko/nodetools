@@ -65,6 +65,12 @@
       .five {
         margin-bottom: 5vh;
       }
+
+      .submit-button {
+        display: flex;
+        justify-content: center;
+        margin-top: 7vh;
+      }
     </style>
     <link
       href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css"
@@ -105,8 +111,17 @@
         class="form-select bg-black text-white"
         id="translate-to"
         aria-label="English"
-        onChange="changeLanguage()"
       ></select>
+
+      <div class="submit-button">
+        <button
+          type="button"
+          class="btn btn-light"
+          onclick="changeLanguage()"
+        >
+          Submit
+        </button>
+      </div>
     </div>
 
     <div class="footer text-white-50">
@@ -118,7 +133,6 @@
 
     <script>
       window.onkeydown = (e) => {
-        console.log(e.keyCode);
         if (e.keyCode === 27) {
           window.close();
 
@@ -267,37 +281,44 @@
         Yoruba: 'yo',
       };
 
+      const { ipcRenderer } = require('electron');
+
       // needed in the renderer process.
       const languages = Object.entries(Language);
 
       const selector = [];
-      languages.forEach(([key, value]) => {
-        selector.push({
-          text: key,
-          value,
-          ...(value === 'en' ? { selected: true } : undefined),
+
+      ipcRenderer.invoke('get-settings').then((result) => {
+        const selectedLanguage = result.translate.to;
+
+        languages.forEach(([key, value]) => {
+          selector.push({
+            text: key,
+            value,
+            ...(value === selectedLanguage ? { selected: true } : undefined),
+          });
         });
+
+        const selectorBox = document.getElementById('translate-to');
+
+        for (const o of selector) {
+          const { text, value, selected } = o;
+
+          const option = document.createElement('option');
+          option.innerText = text;
+          option.value = value;
+          option.selected = selected ?? false;
+
+          selectorBox.append(option);
+        }
       });
 
-      const selectorBox = document.getElementById('translate-to');
-
-      for (const o of selector) {
-        const { text, value, selected } = o;
-
-        const option = document.createElement('option');
-        option.innerText = text;
-        option.value = value;
-        option.selected = selected ?? false;
-
-        selectorBox.append(option);
-      }
-
       function changeLanguage() {
-        const { ipcRenderer } = require("electron");
+        const { ipcRenderer } = require('electron');
 
-        const selectedLanguage = document.getElementById("translate-to").value
-        
-        ipcRenderer.send("change-language", { to: selectedLanguage });
+        const selectedLanguage = document.getElementById('translate-to').value;
+
+        ipcRenderer.send('change-language', { to: selectedLanguage });
       }
     </script>
     <script

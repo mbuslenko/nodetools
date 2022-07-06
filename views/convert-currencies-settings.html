@@ -146,7 +146,6 @@
 
     <script>
       window.onkeydown = (e) => {
-        console.log(e.keyCode);
         if (e.keyCode === 27) {
           window.close();
 
@@ -349,41 +348,48 @@
         });
       });
 
-      const currencyFromBox = document.getElementById('currency-from');
+      const { ipcRenderer } = require('electron');
 
-      for (const o of selector) {
-        const { text, value, selected } = o;
+      ipcRenderer.invoke('get-settings').then((result) => {
+        const currencyFrom = result.convertCurrencies.from;
+        const currencyTo = result.convertCurrencies.to;
 
-        const option = document.createElement('option');
-        option.innerText = text;
-        option.value = value;
+        const currencyFromBox = document.getElementById('currency-from');
 
-        if (value === 'UAH') {
+        for (const o of selector) {
+          const { text, value, selected } = o;
+
+          const option = document.createElement('option');
+          option.innerText = text;
+          option.value = value;
+
+          if (value === currencyFrom) {
             option.selected = true;
-        } else {
+          } else {
             option.selected = false;
+          }
+
+          currencyFromBox.append(option);
         }
 
-        currencyFromBox.append(option);
-      }
+        const currencyToBox = document.getElementById('currency-to');
 
-      const currencyToBox = document.getElementById('currency-to');
+        for (const o of selector) {
+          const { text, value, selected } = o;
 
-      for (const o of selector) {
-        const { text, value, selected } = o;
+          const option = document.createElement('option');
+          option.innerText = text;
+          option.value = value;
 
-        const option = document.createElement('option');
-        option.innerText = text;
-        option.value = value;
-
-        if (value === 'USD') {
+          if (value === currencyTo) {
             option.selected = true;
-        } else {
+          } else {
             option.selected = false;
-        }
+          }
 
-        currencyToBox.append(option);
-      }
+          currencyToBox.append(option);
+        }
+      });
 
       function changeConvertCurrenciesSettings() {
         const { ipcRenderer } = require('electron');

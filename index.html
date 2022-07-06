@@ -55,8 +55,6 @@
       const { ipcRenderer } = require("electron");
 
       ipcRenderer.on("handle-error", (event, error) => {
-        console.error(error);
-
         const previousErrors = window.localStorage.getItem("errors") ?? [];
         const newErrors = previousErrors.push(error);
 

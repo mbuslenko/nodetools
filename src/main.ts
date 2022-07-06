@@ -41,37 +41,45 @@ function createWindow(pathToHtmlFile: string) {
 }
 
 ipcMain.on('change-settings', (event, arg) => {
-  console.log('Settings was changed', JSON.stringify(arg));
-
   changeSettings(arg.data);
 });
 
 ipcMain.on('change-language', (event, arg) => {
-  console.log('Translate option was changed', JSON.stringify(arg));
   if (process.platform === 'darwin') {
     app.dock.hide();
+  }
+
+  if (!arg.to) {
+    return;
   }
 
   changeSetting('translate', arg);
-})
+});
 
 ipcMain.on('change-convert-currencies-settings', (event, arg) => {
-  console.log('Currencies convert options was changed', JSON.stringify(arg));
   if (process.platform === 'darwin') {
     app.dock.hide();
   }
 
+  if (!arg.from || !arg.to) {
+    return;
+  }
+
   changeSetting('convertCurrencies', arg);
-})
+});
 
 ipcMain.on('close-window', (event, arg) => {
   if (process.platform === 'darwin') {
     app.dock.hide();
   }
-})
+});
 
 ipcMain.handle('get-errors', (event, arg) => {
   return settings.get('errorsStorage');
+});
+
+ipcMain.handle('get-settings', (event, arg) => {
+  return settings.store;
 });
 
 app.whenReady().then(() => {
@@ -95,7 +103,8 @@ app.whenReady().then(() => {
 
     if (getAuthStatus('accessibility') === 'denied') {
       errorsHandler.handleError({
-        message: 'You have to grant Accessibility permission for Nodetools to work it correctly, open Settings -> Security & Privacy -> Privacy tab -> Accessibility -> Add Nodetools',
+        message:
+          'You have to grant Accessibility permission for Nodetools to work it correctly, open Settings -> Security & Privacy -> Privacy tab -> Accessibility -> Add Nodetools',
         environment: 'Nodetools',
         trace: null,
       });
@@ -174,7 +183,8 @@ app.whenReady().then(() => {
         {
           label: 'Currency converter options',
           role: 'window',
-          click: () => createWindow('../views/convert-currencies-settings.html'),
+          click: () =>
+            createWindow('../views/convert-currencies-settings.html'),
         },
         {
           label: 'Errors',

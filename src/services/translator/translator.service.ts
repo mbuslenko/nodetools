@@ -13,9 +13,9 @@ export class TranslatorService {
         any,
         { data: types.TranslateResponse }
       >({
-        method: "GET",
+        method: "POST",
         url: "/translate",
-        params: {
+        data: {
           to: options.to,
           text: options.text,
         },

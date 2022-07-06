@@ -127,9 +127,12 @@
         console.log(e.keyCode);
         if (e.keyCode === 27) {
           window.close();
+
+          const { ipcRenderer } = require('electron');
+          ipcRenderer.send('close-window');
         }
       };
-      
+
       window.addEventListener('DOMContentLoaded', () => {
         const { ipcRenderer } = require('electron');
 
@@ -139,7 +142,7 @@
           var table = document.getElementById('errors-table');
 
           if (result.length === 0) {
-            return document.getElementById('table').style.display = 'none';
+            return (document.getElementById('table').style.display = 'none');
           } else if (result.length > 6) {
             result = result.slice(-6);
           }

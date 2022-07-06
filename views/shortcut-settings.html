@@ -72,7 +72,21 @@
         gap: 5px;
       }
 
-      
+      .shortcuts {
+        display: flex;
+        justify-content: space-between;
+        margin-left: 20vh;
+        margin-right: 20vh;
+      }
+
+      .column {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        width: 50%;
+      }
+
       .hotkey-btn {
         display: inline-block;
         padding: 4px;
@@ -94,7 +108,7 @@
 
       .hotkey:hover {
         cursor: pointer;
-        background-color: #1E1E1E;
+        background-color: #1e1e1e;
       }
 
       .button-wrapper {
@@ -116,6 +130,17 @@
 
       .is-hidden {
         visibility: hidden;
+      }
+
+      .last-shortcut {
+        display: flex;
+        justify-content: center;
+      }
+
+      .submit-button {
+        display: flex;
+        justify-content: center;
+        margin-top: 7vh;
       }
     </style>
     <link
@@ -152,27 +177,101 @@
     <div class="bodyClass text-white">
       <h3 class="five">Shortcuts</h3>
 
-      <div class="shortcut-row">
-        <p>Translate text</p>
-        <div class="button-wrapper">
-          <div class="hotkey translate-shortcut"></div>
-          <div class="input-label is-hidden">
-            <div class="new-hotkey"></div>
-            <button class="save-hotkey-btn">Save</button>
+      <div class="shortcuts">
+        <div class="column">
+          <div class="shortcut-row">
+            <p>Translate text</p>
+            <div class="button-wrapper">
+              <div class="hotkey translate-shortcut"></div>
+              <div class="input-label is-hidden">
+                <div class="new-hotkey"></div>
+                <button class="save-hotkey-btn">Save</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="shortcut-row">
+            <p>Humanize text</p>
+            <div class="button-wrapper">
+              <div class="hotkey humanize-shortcut"></div>
+              <div class="input-label is-hidden">
+                <div class="new-hotkey"></div>
+                <button class="save-hotkey-btn">Save</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="shortcut-row">
+            <p>Calculate</p>
+            <div class="button-wrapper">
+              <div class="hotkey calculate-shortcut"></div>
+              <div class="input-label is-hidden">
+                <div class="new-hotkey"></div>
+                <button class="save-hotkey-btn">Save</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="column">
+          <div class="shortcut-row">
+            <p>Translate text</p>
+            <div class="button-wrapper">
+              <div class="hotkey transliterate-shortcut"></div>
+              <div class="input-label is-hidden">
+                <div class="new-hotkey"></div>
+                <button class="save-hotkey-btn">Save</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="shortcut-row">
+            <p>Fix spelling</p>
+            <div class="button-wrapper">
+              <div class="hotkey spellfix-shortcut"></div>
+              <div class="input-label is-hidden">
+                <div class="new-hotkey"></div>
+                <button class="save-hotkey-btn">Save</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="shortcut-row">
+            <p>Convert currencies</p>
+            <div class="button-wrapper">
+              <div class="hotkey convertcurrencies-shortcut"></div>
+              <div class="input-label is-hidden">
+                <div class="new-hotkey"></div>
+                <button class="save-hotkey-btn">Save</button>
+              </div>
+            </div>
           </div>
         </div>
       </div>
 
-      <div class="shortcut-row">
-        <p>Transliterate text</p>
-        <div class="button-wrapper">
-          <div class="hotkey transliterate-shortcut"></div>
-          <div class="input-label is-hidden">
-            <div class="new-hotkey"></div>
-            <button class="save-hotkey-btn">Save</button>
+      <div class="last-shortcut">
+        <div class="shortcut-row">
+          <p>Shorten URL</p>
+          <div class="button-wrapper">
+            <div class="hotkey shortenurl-shortcut"></div>
+            <div class="input-label is-hidden">
+              <div class="new-hotkey"></div>
+              <button class="save-hotkey-btn">Save</button>
+            </div>
           </div>
         </div>
       </div>
+
+      <div class="submit-button">
+        <button
+          type="button"
+          class="btn btn-light"
+          onclick="changeConvertCurrenciesSettings()"
+        >
+          Submit
+        </button>
+      </div>
+    </div>
 
     <div class="footer text-white-50">
       <p>
@@ -186,23 +285,58 @@
         console.log(e.keyCode);
         if (e.keyCode === 27) {
           window.close();
+
+          const { ipcRenderer } = require('electron');
+          ipcRenderer.send('close-window');
         }
       };
-      
+
       const translateHotKeyDom = document.querySelector('.translate-shortcut');
-        const transliterateHotKeyDom = document.querySelector('.transliterate-shortcut');
+      const transliterateHotKeyDom = document.querySelector(
+        '.transliterate-shortcut'
+      );
+      const humanizeHotKeyDom = document.querySelector('.humanize-shortcut');
+      const spellfixHotKeyDom = document.querySelector('.spellfix-shortcut');
+      const calculateHotKeyDom = document.querySelector('.calculate-shortcut');
+      const convertCurrenciesHotKeyDom = document.querySelector(
+        '.convertcurrencies-shortcut'
+      );
+      const shortenUrlHotKeyDom = document.querySelector(
+        '.shortenurl-shortcut'
+      );
+
       const newHotkeyDom = document.querySelector('.new-hotkey');
       const inputLabel = document.querySelector('.input-label');
 
       // for preview
       const pKey = document.createElement('span');
-      const pKey2 = document.createElement('span')
+      const pKey2 = document.createElement('span');
+      const pKey3 = document.createElement('span');
+      const pKey4 = document.createElement('span');
+      const pKey5 = document.createElement('span');
+      const pKey6 = document.createElement('span');
+      const pKey7 = document.createElement('span');
       pKey2.textContent = 'Z';
       pKey.textContent = 'P';
-      pKey2.className = 'hotkey-btn'
+      pKey3.textContent = 'C';
+      pKey4.textContent = 'X';
+      pKey5.textContent = 'V';
+      pKey6.textContent = 'K';
+      pKey7.textContent = 'L';
+      pKey2.className = 'hotkey-btn';
       pKey.className = 'hotkey-btn';
+      pKey3.className = 'hotkey-btn';
+      pKey4.className = 'hotkey-btn';
+      pKey5.className = 'hotkey-btn';
+      pKey6.className = 'hotkey-btn';
+      pKey7.className = 'hotkey-btn';
       translateHotKeyDom.append(pKey);
       transliterateHotKeyDom.append(pKey2);
+      humanizeHotKeyDom.append(pKey3);
+      spellfixHotKeyDom.append(pKey4);
+      calculateHotKeyDom.append(pKey5);
+      convertCurrenciesHotKeyDom.append(pKey6);
+      shortenUrlHotKeyDom.append(pKey7);
 
       let newHotkey = [];
       const codeToKey = new Map([

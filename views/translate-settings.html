@@ -121,6 +121,9 @@
         console.log(e.keyCode);
         if (e.keyCode === 27) {
           window.close();
+
+          const { ipcRenderer } = require('electron');
+          ipcRenderer.send('close-window');
         }
       };
 

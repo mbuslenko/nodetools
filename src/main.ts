@@ -64,6 +64,12 @@ ipcMain.on('change-convert-currencies-settings', (event, arg) => {
   changeSetting('convertCurrencies', arg);
 })
 
+ipcMain.on('close-window', (event, arg) => {
+  if (process.platform === 'darwin') {
+    app.dock.hide();
+  }
+})
+
 ipcMain.handle('get-errors', (event, arg) => {
   return settings.get('errorsStorage');
 });

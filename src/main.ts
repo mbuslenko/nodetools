@@ -9,7 +9,7 @@ import {
 } from 'electron';
 import * as path from 'path';
 import * as domains from './domains';
-import { changeSettings, initSettings } from './settings';
+import { changeSetting, changeSettings, initSettings } from './settings';
 import settings from './settings';
 import { ShortcutsSettings } from './settings/settings.types';
 import { openWebURL } from './shared/utils/open-website';
@@ -24,6 +24,7 @@ function createWindow(pathToHtmlFile: string) {
   // Create the browser window.
   const mainWindow = new BrowserWindow({
     height: 600,
+    frame: false,
     webPreferences: {
       nodeIntegration: true,
       contextIsolation: false,
@@ -44,6 +45,24 @@ ipcMain.on('change-settings', (event, arg) => {
 
   changeSettings(arg.data);
 });
+
+ipcMain.on('change-language', (event, arg) => {
+  console.log('Translate option was changed', JSON.stringify(arg));
+  if (process.platform === 'darwin') {
+    app.dock.hide();
+  }
+
+  changeSetting('translate', arg);
+})
+
+ipcMain.on('change-convert-currencies-settings', (event, arg) => {
+  console.log('Currencies convert options was changed', JSON.stringify(arg));
+  if (process.platform === 'darwin') {
+    app.dock.hide();
+  }
+
+  changeSetting('convertCurrencies', arg);
+})
 
 ipcMain.handle('get-errors', (event, arg) => {
   return settings.get('errorsStorage');
@@ -130,7 +149,7 @@ app.whenReady().then(() => {
   const contextMenu = Menu.buildFromTemplate([
     {
       label: 'About',
-      role: 'about',
+      role: 'window',
       click: () => openWebURL('https://nodetools.app/about'),
     },
     {
@@ -139,22 +158,22 @@ app.whenReady().then(() => {
         {
           label: 'Shortcuts',
           role: 'window',
-          click: () => createWindow('../index.html'),
+          click: () => createWindow('../views/shortcut-settings.html'),
         },
         {
           label: 'Translate options',
           role: 'window',
-          click: () => createWindow('../index.html'),
+          click: () => createWindow('../views/translate-settings.html'),
         },
         {
           label: 'Currency converter options',
           role: 'window',
-          click: () => createWindow('../index.html'),
+          click: () => createWindow('../views/convert-currencies-settings.html'),
         },
         {
           label: 'Errors',
           role: 'window',
-          click: () => createWindow('../errors-list.html'),
+          click: () => createWindow('../views/errors-list.html'),
         },
       ],
     },

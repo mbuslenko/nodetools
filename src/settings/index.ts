@@ -54,6 +54,10 @@ export const changeSettings = (newSettings: Settings) => {
   }
 };
 
+export const changeSetting = (key: string, value: any) => {
+  settings.set(key, value);
+}
+
 export const addErrorToStorage = (error: ErrorStructure) => {
   const errors = settings.get("errorsStorage") as ErrorStructure[];
   errors.push(error);

@@ -133,6 +133,7 @@
         display: flex;
         justify-content: center;
         margin-top: 7vh;
+        z-index: 1;
       }
 
       .shortcut-wrapper p {
@@ -356,7 +357,7 @@
             !newShortcut.includes('Shift')
           ) {
             console.log(newShortcut);
-            return alert('You have to press Control');
+            return alert('You have to press Control/Shift/Meta');
           }
 
           if (newShortcut.length > 3) {
@@ -364,7 +365,6 @@
           }
 
           if (newShortcut.length > 0) {
-            console.log(newShortcut);
             onShortcutUpdate(newShortcut);
             shortcutDom.replaceChildren(
               ...newShortcut.map((key) => createShortcutKeyDom(key))

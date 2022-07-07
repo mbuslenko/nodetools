@@ -13,8 +13,9 @@ import { changeSetting, changeSettings, initSettings } from './settings';
 import settings from './settings';
 import { ShortcutsSettings } from './settings/settings.types';
 import { openWebURL } from './shared/utils/open-website';
-import { askForAccessibilityAccess, getAuthStatus } from 'node-mac-permissions';
 import ErrorsHandler from './errors/errors.module';
+
+// import { askForAccessibilityAccess, getAuthStatus } from 'node-mac-permissions';
 
 require('update-electron-app')({
   repo: 'mbuslenko/nodetools',
@@ -110,29 +111,30 @@ app.whenReady().then(() => {
   const shortcuts = settings.get('shortcuts') as ShortcutsSettings;
   const InlineDomain = new domains.inline.InlineDomain();
 
-  if (getAuthStatus('accessibility') === 'denied') {
-    const errorsHandler = new ErrorsHandler();
+  // * Disabled for Windows and Linux
+  // if (getAuthStatus('accessibility') === 'denied') {
+  //   const errorsHandler = new ErrorsHandler();
 
-    //@ts-ignore
-    askForAccessibilityAccess().then((status: string) => {
-      if (status === 'denied') {
-        errorsHandler.handleError({
-          message: 'Accessibility access is denied',
-          environment: 'Nodetools',
-          trace: null,
-        });
-      }
-    });
+  //   //@ts-ignore
+  //   askForAccessibilityAccess().then((status: string) => {
+  //     if (status === 'denied') {
+  //       errorsHandler.handleError({
+  //         message: 'Accessibility access is denied',
+  //         environment: 'Nodetools',
+  //         trace: null,
+  //       });
+  //     }
+  //   });
 
-    if (getAuthStatus('accessibility') === 'denied') {
-      errorsHandler.handleError({
-        message:
-          'You have to grant Accessibility permission for Nodetools to work it correctly, open Settings -> Security & Privacy -> Privacy tab -> Accessibility -> Add Nodetools',
-        environment: 'Nodetools',
-        trace: null,
-      });
-    }
-  }
+  //   if (getAuthStatus('accessibility') === 'denied') {
+  //     errorsHandler.handleError({
+  //       message:
+  //         'You have to grant Accessibility permission for Nodetools to work it correctly, open Settings -> Security & Privacy -> Privacy tab -> Accessibility -> Add Nodetools',
+  //       environment: 'Nodetools',
+  //       trace: null,
+  //     });
+  //   }
+  // }
 
   // * translate shortcut
   globalShortcut.register(shortcuts.translate.join('+'), async () => {

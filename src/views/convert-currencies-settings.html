@@ -66,6 +66,10 @@
         margin-bottom: 5vh;
       }
 
+      .second-item {
+        margin-top: 5vh;
+      }
+
       .submit-button {
         display: flex;
         justify-content: center;
@@ -99,17 +103,26 @@
         />
       </svg>
       <a href="https://nodetools.app" style="text-decoration: none">
-        <p class="strong blue">Prealpha version</p>
+        <p class="strong blue">Alpha version</p>
       </a>
     </div>
 
     <div class="bodyClass text-white">
-      <h3 class="five">Translate options</h3>
+      <h3 class="five">Convert currencies options</h3>
 
-      <p>Select the language in which the text will be translated</p>
+      <p>Currency <span class="strong">from</span> which convert</p>
       <select
         class="form-select bg-black text-white"
-        id="translate-to"
+        id="currency-from"
+        aria-label="English"
+      ></select>
+
+      <p class="second-item">
+        Currency <span class="strong">to</span> which convert
+      </p>
+      <select
+        class="form-select bg-black text-white"
+        id="currency-to"
         aria-label="English"
       ></select>
 
@@ -117,7 +130,7 @@
         <button
           type="button"
           class="btn btn-light"
-          onclick="changeLanguage()"
+          onclick="changeConvertCurrenciesSettings()"
         >
           Submit
         </button>
@@ -141,165 +154,207 @@
         }
       };
 
-      const Language = {
-        Afrikaans: 'af',
-        Amharic: 'am',
-        Arabic: 'ar',
-        Aragonese: 'an',
-        Armenian: 'hy',
-        Avaric: 'av',
-        Avestan: 'ae',
-        Azerbaijani: 'az',
-        Basque: 'eu',
-        Belarusian: 'be',
-        Bengali: 'bn',
-        Bosnian: 'bs',
-        Bulgarian: 'bg',
-        Burmese: 'my',
-        Catalan: 'ca',
-        Chamorro: 'ch',
-        Chechen: 'ce',
-        Chichewa: 'ny',
-        Chinese: 'zh',
-        Chuvash: 'cv',
-        Cornish: 'kw',
-        Corsican: 'co',
-        Cree: 'cr',
-        Croatian: 'hr',
-        Czech: 'cs',
-        Danish: 'da',
-        Dutch: 'nl',
-        English: 'en',
-        Esperanto: 'eo',
-        Estonian: 'et',
-        Finnish: 'fi',
-        French: 'fr',
-        Fula: 'ff',
-        Galician: 'gl',
-        Georgian: 'ka',
-        German: 'de',
-        Greek: 'el',
-        Gujarati: 'gu',
-        Haitian: 'ht',
-        Hausa: 'ha',
-        Hebrew: 'he',
-        Herero: 'hz',
-        Hindi: 'hi',
-        'Hiri Motu': 'ho',
-        Hungarian: 'hu',
-        Icelandic: 'is',
-        Ido: 'io',
-        Igbo: 'ig',
-        Indonesian: 'id',
-        Irish: 'ga',
-        Italian: 'it',
-        Japanese: 'ja',
-        Javanese: 'jv',
-        Kannada: 'kn',
-        Kanuri: 'kr',
-        Kazakh: 'kk',
-        Khmer: 'km',
-        Kikuyu: 'ki',
-        Kinyarwanda: 'rw',
-        Komi: 'kv',
-        Kongo: 'kg',
-        Korean: 'ko',
-        Kurdish: 'ku',
-        Kwanyama: 'kj',
-        Kyrgyz: 'ky',
-        Lao: 'lo',
-        Latin: 'la',
-        Latvian: 'lv',
-        Limburgish: 'li',
-        Lithuanian: 'lt',
-        'Luba-Katanga': 'lu',
-        Luxembourgish: 'lb',
-        Macedonian: 'mk',
-        Malagasy: 'mg',
-        Malay: 'ms',
-        Malayalam: 'ml',
-        Maltese: 'mt',
-        Marathi: 'mr',
-        Marshallese: 'mh',
-        Mongolian: 'mn',
-        Māori: 'mi',
-        Navajo: 'nv',
-        Ndonga: 'ng',
-        Nepali: 'ne',
-        'Northern Ndebele': 'nd',
-        'Northern Sami': 'se',
-        Norwegian: 'no',
-        'Norwegian Bokmål': 'nb',
-        'Norwegian Nynorsk': 'nn',
-        Nuosu: 'ii',
-        Ojibwe: 'oj',
-        'Old Church Slavonic': 'cu',
-        Oriya: 'or',
-        Panjabi: 'pa',
-        Pashto: 'ps',
-        Persian: 'fa',
-        Polish: 'pl',
-        Portuguese: 'pt',
-        Pāli: 'pi',
-        Romanian: 'ro',
-        Russian: 'ru',
-        Samoan: 'sm',
-        Sardinian: 'sc',
-        'Scottish Gaelic': 'gd',
-        Serbian: 'sr',
-        Shona: 'sn',
-        Sindhi: 'sd',
-        Sinhala: 'si',
-        Slovak: 'sk',
-        Slovene: 'sl',
-        Somali: 'so',
-        'Southern Ndebele': 'nr',
-        'Southern Sotho': 'st',
-        Spanish: 'es',
-        Sundanese: 'su',
-        Swahili: 'sw',
-        Swedish: 'sv',
-        Tagalog: 'tl',
-        Tahitian: 'ty',
-        Tajik: 'tg',
-        Tamil: 'ta',
-        Tatar: 'tt',
-        Telugu: 'te',
-        Thai: 'th',
-        Turkish: 'tr',
-        Turkmen: 'tk',
-        Ukrainian: 'uk',
-        Urdu: 'ur',
-        Uyghur: 'ug',
-        Uzbek: 'uz',
-        Vietnamese: 'vi',
-        Walloon: 'wa',
-        Welsh: 'cy',
-        'Western Frisian': 'fy',
-        Xhosa: 'xh',
-        Yiddish: 'yi',
-        Yoruba: 'yo',
+      const Currency = {
+        'US Dollar': 'USD',
+        Euro: 'EUR',
+        'British Pound': 'GBP',
+        'Canadian Dollar': 'CAD',
+        'Australian Dollar': 'AUD',
+        'Japanese Yen': 'JPY',
+        Cardano: 'ADA',
+        'Emirati Dirham': 'AED',
+        'Afghan Afghani': 'AFN',
+        'Albanian Lek': 'ALL',
+        'Armenian Dram': 'AMD',
+        'Dutch Guilder': 'ANG',
+        'Angolan Kwanza': 'AOA',
+        'Argentine Peso': 'ARS',
+        'Aruban or Dutch Guilder': 'AWG',
+        'Azerbaijan Manat': 'AZN',
+        'Bosnian Convertible Mark': 'BAM',
+        'Barbadian or Bajan Dollar': 'BBD',
+        'Bitcoin Cash': 'BCH',
+        'Bangladeshi Taka': 'BDT',
+        'Bulgarian Lev': 'BGN',
+        'Bahraini Dinar': 'BHD',
+        'Burundian Franc': 'BIF',
+        'Bermudian Dollar': 'BMD',
+        'Bruneian Dollar': 'BND',
+        'Bolivian Bolíviano': 'BOB',
+        'Brazilian Real': 'BRL',
+        'Bahamian Dollar': 'BSD',
+        Bitcoin: 'BTC',
+        'Bhutanese Ngultrum': 'BTN',
+        'Botswana Pula': 'BWP',
+        'Belarusian Ruble': 'BYR',
+        'Belizean Dollar': 'BZD',
+        'Congolese Franc': 'CDF',
+        'Swiss Franc': 'CHF',
+        'Chilean Peso': 'CLP',
+        'Chinese Yuan Renminbi': 'CNY',
+        'Colombian Peso': 'COP',
+        'Costa Rican Colon': 'CRC',
+        'Cuban Convertible Peso': 'CUC',
+        'Cuban Peso': 'CUP',
+        'Cape Verdean Escudo': 'CVE',
+        'Czech Koruna': 'CZK',
+        'Djiboutian Franc': 'DJF',
+        'Danish Krone': 'DKK',
+        Dogecoin: 'DOGE',
+        'Dominican Peso': 'DOP',
+        Polkadot: 'DOT',
+        'Algerian Dinar': 'DZD',
+        'Estonian Kroon': 'EEK',
+        'Egyptian Pound': 'EGP',
+        'Eritrean Nakfa': 'ERN',
+        'Ethiopian Birr': 'ETB',
+        Ethereum: 'ETH',
+        'Fijian Dollar': 'FJD',
+        'Falkland Island Pound': 'FKP',
+        'Georgian Lari': 'GEL',
+        'Guernsey Pound': 'GGP',
+        'Ghanaian Cedi': 'GHS',
+        'Gibraltar Pound': 'GIP',
+        'Gambian Dalasi': 'GMD',
+        'Guinean Franc': 'GNF',
+        'Guatemalan Quetzal': 'GTQ',
+        'Guyanese Dollar': 'GYD',
+        'Hong Kong Dollar': 'HKD',
+        'Honduran Lempira': 'HNL',
+        'Croatian Kuna': 'HRK',
+        'Haitian Gourde': 'HTG',
+        'Hungarian Forint': 'HUF',
+        'Indonesian Rupiah': 'IDR',
+        'Israeli Shekel': 'ILS',
+        'Isle of Man Pound': 'IMP',
+        'Indian Rupee': 'INR',
+        'Iraqi Dinar': 'IQD',
+        'Iranian Rial': 'IRR',
+        'Icelandic Krona': 'ISK',
+        'Jersey Pound': 'JEP',
+        'Jamaican Dollar': 'JMD',
+        'Jordanian Dinar': 'JOD',
+        'Kenyan Shilling': 'KES',
+        'Kyrgyzstani Som': 'KGS',
+        'Cambodian Riel': 'KHR',
+        'Comorian Franc': 'KMF',
+        'North Korean Won': 'KPW',
+        'South Korean Won': 'KRW',
+        'Kuwaiti Dinar': 'KWD',
+        'Caymanian Dollar': 'KYD',
+        'Kazakhstani Tenge': 'KZT',
+        'Lao Kip': 'LAK',
+        'Lebanese Pound': 'LBP',
+        Chainlink: 'LINK',
+        'Sri Lankan Rupee': 'LKR',
+        'Liberian Dollar': 'LRD',
+        'Basotho Loti': 'LSL',
+        Litecoin: 'LTC',
+        'Lithuanian Litas': 'LTL',
+        Terra: 'LUNA',
+        'Latvian Lat': 'LVL',
+        'Libyan Dinar': 'LYD',
+        'Moroccan Dirham': 'MAD',
+        'Moldovan Leu': 'MDL',
+        'Malagasy Ariary': 'MGA',
+        'Macedonian Denar': 'MKD',
+        'Burmese Kyat': 'MMK',
+        'Mongolian Tughrik': 'MNT',
+        'Macau Pataca': 'MOP',
+        'Mauritanian Ouguiya': 'MRU',
+        'Mauritian Rupee': 'MUR',
+        'Maldivian Rufiyaa': 'MVR',
+        'Malawian Kwacha': 'MWK',
+        'Mexican Peso': 'MXN',
+        'Malaysian Ringgit': 'MYR',
+        'Mozambican Metical': 'MZN',
+        'Namibian Dollar': 'NAD',
+        'Nigerian Naira': 'NGN',
+        'Nicaraguan Cordoba': 'NIO',
+        'Norwegian Krone': 'NOK',
+        'Nepalese Rupee': 'NPR',
+        'New Zealand Dollar': 'NZD',
+        'Omani Rial': 'OMR',
+        'Panamanian Balboa': 'PAB',
+        'Peruvian Sol': 'PEN',
+        'Papua New Guinean Kina': 'PGK',
+        'Philippine Peso': 'PHP',
+        'Pakistani Rupee': 'PKR',
+        'Polish Zloty': 'PLN',
+        'Paraguayan Guarani': 'PYG',
+        'Qatari Riyal': 'QAR',
+        'Romanian Leu': 'RON',
+        'Serbian Dinar': 'RSD',
+        'Russian Ruble': 'RUB',
+        'Rwandan Franc': 'RWF',
+        'Saudi Arabian Riyal': 'SAR',
+        'Solomon Islander Dollar': 'SBD',
+        'Seychellois Rupee': 'SCR',
+        'Sudanese Pound': 'SDG',
+        'Swedish Krona': 'SEK',
+        'Singapore Dollar': 'SGD',
+        'Saint Helenian Pound': 'SHP',
+        'Sierra Leonean Leone': 'SLL',
+        'Somali Shilling': 'SOS',
+        'Seborgan Luigino': 'SPL',
+        'Surinamese Dollar': 'SRD',
+        'Sao Tomean Dobra': 'STN',
+        'Salvadoran Colon': 'SVC',
+        'Syrian Pound': 'SYP',
+        'Swazi Lilangeni': 'SZL',
+        'Thai Baht': 'THB',
+        'Tajikistani Somoni': 'TJS',
+        'Turkmenistani Manat': 'TMT',
+        'Tunisian Dinar': 'TND',
+        "Tongan Pa'anga": 'TOP',
+        'Turkish Lira': 'TRY',
+        'Trinidadian Dollar': 'TTD',
+        'Tuvaluan Dollar': 'TVD',
+        'Taiwan New Dollar': 'TWD',
+        'Tanzanian Shilling': 'TZS',
+        'Ukrainian Hryvnia': 'UAH',
+        'Ugandan Shilling': 'UGX',
+        Uniswap: 'UNI',
+        'Uruguayan Peso': 'UYU',
+        'Uzbekistani Som': 'UZS',
+        'Venezuelan Bolívar': 'VES',
+        'Vietnamese Dong': 'VND',
+        Ni: 'VUV',
+        'Samoan Tala': 'WST',
+        'Central African CFA Franc BEAC': 'XAF',
+        'Silver Ounce': 'XAG',
+        'Gold Ounce': 'XAU',
+        'East Caribbean Dollar': 'XCD',
+        'IMF Special Drawing Rights': 'XDR',
+        'Stellar Lumen': 'XLM',
+        'CFA Franc': 'XOF',
+        'Palladium Ounce': 'XPD',
+        'CFP Franc': 'XPF',
+        'Platinum Ounce': 'XPT',
+        Ripple: 'XRP',
+        'Yemeni Rial': 'YER',
+        'South African Rand': 'ZAR',
+        'Zambian Kwacha': 'ZMW',
+        'Zimbabwean Dollar': 'ZWD',
       };
+
+      const currencies = Object.entries(Currency);
+
+      const selector = [];
+      currencies.forEach(([key, value]) => {
+        selector.push({
+          text: key,
+          value,
+        });
+      });
 
       const { ipcRenderer } = require('electron');
 
-      // needed in the renderer process.
-      const languages = Object.entries(Language);
-
-      const selector = [];
-
       ipcRenderer.invoke('get-settings').then((result) => {
-        const selectedLanguage = result.translate.to;
+        const currencyFrom = result.convertCurrencies.from;
+        const currencyTo = result.convertCurrencies.to;
 
-        languages.forEach(([key, value]) => {
-          selector.push({
-            text: key,
-            value,
-            ...(value === selectedLanguage ? { selected: true } : undefined),
-          });
-        });
-
-        const selectorBox = document.getElementById('translate-to');
+        const currencyFromBox = document.getElementById('currency-from');
 
         for (const o of selector) {
           const { text, value, selected } = o;
@@ -307,18 +362,46 @@
           const option = document.createElement('option');
           option.innerText = text;
           option.value = value;
-          option.selected = selected ?? false;
 
-          selectorBox.append(option);
+          if (value === currencyFrom) {
+            option.selected = true;
+          } else {
+            option.selected = false;
+          }
+
+          currencyFromBox.append(option);
+        }
+
+        const currencyToBox = document.getElementById('currency-to');
+
+        for (const o of selector) {
+          const { text, value, selected } = o;
+
+          const option = document.createElement('option');
+          option.innerText = text;
+          option.value = value;
+
+          if (value === currencyTo) {
+            option.selected = true;
+          } else {
+            option.selected = false;
+          }
+
+          currencyToBox.append(option);
         }
       });
 
-      function changeLanguage() {
+      function changeConvertCurrenciesSettings() {
         const { ipcRenderer } = require('electron');
 
-        const selectedLanguage = document.getElementById('translate-to').value;
+        const fromCurrency = document.getElementById('currency-from').value;
+        const toCurrency = document.getElementById('currency-to').value;
 
-        ipcRenderer.send('change-language', { to: selectedLanguage });
+        ipcRenderer.send('change-convert-currencies-settings', {
+          from: fromCurrency,
+          to: toCurrency,
+        });
+        window.close();
       }
     </script>
     <script

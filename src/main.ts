@@ -40,6 +40,11 @@ function createWindow(pathToHtmlFile: string) {
   app.dock.show();
 }
 
+export const relaunchApp = () => {
+  app.relaunch();
+  app.exit();
+};
+
 ipcMain.on('change-settings', (event, arg) => {
   changeSettings(arg.data);
 });
@@ -66,6 +71,24 @@ ipcMain.on('change-convert-currencies-settings', (event, arg) => {
   }
 
   changeSetting('convertCurrencies', arg);
+});
+
+ipcMain.on('change-shortcuts', (event, arg) => {
+  if (
+    !arg.translate ||
+    !arg.transliterate ||
+    !arg.convertCurrency ||
+    !arg.humanizeText ||
+    !arg.spellCheck ||
+    !arg.shortenUrl ||
+    !arg.calculate
+  ) {
+    return;
+  }
+
+  changeSetting('shortcuts', arg);
+
+  relaunchApp();
 });
 
 ipcMain.on('close-window', (event, arg) => {
@@ -173,23 +196,23 @@ app.whenReady().then(() => {
         {
           label: 'Shortcuts',
           role: 'window',
-          click: () => createWindow('../views/shortcut-settings.html'),
+          click: () => createWindow('../src/views/shortcut-settings.html'),
         },
         {
           label: 'Translate options',
           role: 'window',
-          click: () => createWindow('../views/translate-settings.html'),
+          click: () => createWindow('../src/views/translate-settings.html'),
         },
         {
           label: 'Currency converter options',
           role: 'window',
           click: () =>
-            createWindow('../views/convert-currencies-settings.html'),
+            createWindow('../src/views/convert-currencies-settings.html'),
         },
         {
           label: 'Errors',
           role: 'window',
-          click: () => createWindow('../views/errors-list.html'),
+          click: () => createWindow('../src/views/errors-list.html'),
         },
       ],
     },
@@ -257,11 +280,6 @@ app.whenReady().then(() => {
 
   tray.setToolTip('Nodetools');
 });
-
-export const relaunchApp = () => {
-  app.relaunch();
-  app.exit();
-};
 
 // Quit when all windows are closed, except on macOS. There, it's common
 // for applications and their menu bar to stay active until the user quits

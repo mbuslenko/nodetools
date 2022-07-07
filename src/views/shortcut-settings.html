@@ -73,21 +73,20 @@
       }
 
       .shortcuts {
-        display: flex;
-        justify-content: space-between;
-        margin-left: 20vh;
-        margin-right: 20vh;
+        display: grid;
+        grid-template-columns: 50vh 65vh;
+        column-gap: 0vh;
+        justify-items: center;
       }
 
-      .column {
-        display: flex;
-        flex-direction: column;
+      .shortcut-wrapper {
+        position: relative;
+        display: inline-flex;
         align-items: center;
-        justify-content: center;
-        width: 50%;
+        gap: 5px;
       }
 
-      .hotkey-btn {
+      .shortcut-key {
         display: inline-block;
         padding: 4px;
         background-color: rgba(128, 128, 128, 0.17);
@@ -99,31 +98,29 @@
         box-shadow: rgba(0, 0, 0, 0.36) 0px -1px 0px inset;
       }
 
-      .hotkey {
+      .shortcut {
         border-radius: 3px;
         padding: 5px;
         display: inline-flex;
         gap: 5px;
       }
 
-      .hotkey:hover {
+      .shortcut:hover {
         cursor: pointer;
-        background-color: #1e1e1e;
-      }
-
-      .button-wrapper {
-        position: relative;
-      }
-
-      .input-label {
         background-color: black;
-        padding: 5px;
-        width: max-content;
-        position: absolute;
-        top: 0;
       }
 
-      .new-hotkey {
+      .new-shortcut-wrapper {
+        position: absolute;
+        display: flex;
+        align-items: center;
+        gap: 5px;
+        background-color: black;
+        width: max-content;
+        margin-left: 18vh;
+      }
+
+      .new-shortcut {
         display: inline-flex;
         gap: 5px;
       }
@@ -132,15 +129,20 @@
         visibility: hidden;
       }
 
-      .last-shortcut {
-        display: flex;
-        justify-content: center;
-      }
-
       .submit-button {
         display: flex;
         justify-content: center;
         margin-top: 7vh;
+      }
+
+      .shortcut-wrapper p {
+        margin: 0;
+      }
+
+      .prompt {
+        
+        padding-top: 2vh;
+        font-size: 12px;
       }
     </style>
     <link
@@ -170,104 +172,18 @@
         />
       </svg>
       <a href="https://nodetools.app" style="text-decoration: none">
-        <p class="strong blue">Prealpha version</p>
+        <p class="strong blue">Alpha version</p>
       </a>
     </div>
 
     <div class="bodyClass text-white">
       <h3 class="five">Shortcuts</h3>
 
-      <div class="shortcuts">
-        <div class="column">
-          <div class="shortcut-row">
-            <p>Translate text</p>
-            <div class="button-wrapper">
-              <div class="hotkey translate-shortcut"></div>
-              <div class="input-label is-hidden">
-                <div class="new-hotkey"></div>
-                <button class="save-hotkey-btn">Save</button>
-              </div>
-            </div>
-          </div>
-
-          <div class="shortcut-row">
-            <p>Humanize text</p>
-            <div class="button-wrapper">
-              <div class="hotkey humanize-shortcut"></div>
-              <div class="input-label is-hidden">
-                <div class="new-hotkey"></div>
-                <button class="save-hotkey-btn">Save</button>
-              </div>
-            </div>
-          </div>
-
-          <div class="shortcut-row">
-            <p>Calculate</p>
-            <div class="button-wrapper">
-              <div class="hotkey calculate-shortcut"></div>
-              <div class="input-label is-hidden">
-                <div class="new-hotkey"></div>
-                <button class="save-hotkey-btn">Save</button>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div class="column">
-          <div class="shortcut-row">
-            <p>Translate text</p>
-            <div class="button-wrapper">
-              <div class="hotkey transliterate-shortcut"></div>
-              <div class="input-label is-hidden">
-                <div class="new-hotkey"></div>
-                <button class="save-hotkey-btn">Save</button>
-              </div>
-            </div>
-          </div>
-
-          <div class="shortcut-row">
-            <p>Fix spelling</p>
-            <div class="button-wrapper">
-              <div class="hotkey spellfix-shortcut"></div>
-              <div class="input-label is-hidden">
-                <div class="new-hotkey"></div>
-                <button class="save-hotkey-btn">Save</button>
-              </div>
-            </div>
-          </div>
-
-          <div class="shortcut-row">
-            <p>Convert currencies</p>
-            <div class="button-wrapper">
-              <div class="hotkey convertcurrencies-shortcut"></div>
-              <div class="input-label is-hidden">
-                <div class="new-hotkey"></div>
-                <button class="save-hotkey-btn">Save</button>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div class="last-shortcut">
-        <div class="shortcut-row">
-          <p>Shorten URL</p>
-          <div class="button-wrapper">
-            <div class="hotkey shortenurl-shortcut"></div>
-            <div class="input-label is-hidden">
-              <div class="new-hotkey"></div>
-              <button class="save-hotkey-btn">Save</button>
-            </div>
-          </div>
-        </div>
-      </div>
+      <p class="prompt">Click on the desired shortcut to change it</p>
+      <div class="shortcuts"></div>
 
       <div class="submit-button">
-        <button
-          type="button"
-          class="btn btn-light"
-          onclick="changeConvertCurrenciesSettings()"
-        >
+        <button type="button" class="btn btn-light" onclick="changeShortcuts()">
           Submit
         </button>
       </div>
@@ -290,125 +206,230 @@
         }
       };
 
-      const translateHotKeyDom = document.querySelector('.translate-shortcut');
-      const transliterateHotKeyDom = document.querySelector(
-        '.transliterate-shortcut'
-      );
-      const humanizeHotKeyDom = document.querySelector('.humanize-shortcut');
-      const spellfixHotKeyDom = document.querySelector('.spellfix-shortcut');
-      const calculateHotKeyDom = document.querySelector('.calculate-shortcut');
-      const convertCurrenciesHotKeyDom = document.querySelector(
-        '.convertcurrencies-shortcut'
-      );
-      const shortenUrlHotKeyDom = document.querySelector(
-        '.shortenurl-shortcut'
-      );
+      const createShortcutDom = (description) => {
+        const shortcutWrapperDom = document.createElement('div');
+        shortcutWrapperDom.className = 'shortcut-wrapper';
 
-      const newHotkeyDom = document.querySelector('.new-hotkey');
-      const inputLabel = document.querySelector('.input-label');
+        const shortcutDescriptionDom = document.createElement('p');
+        shortcutDescriptionDom.textContent = description;
 
-      // for preview
-      const pKey = document.createElement('span');
-      const pKey2 = document.createElement('span');
-      const pKey3 = document.createElement('span');
-      const pKey4 = document.createElement('span');
-      const pKey5 = document.createElement('span');
-      const pKey6 = document.createElement('span');
-      const pKey7 = document.createElement('span');
-      pKey2.textContent = 'Z';
-      pKey.textContent = 'P';
-      pKey3.textContent = 'C';
-      pKey4.textContent = 'X';
-      pKey5.textContent = 'V';
-      pKey6.textContent = 'K';
-      pKey7.textContent = 'L';
-      pKey2.className = 'hotkey-btn';
-      pKey.className = 'hotkey-btn';
-      pKey3.className = 'hotkey-btn';
-      pKey4.className = 'hotkey-btn';
-      pKey5.className = 'hotkey-btn';
-      pKey6.className = 'hotkey-btn';
-      pKey7.className = 'hotkey-btn';
-      translateHotKeyDom.append(pKey);
-      transliterateHotKeyDom.append(pKey2);
-      humanizeHotKeyDom.append(pKey3);
-      spellfixHotKeyDom.append(pKey4);
-      calculateHotKeyDom.append(pKey5);
-      convertCurrenciesHotKeyDom.append(pKey6);
-      shortenUrlHotKeyDom.append(pKey7);
+        const shortcutDom = document.createElement('div');
+        shortcutDom.className = 'shortcut';
 
-      let newHotkey = [];
+        const newShortcutWrapperDom = document.createElement('div');
+        newShortcutWrapperDom.className = 'new-shortcut-wrapper is-hidden';
+
+        const newShortcutDom = document.createElement('div');
+        newShortcutDom.className = 'new-shortcut';
+
+        const saveShortcutButton = document.createElement('button');
+        saveShortcutButton.className = 'save-shortcut-btn btn btn-dark';
+        saveShortcutButton.textContent = 'Save';
+
+        newShortcutWrapperDom.append(newShortcutDom, saveShortcutButton);
+        shortcutWrapperDom.append(
+          shortcutDescriptionDom,
+          shortcutDom,
+          newShortcutWrapperDom
+        );
+
+        return {
+          shortcutWrapperDom,
+          shortcutDom,
+          newShortcutWrapperDom,
+          newShortcutDom,
+          saveShortcutButton,
+        };
+      };
+
+      const createShortcutKeyDom = (key) => {
+        const keyDom = document.createElement('span');
+        keyDom.textContent = key;
+        keyDom.className = 'shortcut-key';
+        return keyDom;
+      };
+
       const codeToKey = new Map([
         ['Equal', '='],
         ['Minus', '-'],
         ['Backquote', '`'],
       ]);
 
-      const transformKeyCode = (code) => {
-        if (codeToKey.has(code)) {
-          return codeToKey.get(code);
+      const transformCodeToKey = (code) => {
+        const key = codeToKey.get(code);
+
+        if (key !== undefined) {
+          return key;
         }
 
         return code.replace(/Key|Digit/, '');
       };
 
-      const changeHotkey = () => {
-        let combine = false;
-        let keysPressed = 0;
+      function Shortcut(description, shortcutKeys, onShortcutUpdate) {
+        const {
+          shortcutWrapperDom,
+          shortcutDom,
+          newShortcutWrapperDom,
+          newShortcutDom,
+          saveShortcutButton,
+        } = createShortcutDom(description);
 
-        newHotkey = [];
-        inputLabel.classList.toggle('is-hidden');
-        hotkeyDom.replaceChildren();
-        newHotkeyDom.replaceChildren();
+        for (const key of shortcutKeys) {
+          shortcutDom.append(createShortcutKeyDom(key));
+        }
 
-        window.onkeydown = (e) => {
-          e.preventDefault();
+        let newShortcut = [];
+        let isChangingShortcut = false;
 
-          if (!combine) {
-            newHotkey = [];
-            combine = true;
+        const changeShortcut = () => {
+          let combineKeys = false;
+          let keysPressed = 0;
 
-            newHotkeyDom.replaceChildren();
-          }
+          newShortcut = [];
+          newShortcutDom.replaceChildren();
 
-          if (newHotkey.includes(e.code)) {
+          window.onkeydown = (e) => {
+            e.preventDefault();
+
+            if (e.keyCode === 27) {
+              stopChangingShortcut();
+              return;
+            }
+
+            if (!combineKeys) {
+              newShortcut = [];
+              combineKeys = true;
+
+              newShortcutDom.replaceChildren();
+            }
+
+            const key = transformCodeToKey(e.code);
+
+            if (newShortcut.includes(key)) {
+              return;
+            }
+
+            keysPressed++;
+            newShortcut.push(key);
+
+            newShortcutDom.append(createShortcutKeyDom(key));
+          };
+
+          window.onkeyup = () => {
+            keysPressed--;
+
+            if (keysPressed <= 0) {
+              combineKeys = false;
+            }
+          };
+        };
+
+        const stopChangingShortcut = () => {
+          newShortcutWrapperDom.classList.add('is-hidden');
+          shortcutDom.classList.remove('is-hidden');
+
+          isChangingShortcut = false;
+          window.onkeydown = null;
+          window.onkeyup = null;
+        };
+
+        shortcutDom.onclick = () => {
+          if (isChangingShortcut) {
+            stopChangingShortcut();
             return;
           }
 
-          keysPressed++;
-          newHotkey.push(e.code);
+          newShortcutWrapperDom.classList.remove('is-hidden');
+          shortcutDom.classList.add('is-hidden');
+          isChangingShortcut = true;
 
-          const newKey = document.createElement('span');
-          newKey.textContent = transformKeyCode(e.code);
-          newKey.className = 'hotkey-btn';
-
-          newHotkeyDom.append(newKey);
+          changeShortcut();
         };
 
-        window.onkeyup = (e) => {
-          prevKey = '';
-          keysPressed--;
-
-          if (keysPressed <= 0) {
-            combine = false;
+        saveShortcutButton.onclick = () => {
+          newShortcut = newShortcut.map((key) =>
+            key.replace('Left', '').replace('Right', '')
+          );
+          if (
+            !newShortcut.includes('Control') &&
+            !newShortcut.includes('Meta') &&
+            !newShortcut.includes('Shift')
+          ) {
+            console.log(newShortcut);
+            return alert('You have to press Control');
           }
+
+          if (newShortcut.length > 3) {
+            newShortcut = newShortcut.slice(0, 2);
+          }
+
+          if (newShortcut.length > 0) {
+            console.log(newShortcut);
+            onShortcutUpdate(newShortcut);
+            shortcutDom.replaceChildren(
+              ...newShortcut.map((key) => createShortcutKeyDom(key))
+            );
+          }
+
+          stopChangingShortcut();
         };
-      };
 
-      document.querySelector('.hotkey').onclick = changeHotkey;
-      document.querySelector('.save-hotkey-btn').onclick = () => {
-        hotkeyDom.replaceChildren(
-          ...newHotkey.map((code) => {
-            const newKey = document.createElement('span');
-            newKey.textContent = transformKeyCode(code);
-            newKey.className = 'hotkey-btn';
-            return newKey;
-          })
+        return shortcutWrapperDom;
+      }
+
+      const div = document.querySelector('.shortcuts');
+
+      const { ipcRenderer } = require('electron');
+
+      let shortcuts = {};
+
+      ipcRenderer.invoke('get-settings').then((settings) => {
+        shortcuts = settings.shortcuts;
+
+        div.append(
+          Shortcut(
+            'Translate text',
+            shortcuts.translate,
+            (shortcut) => (shortcuts.translate = shortcut)
+          ),
+          Shortcut(
+            'Transliterate text',
+            shortcuts.transliterate,
+            (shortcut) => (shortcuts.transliterate = shortcut)
+          ),
+          Shortcut(
+            'Humanize text',
+            shortcuts.humanizeText,
+            (shortcut) => (shortcuts.humanizeText = shortcut)
+          ),
+          Shortcut(
+            'Fix spelling',
+            shortcuts.spellCheck,
+            (shortcut) => (shortcuts.spellCheck = shortcut)
+          ),
+          Shortcut(
+            'Calculate',
+            shortcuts.calculate,
+            (shortcut) => (shortcuts.calculate = shortcut)
+          ),
+          Shortcut(
+            'Convert currency',
+            shortcuts.convertCurrency,
+            (shortcut) => (shortcuts.convertCurrency = shortcut)
+          ),
+          Shortcut(
+            'Shorten URL',
+            shortcuts.shortenUrl,
+            (shortcut) => (shortcuts.shortenUrl = shortcut)
+          )
         );
+      });
 
-        inputLabel.classList.add('is-hidden');
-        window.onkeydown = null;
-      };
+      function changeShortcuts() {
+        const { ipcRenderer } = require('electron');
+
+        ipcRenderer.send('change-shortcuts', shortcuts);
+      }
     </script>
   </body>
 </html>

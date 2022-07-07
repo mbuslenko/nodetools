@@ -65,16 +65,6 @@
       .five {
         margin-bottom: 5vh;
       }
-
-      .second-item {
-        margin-top: 5vh;
-      }
-
-      .submit-button {
-        display: flex;
-        justify-content: center;
-        margin-top: 7vh;
-      }
     </style>
     <link
       href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css"
@@ -103,38 +93,26 @@
         />
       </svg>
       <a href="https://nodetools.app" style="text-decoration: none">
-        <p class="strong blue">Prealpha version</p>
+        <p class="strong blue">Alpha version</p>
       </a>
     </div>
 
     <div class="bodyClass text-white">
-      <h3 class="five">Convert currencies options</h3>
+      <h3 class="five">Errors that have occured recently</h3>
 
-      <p>Currency <span class="strong">from</span> which convert</p>
-      <select
-        class="form-select bg-black text-white"
-        id="currency-from"
-        aria-label="English"
-      ></select>
-
-      <p class="second-item">
-        Currency <span class="strong">to</span> which convert
-      </p>
-      <select
-        class="form-select bg-black text-white"
-        id="currency-to"
-        aria-label="English"
-      ></select>
-
-      <div class="submit-button">
-        <button
-          type="button"
-          class="btn btn-light"
-          onclick="changeConvertCurrenciesSettings()"
-        >
-          Submit
-        </button>
-      </div>
+      <table class="table table-dark table-striped" id="table">
+        <thead>
+          <tr class="table-dark">
+            <th>Datetime</th>
+            <th>Environment</th>
+            <th>Message</th>
+          </tr>
+        </thead>
+        <tbody id="errors-table">
+          <tr class="table-dark"></tr>
+        </tbody>
+      </table>
+      <p id="no-errors">Yay! So far we haven't spotted any errors!</p>
     </div>
 
     <div class="footer text-white-50">
@@ -154,261 +132,37 @@
         }
       };
 
-      const Currency = {
-        'US Dollar': 'USD',
-        Euro: 'EUR',
-        'British Pound': 'GBP',
-        'Canadian Dollar': 'CAD',
-        'Australian Dollar': 'AUD',
-        'Japanese Yen': 'JPY',
-        Cardano: 'ADA',
-        'Emirati Dirham': 'AED',
-        'Afghan Afghani': 'AFN',
-        'Albanian Lek': 'ALL',
-        'Armenian Dram': 'AMD',
-        'Dutch Guilder': 'ANG',
-        'Angolan Kwanza': 'AOA',
-        'Argentine Peso': 'ARS',
-        'Aruban or Dutch Guilder': 'AWG',
-        'Azerbaijan Manat': 'AZN',
-        'Bosnian Convertible Mark': 'BAM',
-        'Barbadian or Bajan Dollar': 'BBD',
-        'Bitcoin Cash': 'BCH',
-        'Bangladeshi Taka': 'BDT',
-        'Bulgarian Lev': 'BGN',
-        'Bahraini Dinar': 'BHD',
-        'Burundian Franc': 'BIF',
-        'Bermudian Dollar': 'BMD',
-        'Bruneian Dollar': 'BND',
-        'Bolivian Bolíviano': 'BOB',
-        'Brazilian Real': 'BRL',
-        'Bahamian Dollar': 'BSD',
-        Bitcoin: 'BTC',
-        'Bhutanese Ngultrum': 'BTN',
-        'Botswana Pula': 'BWP',
-        'Belarusian Ruble': 'BYR',
-        'Belizean Dollar': 'BZD',
-        'Congolese Franc': 'CDF',
-        'Swiss Franc': 'CHF',
-        'Chilean Peso': 'CLP',
-        'Chinese Yuan Renminbi': 'CNY',
-        'Colombian Peso': 'COP',
-        'Costa Rican Colon': 'CRC',
-        'Cuban Convertible Peso': 'CUC',
-        'Cuban Peso': 'CUP',
-        'Cape Verdean Escudo': 'CVE',
-        'Czech Koruna': 'CZK',
-        'Djiboutian Franc': 'DJF',
-        'Danish Krone': 'DKK',
-        Dogecoin: 'DOGE',
-        'Dominican Peso': 'DOP',
-        Polkadot: 'DOT',
-        'Algerian Dinar': 'DZD',
-        'Estonian Kroon': 'EEK',
-        'Egyptian Pound': 'EGP',
-        'Eritrean Nakfa': 'ERN',
-        'Ethiopian Birr': 'ETB',
-        Ethereum: 'ETH',
-        'Fijian Dollar': 'FJD',
-        'Falkland Island Pound': 'FKP',
-        'Georgian Lari': 'GEL',
-        'Guernsey Pound': 'GGP',
-        'Ghanaian Cedi': 'GHS',
-        'Gibraltar Pound': 'GIP',
-        'Gambian Dalasi': 'GMD',
-        'Guinean Franc': 'GNF',
-        'Guatemalan Quetzal': 'GTQ',
-        'Guyanese Dollar': 'GYD',
-        'Hong Kong Dollar': 'HKD',
-        'Honduran Lempira': 'HNL',
-        'Croatian Kuna': 'HRK',
-        'Haitian Gourde': 'HTG',
-        'Hungarian Forint': 'HUF',
-        'Indonesian Rupiah': 'IDR',
-        'Israeli Shekel': 'ILS',
-        'Isle of Man Pound': 'IMP',
-        'Indian Rupee': 'INR',
-        'Iraqi Dinar': 'IQD',
-        'Iranian Rial': 'IRR',
-        'Icelandic Krona': 'ISK',
-        'Jersey Pound': 'JEP',
-        'Jamaican Dollar': 'JMD',
-        'Jordanian Dinar': 'JOD',
-        'Kenyan Shilling': 'KES',
-        'Kyrgyzstani Som': 'KGS',
-        'Cambodian Riel': 'KHR',
-        'Comorian Franc': 'KMF',
-        'North Korean Won': 'KPW',
-        'South Korean Won': 'KRW',
-        'Kuwaiti Dinar': 'KWD',
-        'Caymanian Dollar': 'KYD',
-        'Kazakhstani Tenge': 'KZT',
-        'Lao Kip': 'LAK',
-        'Lebanese Pound': 'LBP',
-        Chainlink: 'LINK',
-        'Sri Lankan Rupee': 'LKR',
-        'Liberian Dollar': 'LRD',
-        'Basotho Loti': 'LSL',
-        Litecoin: 'LTC',
-        'Lithuanian Litas': 'LTL',
-        Terra: 'LUNA',
-        'Latvian Lat': 'LVL',
-        'Libyan Dinar': 'LYD',
-        'Moroccan Dirham': 'MAD',
-        'Moldovan Leu': 'MDL',
-        'Malagasy Ariary': 'MGA',
-        'Macedonian Denar': 'MKD',
-        'Burmese Kyat': 'MMK',
-        'Mongolian Tughrik': 'MNT',
-        'Macau Pataca': 'MOP',
-        'Mauritanian Ouguiya': 'MRU',
-        'Mauritian Rupee': 'MUR',
-        'Maldivian Rufiyaa': 'MVR',
-        'Malawian Kwacha': 'MWK',
-        'Mexican Peso': 'MXN',
-        'Malaysian Ringgit': 'MYR',
-        'Mozambican Metical': 'MZN',
-        'Namibian Dollar': 'NAD',
-        'Nigerian Naira': 'NGN',
-        'Nicaraguan Cordoba': 'NIO',
-        'Norwegian Krone': 'NOK',
-        'Nepalese Rupee': 'NPR',
-        'New Zealand Dollar': 'NZD',
-        'Omani Rial': 'OMR',
-        'Panamanian Balboa': 'PAB',
-        'Peruvian Sol': 'PEN',
-        'Papua New Guinean Kina': 'PGK',
-        'Philippine Peso': 'PHP',
-        'Pakistani Rupee': 'PKR',
-        'Polish Zloty': 'PLN',
-        'Paraguayan Guarani': 'PYG',
-        'Qatari Riyal': 'QAR',
-        'Romanian Leu': 'RON',
-        'Serbian Dinar': 'RSD',
-        'Russian Ruble': 'RUB',
-        'Rwandan Franc': 'RWF',
-        'Saudi Arabian Riyal': 'SAR',
-        'Solomon Islander Dollar': 'SBD',
-        'Seychellois Rupee': 'SCR',
-        'Sudanese Pound': 'SDG',
-        'Swedish Krona': 'SEK',
-        'Singapore Dollar': 'SGD',
-        'Saint Helenian Pound': 'SHP',
-        'Sierra Leonean Leone': 'SLL',
-        'Somali Shilling': 'SOS',
-        'Seborgan Luigino': 'SPL',
-        'Surinamese Dollar': 'SRD',
-        'Sao Tomean Dobra': 'STN',
-        'Salvadoran Colon': 'SVC',
-        'Syrian Pound': 'SYP',
-        'Swazi Lilangeni': 'SZL',
-        'Thai Baht': 'THB',
-        'Tajikistani Somoni': 'TJS',
-        'Turkmenistani Manat': 'TMT',
-        'Tunisian Dinar': 'TND',
-        "Tongan Pa'anga": 'TOP',
-        'Turkish Lira': 'TRY',
-        'Trinidadian Dollar': 'TTD',
-        'Tuvaluan Dollar': 'TVD',
-        'Taiwan New Dollar': 'TWD',
-        'Tanzanian Shilling': 'TZS',
-        'Ukrainian Hryvnia': 'UAH',
-        'Ugandan Shilling': 'UGX',
-        Uniswap: 'UNI',
-        'Uruguayan Peso': 'UYU',
-        'Uzbekistani Som': 'UZS',
-        'Venezuelan Bolívar': 'VES',
-        'Vietnamese Dong': 'VND',
-        Ni: 'VUV',
-        'Samoan Tala': 'WST',
-        'Central African CFA Franc BEAC': 'XAF',
-        'Silver Ounce': 'XAG',
-        'Gold Ounce': 'XAU',
-        'East Caribbean Dollar': 'XCD',
-        'IMF Special Drawing Rights': 'XDR',
-        'Stellar Lumen': 'XLM',
-        'CFA Franc': 'XOF',
-        'Palladium Ounce': 'XPD',
-        'CFP Franc': 'XPF',
-        'Platinum Ounce': 'XPT',
-        Ripple: 'XRP',
-        'Yemeni Rial': 'YER',
-        'South African Rand': 'ZAR',
-        'Zambian Kwacha': 'ZMW',
-        'Zimbabwean Dollar': 'ZWD',
-      };
-
-      const currencies = Object.entries(Currency);
-
-      const selector = [];
-      currencies.forEach(([key, value]) => {
-        selector.push({
-          text: key,
-          value,
-        });
-      });
-
-      const { ipcRenderer } = require('electron');
-
-      ipcRenderer.invoke('get-settings').then((result) => {
-        const currencyFrom = result.convertCurrencies.from;
-        const currencyTo = result.convertCurrencies.to;
-
-        const currencyFromBox = document.getElementById('currency-from');
-
-        for (const o of selector) {
-          const { text, value, selected } = o;
-
-          const option = document.createElement('option');
-          option.innerText = text;
-          option.value = value;
-
-          if (value === currencyFrom) {
-            option.selected = true;
-          } else {
-            option.selected = false;
-          }
-
-          currencyFromBox.append(option);
-        }
-
-        const currencyToBox = document.getElementById('currency-to');
-
-        for (const o of selector) {
-          const { text, value, selected } = o;
-
-          const option = document.createElement('option');
-          option.innerText = text;
-          option.value = value;
-
-          if (value === currencyTo) {
-            option.selected = true;
-          } else {
-            option.selected = false;
-          }
-
-          currencyToBox.append(option);
-        }
-      });
-
-      function changeConvertCurrenciesSettings() {
+      window.addEventListener('DOMContentLoaded', () => {
         const { ipcRenderer } = require('electron');
 
-        const fromCurrency = document.getElementById('currency-from').value;
-        const toCurrency = document.getElementById('currency-to').value;
+        ipcRenderer.invoke('get-errors').then((result) => {
+          localStorage.setItem('errors', JSON.stringify(result));
 
-        ipcRenderer.send('change-convert-currencies-settings', {
-          from: fromCurrency,
-          to: toCurrency,
+          var table = document.getElementById('errors-table');
+
+          if (result.length === 0) {
+            return (document.getElementById('table').style.display = 'none');
+          } else if (result.length > 6) {
+            result = result.slice(-6);
+          }
+
+          document.getElementById('no-errors').style.display = 'none';
+
+          result.forEach((el) => {
+            row = table.insertRow(-1);
+            cell1 = row.insertCell(0);
+            cell2 = row.insertCell(1);
+            cell3 = row.insertCell(2);
+            cell1.innerHTML = new Date(el.date)
+              .toISOString()
+              .replace('T', ' ')
+              .split('.')[0];
+            cell2.innerHTML = el.environment;
+            cell3.innerHTML = el.message;
+          });
         });
-        window.close();
-      }
+      });
     </script>
-    <script
-      src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/js/bootstrap.bundle.min.js"
-      integrity="sha384-pprn3073KE6tl6bjs2QrFaJGz5/SUsLqktiwsUTF55Jfv3qYSDhgCecCxMW52nD2"
-      crossorigin="anonymous"
-    ></script>
   </body>
   <script></script>
 </html>

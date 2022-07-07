@@ -65,6 +65,12 @@
       .five {
         margin-bottom: 5vh;
       }
+
+      .submit-button {
+        display: flex;
+        justify-content: center;
+        margin-top: 7vh;
+      }
     </style>
     <link
       href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css"
@@ -93,26 +99,29 @@
         />
       </svg>
       <a href="https://nodetools.app" style="text-decoration: none">
-        <p class="strong blue">Prealpha version</p>
+        <p class="strong blue">Alpha version</p>
       </a>
     </div>
 
     <div class="bodyClass text-white">
-      <h3 class="five">Errors that have occured recently</h3>
+      <h3 class="five">Translate options</h3>
 
-      <table class="table table-dark table-striped" id="table">
-        <thead>
-          <tr class="table-dark">
-            <th>Datetime</th>
-            <th>Environment</th>
-            <th>Message</th>
-          </tr>
-        </thead>
-        <tbody id="errors-table">
-          <tr class="table-dark"></tr>
-        </tbody>
-      </table>
-      <p id="no-errors">Yay! So far we haven't spotted any errors!</p>
+      <p>Select the language in which the text will be translated</p>
+      <select
+        class="form-select bg-black text-white"
+        id="translate-to"
+        aria-label="English"
+      ></select>
+
+      <div class="submit-button">
+        <button
+          type="button"
+          class="btn btn-light"
+          onclick="changeLanguage()"
+        >
+          Submit
+        </button>
+      </div>
     </div>
 
     <div class="footer text-white-50">
@@ -132,37 +141,191 @@
         }
       };
 
-      window.addEventListener('DOMContentLoaded', () => {
-        const { ipcRenderer } = require('electron');
+      const Language = {
+        Afrikaans: 'af',
+        Amharic: 'am',
+        Arabic: 'ar',
+        Aragonese: 'an',
+        Armenian: 'hy',
+        Avaric: 'av',
+        Avestan: 'ae',
+        Azerbaijani: 'az',
+        Basque: 'eu',
+        Belarusian: 'be',
+        Bengali: 'bn',
+        Bosnian: 'bs',
+        Bulgarian: 'bg',
+        Burmese: 'my',
+        Catalan: 'ca',
+        Chamorro: 'ch',
+        Chechen: 'ce',
+        Chichewa: 'ny',
+        Chinese: 'zh',
+        Chuvash: 'cv',
+        Cornish: 'kw',
+        Corsican: 'co',
+        Cree: 'cr',
+        Croatian: 'hr',
+        Czech: 'cs',
+        Danish: 'da',
+        Dutch: 'nl',
+        English: 'en',
+        Esperanto: 'eo',
+        Estonian: 'et',
+        Finnish: 'fi',
+        French: 'fr',
+        Fula: 'ff',
+        Galician: 'gl',
+        Georgian: 'ka',
+        German: 'de',
+        Greek: 'el',
+        Gujarati: 'gu',
+        Haitian: 'ht',
+        Hausa: 'ha',
+        Hebrew: 'he',
+        Herero: 'hz',
+        Hindi: 'hi',
+        'Hiri Motu': 'ho',
+        Hungarian: 'hu',
+        Icelandic: 'is',
+        Ido: 'io',
+        Igbo: 'ig',
+        Indonesian: 'id',
+        Irish: 'ga',
+        Italian: 'it',
+        Japanese: 'ja',
+        Javanese: 'jv',
+        Kannada: 'kn',
+        Kanuri: 'kr',
+        Kazakh: 'kk',
+        Khmer: 'km',
+        Kikuyu: 'ki',
+        Kinyarwanda: 'rw',
+        Komi: 'kv',
+        Kongo: 'kg',
+        Korean: 'ko',
+        Kurdish: 'ku',
+        Kwanyama: 'kj',
+        Kyrgyz: 'ky',
+        Lao: 'lo',
+        Latin: 'la',
+        Latvian: 'lv',
+        Limburgish: 'li',
+        Lithuanian: 'lt',
+        'Luba-Katanga': 'lu',
+        Luxembourgish: 'lb',
+        Macedonian: 'mk',
+        Malagasy: 'mg',
+        Malay: 'ms',
+        Malayalam: 'ml',
+        Maltese: 'mt',
+        Marathi: 'mr',
+        Marshallese: 'mh',
+        Mongolian: 'mn',
+        Māori: 'mi',
+        Navajo: 'nv',
+        Ndonga: 'ng',
+        Nepali: 'ne',
+        'Northern Ndebele': 'nd',
+        'Northern Sami': 'se',
+        Norwegian: 'no',
+        'Norwegian Bokmål': 'nb',
+        'Norwegian Nynorsk': 'nn',
+        Nuosu: 'ii',
+        Ojibwe: 'oj',
+        'Old Church Slavonic': 'cu',
+        Oriya: 'or',
+        Panjabi: 'pa',
+        Pashto: 'ps',
+        Persian: 'fa',
+        Polish: 'pl',
+        Portuguese: 'pt',
+        Pāli: 'pi',
+        Romanian: 'ro',
+        Russian: 'ru',
+        Samoan: 'sm',
+        Sardinian: 'sc',
+        'Scottish Gaelic': 'gd',
+        Serbian: 'sr',
+        Shona: 'sn',
+        Sindhi: 'sd',
+        Sinhala: 'si',
+        Slovak: 'sk',
+        Slovene: 'sl',
+        Somali: 'so',
+        'Southern Ndebele': 'nr',
+        'Southern Sotho': 'st',
+        Spanish: 'es',
+        Sundanese: 'su',
+        Swahili: 'sw',
+        Swedish: 'sv',
+        Tagalog: 'tl',
+        Tahitian: 'ty',
+        Tajik: 'tg',
+        Tamil: 'ta',
+        Tatar: 'tt',
+        Telugu: 'te',
+        Thai: 'th',
+        Turkish: 'tr',
+        Turkmen: 'tk',
+        Ukrainian: 'uk',
+        Urdu: 'ur',
+        Uyghur: 'ug',
+        Uzbek: 'uz',
+        Vietnamese: 'vi',
+        Walloon: 'wa',
+        Welsh: 'cy',
+        'Western Frisian': 'fy',
+        Xhosa: 'xh',
+        Yiddish: 'yi',
+        Yoruba: 'yo',
+      };
 
-        ipcRenderer.invoke('get-errors').then((result) => {
-          localStorage.setItem('errors', JSON.stringify(result));
+      const { ipcRenderer } = require('electron');
 
-          var table = document.getElementById('errors-table');
+      // needed in the renderer process.
+      const languages = Object.entries(Language);
 
-          if (result.length === 0) {
-            return (document.getElementById('table').style.display = 'none');
-          } else if (result.length > 6) {
-            result = result.slice(-6);
-          }
+      const selector = [];
 
-          document.getElementById('no-errors').style.display = 'none';
+      ipcRenderer.invoke('get-settings').then((result) => {
+        const selectedLanguage = result.translate.to;
 
-          result.forEach((el) => {
-            row = table.insertRow(-1);
-            cell1 = row.insertCell(0);
-            cell2 = row.insertCell(1);
-            cell3 = row.insertCell(2);
-            cell1.innerHTML = el.date
-              .toISOString()
-              .replace('T', ' ')
-              .split('.')[0];
-            cell2.innerHTML = el.environment;
-            cell3.innerHTML = el.message;
+        languages.forEach(([key, value]) => {
+          selector.push({
+            text: key,
+            value,
+            ...(value === selectedLanguage ? { selected: true } : undefined),
           });
         });
+
+        const selectorBox = document.getElementById('translate-to');
+
+        for (const o of selector) {
+          const { text, value, selected } = o;
+
+          const option = document.createElement('option');
+          option.innerText = text;
+          option.value = value;
+          option.selected = selected ?? false;
+
+          selectorBox.append(option);
+        }
       });
+
+      function changeLanguage() {
+        const { ipcRenderer } = require('electron');
+
+        const selectedLanguage = document.getElementById('translate-to').value;
+
+        ipcRenderer.send('change-language', { to: selectedLanguage });
+      }
     </script>
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-pprn3073KE6tl6bjs2QrFaJGz5/SUsLqktiwsUTF55Jfv3qYSDhgCecCxMW52nD2"
+      crossorigin="anonymous"
+    ></script>
   </body>
   <script></script>
 </html>

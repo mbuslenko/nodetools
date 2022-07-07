@@ -315,10 +315,11 @@
 
       function changeLanguage() {
         const { ipcRenderer } = require('electron');
-
+        
         const selectedLanguage = document.getElementById('translate-to').value;
 
         ipcRenderer.send('change-language', { to: selectedLanguage });
+        window.close()
       }
     </script>
     <script

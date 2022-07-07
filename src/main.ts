@@ -13,7 +13,6 @@ import { changeSetting, changeSettings, initSettings } from './settings';
 import settings from './settings';
 import { ShortcutsSettings } from './settings/settings.types';
 import { openWebURL } from './shared/utils/open-website';
-import ErrorsHandler from './errors/errors.module';
 
 // import { askForAccessibilityAccess, getAuthStatus } from 'node-mac-permissions';
 
@@ -38,7 +37,10 @@ function createWindow(pathToHtmlFile: string) {
   // and load the index.html of the app.
   mainWindow.loadFile(path.join(__dirname, pathToHtmlFile));
   mainWindow.setResizable(false);
-  app.dock.show();
+  
+  if (process.platform === 'darwin') {
+    app.dock.show();
+  }
 }
 
 export const relaunchApp = () => {

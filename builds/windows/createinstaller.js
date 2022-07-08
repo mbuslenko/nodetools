@@ -12,7 +12,12 @@ function getInstallerConfig() {
   const outPath = path.join(rootPath, "builds");
 
   return Promise.resolve({
-    appDirectory: path.join(outPath, 'release-builds', 'windows', "Nodetools-win32-ia32/"),
+    appDirectory: path.join(
+      outPath,
+      "release-builds",
+      "windows",
+      "Nodetools-win32-ia32/"
+    ),
     authors: "Mike Buslenko",
     noMsi: false,
     outputDirectory: path.join(outPath, "installers", "windows"),

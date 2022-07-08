@@ -11,8 +11,8 @@
     "pack": "electron-builder --dir",
     "dist": "electron-builder",
     "dist-all": "electron-builder -mw",
-    "pack:osx": "electron-packager . Nodetools --out=dist/osx --platform=darwin --arch=x64 --icon=src/assets/build/icon.icns",
-    "pack:win64": "electron-packager . Nodetools --out=dist/win --platform=win32 --arch=x64 --app-version=0.0.9 --icon=src/assets/build/icon.ico",
+    "pack:osx": "electron-packager . Nodetools --out=builds/release-builds/osx --platform=darwin --arch=x64 --icon=src/assets/build/icon.icns",
+    "pack:win64": "electron-packager . Nodetools --out=builds/release-builds/windows --platform=win32 --arch=x64 --app-version=0.0.9 --icon=src/assets/build/icon.ico",
     "create-win-installer": "node builds/windows/createInstaller.js",
     "create-osx-installer": "electron-installer-dmg ./builds/release-builds/osx/Nodetools-darwin-x64/Nodetools.app Nodetools --out=builds/installers/osx --overwrite --icon=src/assets/build/icon.icns",
     "create-debian-installer": "electron-installer-debian --src builds/release-builds/debian/nodetools-linux-x64/ --arch amd64 --config builds/debian/config.json"

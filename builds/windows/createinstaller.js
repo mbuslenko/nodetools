@@ -25,6 +25,6 @@ function getInstallerConfig() {
 getInstallerConfig()
   .then(createWindowsInstaller)
   .catch((error) => {
-    console.error(error.message || error);
+    console.error(error);
     process.exit(1);
   });

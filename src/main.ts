@@ -43,16 +43,19 @@ function createWindow(pathToHtmlFile: string) {
   }
 }
 
+/**
+ * It relaunches the app
+ */
 export const relaunchApp = () => {
   app.relaunch();
   app.exit();
 };
 
-ipcMain.on('change-settings', (event, arg) => {
+ipcMain.on('change-settings', (_event, arg) => {
   changeSettings(arg.data);
 });
 
-ipcMain.on('change-language', (event, arg) => {
+ipcMain.on('change-language', (_event, arg) => {
   if (process.platform === 'darwin') {
     app.dock.hide();
   }
@@ -64,7 +67,7 @@ ipcMain.on('change-language', (event, arg) => {
   changeSetting('translate', arg);
 });
 
-ipcMain.on('change-convert-currencies-settings', (event, arg) => {
+ipcMain.on('change-convert-currencies-settings', (_event, arg) => {
   if (process.platform === 'darwin') {
     app.dock.hide();
   }
@@ -76,7 +79,7 @@ ipcMain.on('change-convert-currencies-settings', (event, arg) => {
   changeSetting('convertCurrencies', arg);
 });
 
-ipcMain.on('change-shortcuts', (event, arg) => {
+ipcMain.on('change-shortcuts', (_event, arg) => {
   if (
     !arg.translate ||
     !arg.transliterate ||
@@ -94,22 +97,23 @@ ipcMain.on('change-shortcuts', (event, arg) => {
   relaunchApp();
 });
 
-ipcMain.on('close-window', (event, arg) => {
+ipcMain.on('close-window', (_event, _arg) => {
   if (process.platform === 'darwin') {
     app.dock.hide();
   }
 });
 
-ipcMain.handle('get-errors', (event, arg) => {
+ipcMain.handle('get-errors', (_event, _arg) => {
   return settings.get('errorsStorage');
 });
 
-ipcMain.handle('get-settings', (event, arg) => {
+ipcMain.handle('get-settings', (_event, _arg) => {
   return settings.store;
 });
 
-app.whenReady().then(() => {
-  initSettings();
+app.whenReady().then(async () => {
+  await initSettings();
+  
   const shortcuts = settings.get('shortcuts') as ShortcutsSettings;
   const InlineDomain = new domains.inline.InlineDomain();
 

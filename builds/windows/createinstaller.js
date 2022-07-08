@@ -1,13 +1,10 @@
 const createWindowsInstaller = require('electron-winstaller').createWindowsInstaller
 const path = require('path')
 
-getInstallerConfig()
-  .then(createWindowsInstaller)
-  .catch((error) => {
-    console.error(error.message || error)
-    process.exit(1)
-  })
-
+/**
+ * It returns a promise that resolves to an object containing the configuration for the installer
+ * @returns A promise that resolves to an object.
+ */
 function getInstallerConfig () {
   console.log('creating windows installer')
   const rootPath = path.join('./')
@@ -23,3 +20,10 @@ function getInstallerConfig () {
     setupIcon: path.join(rootPath, 'src', 'assets', 'build', 'icon.ico')
   })
 }
+
+getInstallerConfig()
+  .then(createWindowsInstaller)
+  .catch((error) => {
+    console.error(error.message || error)
+    process.exit(1)
+  })

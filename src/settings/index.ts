@@ -64,7 +64,12 @@ export const changeSettings = (newSettings: Settings) => {
   }
 };
 
-export const changeSetting = (key: string, value: any) => {
+/**
+ * Change one property of settings
+ * @param {string} key - The key of the setting to change.
+ * @param {unknown} value - The value to set the setting to.
+ */
+export const changeSetting = (key: string, value: unknown) => {
   settings.set(key, value);
 };
 

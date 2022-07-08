@@ -9,10 +9,10 @@ const path = require("path");
 function getInstallerConfig() {
   console.log("creating windows installer");
   const rootPath = path.join("./");
-  const outPath = path.join(rootPath, "release-builds");
+  const outPath = path.join(rootPath, "builds");
 
   return Promise.resolve({
-    appDirectory: path.join(outPath, "Nodetools-win32-ia32/"),
+    appDirectory: path.join(outPath, 'release-builds', 'windows', "Nodetools-win32-ia32/"),
     authors: "Mike Buslenko",
     noMsi: false,
     outputDirectory: path.join(outPath, "installers", "windows"),

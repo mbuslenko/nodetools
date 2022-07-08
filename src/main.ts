@@ -9,9 +9,12 @@ import {
 } from "electron";
 import * as path from "path";
 import * as domains from "./domains";
-import { changeSettings, initSettings } from "./settings";
+import { changeSetting, changeSettings, initSettings } from "./settings";
 import settings from "./settings";
 import { ShortcutsSettings } from "./settings/settings.types";
+import { openWebURL } from "./shared/utils/open-website";
+
+// import { askForAccessibilityAccess, getAuthStatus } from 'node-mac-permissions';
 
 require("update-electron-app")({
   repo: "mbuslenko/nodetools",
@@ -21,6 +24,7 @@ function createWindow(pathToHtmlFile: string) {
   // Create the browser window.
   const mainWindow = new BrowserWindow({
     height: 600,
+    frame: false,
     webPreferences: {
       nodeIntegration: true,
       contextIsolation: false,
@@ -33,23 +37,110 @@ function createWindow(pathToHtmlFile: string) {
   // and load the index.html of the app.
   mainWindow.loadFile(path.join(__dirname, pathToHtmlFile));
   mainWindow.setResizable(false);
-  app.dock.show();
+
+  if (process.platform === "darwin") {
+    app.dock.show();
+  }
 }
 
-ipcMain.on("change-settings", (event, arg) => {
-  console.log("Settings was changed", JSON.stringify(arg));
+/**
+ * It relaunches the app
+ */
+export const relaunchApp = () => {
+  app.relaunch();
+  app.exit();
+};
 
+ipcMain.on("change-settings", (_event, arg) => {
   changeSettings(arg.data);
 });
 
-ipcMain.handle("get-errors", (event, arg) => {
+ipcMain.on("change-language", (_event, arg) => {
+  if (process.platform === "darwin") {
+    app.dock.hide();
+  }
+
+  if (!arg.to) {
+    return;
+  }
+
+  changeSetting("translate", arg);
+});
+
+ipcMain.on("change-convert-currencies-settings", (_event, arg) => {
+  if (process.platform === "darwin") {
+    app.dock.hide();
+  }
+
+  if (!arg.from || !arg.to) {
+    return;
+  }
+
+  changeSetting("convertCurrencies", arg);
+});
+
+ipcMain.on("change-shortcuts", (_event, arg) => {
+  if (
+    !arg.translate ||
+    !arg.transliterate ||
+    !arg.convertCurrency ||
+    !arg.humanizeText ||
+    !arg.spellCheck ||
+    !arg.shortenUrl ||
+    !arg.calculate
+  ) {
+    return;
+  }
+
+  changeSetting("shortcuts", arg);
+
+  relaunchApp();
+});
+
+ipcMain.on("close-window", (_event, _arg) => {
+  if (process.platform === "darwin") {
+    app.dock.hide();
+  }
+});
+
+ipcMain.handle("get-errors", (_event, _arg) => {
   return settings.get("errorsStorage");
 });
 
-app.whenReady().then(() => {
-  initSettings();
+ipcMain.handle("get-settings", (_event, _arg) => {
+  return settings.store;
+});
+
+app.whenReady().then(async () => {
+  await initSettings();
+
   const shortcuts = settings.get("shortcuts") as ShortcutsSettings;
   const InlineDomain = new domains.inline.InlineDomain();
+
+  // * Disabled for Windows and Linux
+  // if (getAuthStatus('accessibility') === 'denied') {
+  //   const errorsHandler = new ErrorsHandler();
+
+  //   //@ts-ignore
+  //   askForAccessibilityAccess().then((status: string) => {
+  //     if (status === 'denied') {
+  //       errorsHandler.handleError({
+  //         message: 'Accessibility access is denied',
+  //         environment: 'Nodetools',
+  //         trace: null,
+  //       });
+  //     }
+  //   });
+
+  //   if (getAuthStatus('accessibility') === 'denied') {
+  //     errorsHandler.handleError({
+  //       message:
+  //         'You have to grant Accessibility permission for Nodetools to work it correctly, open Settings -> Security & Privacy -> Privacy tab -> Accessibility -> Add Nodetools',
+  //       environment: 'Nodetools',
+  //       trace: null,
+  //     });
+  //   }
+  // }
 
   // * translate shortcut
   globalShortcut.register(shortcuts.translate.join("+"), async () => {
@@ -103,27 +194,33 @@ app.whenReady().then(() => {
 
   const contextMenu = Menu.buildFromTemplate([
     {
+      label: "About",
+      role: "window",
+      click: () => openWebURL("https://nodetools.app/about"),
+    },
+    {
       label: "Preferences",
       submenu: [
         {
           label: "Shortcuts",
           role: "window",
-          click: () => createWindow("../index.html"),
+          click: () => createWindow("../src/views/shortcut-settings.html"),
         },
         {
           label: "Translate options",
           role: "window",
-          click: () => createWindow("../index.html"),
+          click: () => createWindow("../src/views/translate-settings.html"),
         },
         {
           label: "Currency converter options",
           role: "window",
-          click: () => createWindow("../index.html"),
+          click: () =>
+            createWindow("../src/views/convert-currencies-settings.html"),
         },
         {
           label: "Errors",
           role: "window",
-          click: () => createWindow("../errors-list.html"),
+          click: () => createWindow("../src/views/errors-list.html"),
         },
       ],
     },
@@ -190,18 +287,4 @@ app.whenReady().then(() => {
   tray.setContextMenu(contextMenu);
 
   tray.setToolTip("Nodetools");
-});
-
-export const relaunchApp = () => {
-  app.relaunch();
-  app.exit();
-};
-
-// Quit when all windows are closed, except on macOS. There, it's common
-// for applications and their menu bar to stay active until the user quits
-// explicitly with Cmd + Q.
-app.on("window-all-closed", () => {
-  if (process.platform !== "darwin") {
-    app.quit();
-  }
 });

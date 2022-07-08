@@ -11,9 +11,9 @@ export class SpellCheckerService {
         unknown,
         { data: spellCheckerTypes.SpellCheckerResponse }
       >({
-        method: "GET",
+        method: "POST",
         url: "/spell-check",
-        params: {
+        data: {
           text,
         },
       });

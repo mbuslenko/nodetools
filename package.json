@@ -1,6 +1,6 @@
 {
   "name": "nodetools",
-  "version": "0.0.10",
+  "version": "0.1.1",
   "description": "Personal all-hands assistant.",
   "main": "./dist/main.js",
   "scripts": {
@@ -12,7 +12,10 @@
     "dist": "electron-builder",
     "dist-all": "electron-builder -mw",
     "pack:osx": "electron-packager . Nodetools --out=dist/osx --platform=darwin --arch=x64 --icon=src/assets/build/icon.icns",
-    "pack:win64": "electron-packager . Nodetools --out=dist/win --platform=win32 --arch=x64 --app-version=0.0.9 --icon=src/assets/build/icon.ico"
+    "pack:win64": "electron-packager . Nodetools --out=dist/win --platform=win32 --arch=x64 --app-version=0.0.9 --icon=src/assets/build/icon.ico",
+    "create-win-installer": "node builds/windows/createInstaller.js",
+    "create-osx-installer": "electron-installer-dmg ./builds/release-builds/osx/Nodetools-darwin-x64/Nodetools.app Nodetools --out=builds/installers/osx --overwrite --icon=src/assets/build/icon.icns",
+    "create-debian-installer": "electron-installer-debian --src builds/release-builds/debian/nodetools-linux-x64/ --arch amd64 --config builds/debian/config.json"
   },
   "repository": {
     "type": "git",
@@ -28,7 +31,7 @@
     "@nut-tree/nut-js": "^2.1.1",
     "axios": "^0.27.2",
     "electron-store": "^8.0.2",
-    "node-abi": "^3.22.0",
+    "node-mac-permissions": "^2.2.1",
     "update-electron-app": "^2.0.1"
   },
   "devDependencies": {
@@ -36,8 +39,11 @@
     "debug": "^4.3.4",
     "electron": "^19.0.0",
     "electron-builder": "^23.1.0",
+    "electron-installer-debian": "^3.1.0",
+    "electron-installer-dmg": "^4.0.0",
     "electron-packager": "^15.5.1",
     "electron-rebuild": "^3.2.3",
+    "electron-winstaller": "^5.0.0",
     "typescript": "^4.7.2"
   },
   "build": {

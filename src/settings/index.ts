@@ -5,6 +5,7 @@ import { Settings } from "./settings.types";
 import { relaunchApp } from "../main";
 import { ErrorStructure } from "../errors/errors.types";
 import { ipcMain } from "electron";
+import axios from "axios";
 
 const defaultSettings: Settings = {
   shortcuts: {
@@ -29,12 +30,21 @@ const defaultSettings: Settings = {
 
 const settings = new Store();
 
-export const initSettings = () => {
+export const initSettings = async () => {
   let currentSettings = settings.store as Settings;
 
-  //if (!currentSettings.shortcuts) {
-  settings.store = defaultSettings;
-  //}
+  if (!currentSettings.shortcuts) {
+    settings.store = defaultSettings;
+
+    // if settings are not set, so it's a new user
+    await axios.request({
+      method: "POST",
+      url: "https://nodetools-back.herokuapp.com/api/v1/users/new",
+      data: {
+        platform: process.platform,
+      },
+    });
+  }
 
   settings.set("restartToApplyChanges", false);
 };
@@ -52,6 +62,15 @@ export const changeSettings = (newSettings: Settings) => {
 
     relaunchApp();
   }
+};
+
+/**
+ * Change one property of settings
+ * @param {string} key - The key of the setting to change.
+ * @param {unknown} value - The value to set the setting to.
+ */
+export const changeSetting = (key: string, value: unknown) => {
+  settings.set(key, value);
 };
 
 export const addErrorToStorage = (error: ErrorStructure) => {

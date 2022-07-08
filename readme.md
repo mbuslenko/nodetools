@@ -39,42 +39,49 @@ or run dev mode from command line:
 _\* All gifs were artificially slowed down_
 
 <a id="translator"></a>
+
 ### Inline translator
 
 The keyboard shortcut triggers the translation of the text into the language configured in the settings.
 ![Demo](https://i.imgur.com/Pe34Qs3.gif)
 
 <a id="transliterator"></a>
+
 ### Inline transliterator
 
 There are times when we write text in the wrong layout. With this feature, now you just need to select the text and press the keyboard shortcut that will trigger the transliteration.
 ![Demo](https://i.imgur.com/LqTHu5l.gif)
 
 <a id="humanizer"></a>
+
 ### Inline text humanizer
 
 Did you accidentally write the text in upper case? It doesn't matter, text humanizer will handle this and many other problems.
 ![Demo](https://i.imgur.com/84FB2NC.gif)
 
 <a id="spell-fixer"></a>
+
 ### Inline spell fixer
 
 Easily deals with spelling, semantic and other errors in your sentences.
 ![Demo](https://i.imgur.com/ocngKoh.gif)
 
 <a id="calculator"></a>
+
 ### Inline calculator
 
 Will gladly solve any arithmetic examples for you.
 ![Demo](https://i.imgur.com/xgdtewe.gif)
 
 <a id="url-shortener"></a>
+
 ### Inline URL Shortener
 
 His main enemy is long links, and he gladly shortens them.
 ![Demo](https://i.imgur.com/ymstnTI.gif)
 
 <a id="currencies-convertor"></a>
+
 ### Inline Currencies Convertor
 
 Fast converter supporting more than 180 currencies.
@@ -111,6 +118,7 @@ Current roadmap for future versions of the app
 - Ability to remove errors via HTML
 
 ### v0.1.30-alpha
+
 - Mathematical, physics and other convertors
 - Final UI/UX
 - Text formatter

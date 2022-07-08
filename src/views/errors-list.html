@@ -127,26 +127,26 @@
         if (e.keyCode === 27) {
           window.close();
 
-          const { ipcRenderer } = require('electron');
-          ipcRenderer.send('close-window');
+          const { ipcRenderer } = require("electron");
+          ipcRenderer.send("close-window");
         }
       };
 
-      window.addEventListener('DOMContentLoaded', () => {
-        const { ipcRenderer } = require('electron');
+      window.addEventListener("DOMContentLoaded", () => {
+        const { ipcRenderer } = require("electron");
 
-        ipcRenderer.invoke('get-errors').then((result) => {
-          localStorage.setItem('errors', JSON.stringify(result));
+        ipcRenderer.invoke("get-errors").then((result) => {
+          localStorage.setItem("errors", JSON.stringify(result));
 
-          var table = document.getElementById('errors-table');
+          var table = document.getElementById("errors-table");
 
           if (result.length === 0) {
-            return (document.getElementById('table').style.display = 'none');
+            return (document.getElementById("table").style.display = "none");
           } else if (result.length > 6) {
             result = result.slice(-6);
           }
 
-          document.getElementById('no-errors').style.display = 'none';
+          document.getElementById("no-errors").style.display = "none";
 
           result.forEach((el) => {
             row = table.insertRow(-1);
@@ -155,8 +155,8 @@
             cell3 = row.insertCell(2);
             cell1.innerHTML = new Date(el.date)
               .toISOString()
-              .replace('T', ' ')
-              .split('.')[0];
+              .replace("T", " ")
+              .split(".")[0];
             cell2.innerHTML = el.environment;
             cell3.innerHTML = el.message;
           });

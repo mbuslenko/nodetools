@@ -37,7 +37,7 @@ function createWindow(pathToHtmlFile: string) {
   // and load the index.html of the app.
   mainWindow.loadFile(path.join(__dirname, pathToHtmlFile));
   mainWindow.setResizable(false);
-  
+
   if (process.platform === 'darwin') {
     app.dock.show();
   }
@@ -113,7 +113,7 @@ ipcMain.handle('get-settings', (_event, _arg) => {
 
 app.whenReady().then(async () => {
   await initSettings();
-  
+
   const shortcuts = settings.get('shortcuts') as ShortcutsSettings;
   const InlineDomain = new domains.inline.InlineDomain();
 

@@ -202,30 +202,30 @@
         if (e.keyCode === 27) {
           window.close();
 
-          const { ipcRenderer } = require('electron');
-          ipcRenderer.send('close-window');
+          const { ipcRenderer } = require("electron");
+          ipcRenderer.send("close-window");
         }
       };
 
       const createShortcutDom = (description) => {
-        const shortcutWrapperDom = document.createElement('div');
-        shortcutWrapperDom.className = 'shortcut-wrapper';
+        const shortcutWrapperDom = document.createElement("div");
+        shortcutWrapperDom.className = "shortcut-wrapper";
 
-        const shortcutDescriptionDom = document.createElement('p');
+        const shortcutDescriptionDom = document.createElement("p");
         shortcutDescriptionDom.textContent = description;
 
-        const shortcutDom = document.createElement('div');
-        shortcutDom.className = 'shortcut';
+        const shortcutDom = document.createElement("div");
+        shortcutDom.className = "shortcut";
 
-        const newShortcutWrapperDom = document.createElement('div');
-        newShortcutWrapperDom.className = 'new-shortcut-wrapper is-hidden';
+        const newShortcutWrapperDom = document.createElement("div");
+        newShortcutWrapperDom.className = "new-shortcut-wrapper is-hidden";
 
-        const newShortcutDom = document.createElement('div');
-        newShortcutDom.className = 'new-shortcut';
+        const newShortcutDom = document.createElement("div");
+        newShortcutDom.className = "new-shortcut";
 
-        const saveShortcutButton = document.createElement('button');
-        saveShortcutButton.className = 'save-shortcut-btn btn btn-dark';
-        saveShortcutButton.textContent = 'Save';
+        const saveShortcutButton = document.createElement("button");
+        saveShortcutButton.className = "save-shortcut-btn btn btn-dark";
+        saveShortcutButton.textContent = "Save";
 
         newShortcutWrapperDom.append(newShortcutDom, saveShortcutButton);
         shortcutWrapperDom.append(
@@ -244,16 +244,16 @@
       };
 
       const createShortcutKeyDom = (key) => {
-        const keyDom = document.createElement('span');
+        const keyDom = document.createElement("span");
         keyDom.textContent = key;
-        keyDom.className = 'shortcut-key';
+        keyDom.className = "shortcut-key";
         return keyDom;
       };
 
       const codeToKey = new Map([
-        ['Equal', '='],
-        ['Minus', '-'],
-        ['Backquote', '`'],
+        ["Equal", "="],
+        ["Minus", "-"],
+        ["Backquote", "`"],
       ]);
 
       const transformCodeToKey = (code) => {
@@ -263,7 +263,7 @@
           return key;
         }
 
-        return code.replace(/Key|Digit/, '');
+        return code.replace(/Key|Digit/, "");
       };
 
       function Shortcut(description, shortcutKeys, onShortcutUpdate) {
@@ -326,8 +326,8 @@
         };
 
         const stopChangingShortcut = () => {
-          newShortcutWrapperDom.classList.add('is-hidden');
-          shortcutDom.classList.remove('is-hidden');
+          newShortcutWrapperDom.classList.add("is-hidden");
+          shortcutDom.classList.remove("is-hidden");
 
           isChangingShortcut = false;
           window.onkeydown = null;
@@ -340,8 +340,8 @@
             return;
           }
 
-          newShortcutWrapperDom.classList.remove('is-hidden');
-          shortcutDom.classList.add('is-hidden');
+          newShortcutWrapperDom.classList.remove("is-hidden");
+          shortcutDom.classList.add("is-hidden");
           isChangingShortcut = true;
 
           changeShortcut();
@@ -349,15 +349,15 @@
 
         saveShortcutButton.onclick = () => {
           newShortcut = newShortcut.map((key) =>
-            key.replace('Left', '').replace('Right', '')
+            key.replace("Left", "").replace("Right", "")
           );
           if (
-            !newShortcut.includes('Control') &&
-            !newShortcut.includes('Meta') &&
-            !newShortcut.includes('Shift')
+            !newShortcut.includes("Control") &&
+            !newShortcut.includes("Meta") &&
+            !newShortcut.includes("Shift")
           ) {
             console.log(newShortcut);
-            return alert('You have to press Control/Shift/Meta');
+            return alert("You have to press Control/Shift/Meta");
           }
 
           if (newShortcut.length > 3) {
@@ -377,48 +377,48 @@
         return shortcutWrapperDom;
       }
 
-      const div = document.querySelector('.shortcuts');
+      const div = document.querySelector(".shortcuts");
 
-      const { ipcRenderer } = require('electron');
+      const { ipcRenderer } = require("electron");
 
       let shortcuts = {};
 
-      ipcRenderer.invoke('get-settings').then((settings) => {
+      ipcRenderer.invoke("get-settings").then((settings) => {
         shortcuts = settings.shortcuts;
 
         div.append(
           Shortcut(
-            'Translate text',
+            "Translate text",
             shortcuts.translate,
             (shortcut) => (shortcuts.translate = shortcut)
           ),
           Shortcut(
-            'Transliterate text',
+            "Transliterate text",
             shortcuts.transliterate,
             (shortcut) => (shortcuts.transliterate = shortcut)
           ),
           Shortcut(
-            'Humanize text',
+            "Humanize text",
             shortcuts.humanizeText,
             (shortcut) => (shortcuts.humanizeText = shortcut)
           ),
           Shortcut(
-            'Fix spelling',
+            "Fix spelling",
             shortcuts.spellCheck,
             (shortcut) => (shortcuts.spellCheck = shortcut)
           ),
           Shortcut(
-            'Calculate',
+            "Calculate",
             shortcuts.calculate,
             (shortcut) => (shortcuts.calculate = shortcut)
           ),
           Shortcut(
-            'Convert currency',
+            "Convert currency",
             shortcuts.convertCurrency,
             (shortcut) => (shortcuts.convertCurrency = shortcut)
           ),
           Shortcut(
-            'Shorten URL',
+            "Shorten URL",
             shortcuts.shortenUrl,
             (shortcut) => (shortcuts.shortenUrl = shortcut)
           )
@@ -426,9 +426,9 @@
       });
 
       function changeShortcuts() {
-        const { ipcRenderer } = require('electron');
+        const { ipcRenderer } = require("electron");
 
-        ipcRenderer.send('change-shortcuts', shortcuts);
+        ipcRenderer.send("change-shortcuts", shortcuts);
       }
     </script>
   </body>

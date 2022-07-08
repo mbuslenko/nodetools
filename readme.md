@@ -6,13 +6,13 @@ Personal all-hands assistant for MacOS, Windows 10+, Ubuntu, Debian and many mor
 
 ## Features
 
-- [Inline translator](###-inline-translator)
-- [Inline transliterator](###-inline-transliterator)
-- [Inline text humanizer](###-inline-text-humanizer)
-- [Inline spell fixer](###-inline-spell-fixer)
-- [Inline calculator](###-inline-calculator)
-- [Inline URL shortener](###-inline-url-shortener)
-- [Inline currencies convertor](###-inline-currencies-convertor)
+- [Inline translator](#translator)
+- [Inline transliterator](#transliterator)
+- [Inline text humanizer](#humanizer)
+- [Inline spell fixer](#spell-fixer)
+- [Inline calculator](#calculator)
+- [Inline URL shortener](#url-shortener)
+- [Inline currencies convertor](#currencies-convertor)
 
 ## Installation
 
@@ -38,36 +38,43 @@ or run dev mode from command line:
 
 _\* All gifs were artificially slowed down_
 
+<a id="translator"></a>
 ### Inline translator
 
 The keyboard shortcut triggers the translation of the text into the language configured in the settings.
 ![Demo](https://i.imgur.com/Pe34Qs3.gif)
 
+<a id="transliterator"></a>
 ### Inline transliterator
 
 There are times when we write text in the wrong layout. With this feature, now you just need to select the text and press the keyboard shortcut that will trigger the transliteration.
 ![Demo](https://i.imgur.com/LqTHu5l.gif)
 
+<a id="humanizer"></a>
 ### Inline text humanizer
 
 Did you accidentally write the text in upper case? It doesn't matter, text humanizer will handle this and many other problems.
 ![Demo](https://i.imgur.com/84FB2NC.gif)
 
+<a id="spell-fixer"></a>
 ### Inline spell fixer
 
 Easily deals with spelling, semantic and other errors in your sentences.
 ![Demo](https://i.imgur.com/ocngKoh.gif)
 
+<a id="calculator"></a>
 ### Inline calculator
 
 Will gladly solve any arithmetic examples for you.
 ![Demo](https://i.imgur.com/xgdtewe.gif)
 
+<a id="url-shortener"></a>
 ### Inline URL Shortener
 
 His main enemy is long links, and he gladly shortens them.
 ![Demo](https://i.imgur.com/ymstnTI.gif)
 
+<a id="currencies-convertor"></a>
 ### Inline Currencies Convertor
 
 Fast converter supporting more than 180 currencies.
@@ -84,27 +91,27 @@ Current roadmap for future versions of the app
 - ~~RU/ENG transliteration fix for MacOS~~
 - ~~Better error handling~~
 
-### v0.0.12-alpha
+### v0.1.1-alpha
 
 - About app section
-- Mathematical, physical and other scientific converters
-- Dev only HTML next version design
+- New UI design
+- Minor fixes & improvements
 
-### v0.0.13-alpha
+### v0.1.10-alpha
 
 - File convertor basics architecture
 - Audio convertor
 - Video convertor
 - UA/ENG transliteration
 
-### v0.0.15-alpha
+### v0.1.20-alpha
 
 - Architecture and basic functionality of the extended clipboard
 - Support for pictures and other basic data types in the clipboard
 - Ability to remove errors via HTML
 
-### v0.0.17-alpha
-
+### v0.1.30-alpha
+- Mathematical, physics and other convertors
 - Final UI/UX
 - Text formatter
 

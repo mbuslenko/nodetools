@@ -1,27 +1,29 @@
 {
-  "name": "nodetools",
+  "name": "Nodetools",
   "version": "0.1.1",
   "description": "Personal all-hands assistant.",
-  "main": "./dist/main.js",
+  "main": "./app/main.js",
+  "compilerOptions": {
+    "outDir": "app"
+  },
   "scripts": {
     "build": "tsc",
     "watch": "tsc -w",
     "lint": "eslint -c .eslintrc --ext .ts ./src",
-    "start": "npm run build && electron ./dist/main.js",
+    "clean": "rm -rf ./app",
+    "copy-files": "cp -r ./src/assets/ ./app/assets/ && cp -r ./src/views/ ./app/views",
+    "start": "npm run clean && npm run build && npm run copy-files && electron ./app/main.js",
     "pack": "electron-builder --dir",
     "dist": "electron-builder",
     "dist-all": "electron-builder -mw",
-    "pack:osx": "electron-packager . Nodetools --out=builds/release-builds/osx --platform=darwin --arch=x64 --icon=src/assets/build/icon.icns",
-    "pack:win64": "electron-packager . Nodetools --out=builds/release-builds/windows --platform=win32 --arch=x64 --app-version=0.0.9 --icon=src/assets/build/icon.ico",
-    "create-win-installer": "node builds/windows/createInstaller.js",
-    "create-osx-installer": "electron-installer-dmg ./builds/release-builds/osx/Nodetools-darwin-x64/Nodetools.app Nodetools --out=builds/installers/osx --overwrite --icon=src/assets/build/icon.icns",
-    "create-debian-installer": "electron-installer-debian --src builds/release-builds/debian/nodetools-linux-x64/ --arch amd64 --config builds/debian/config.json"
-  },
+    "postinstall": "electron-builder install-app-deps",
+    "dist-linux": "electron-builder --linux deb"
+    },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/mbuslenko/nodetools.git"
   },
-  "author": "mbuslenko",
+  "author": "mbuslenko <m.buslenko@gmail.com>",
   "license": "ISC",
   "bugs": {
     "url": "https://github.com/mbuslenko/nodetools/issues"
@@ -48,10 +50,11 @@
   },
   "build": {
     "extraMetadata": {
-      "main": "dist/main.js"
+      "main": "app/main.js"
     },
     "files": [
-      "./dist/main.js"
+      "src/**/*",
+      "app/**/*"
     ],
     "appId": "com.nodetools.app",
     "mac": {
@@ -61,6 +64,10 @@
     },
     "win": {
       "target": "nsis",
+      "icon": "src/assets/build/icon.ico"
+    },
+    "linux": {
+      "target": "deb",
       "icon": "src/assets/build/icon.png"
     }
   }

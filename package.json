@@ -18,7 +18,7 @@
     "dist-all": "electron-builder -mw",
     "postinstall": "electron-builder install-app-deps",
     "dist-linux": "electron-builder --linux deb"
-    },
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/mbuslenko/nodetools.git"

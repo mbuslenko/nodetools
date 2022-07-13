@@ -92,7 +92,7 @@
           fill="white"
         />
       </svg>
-      <a href="https://nodetools.app" style="text-decoration: none">
+      <a href="javascript:openNodetoolsWebsite()" style="text-decoration: none">
         <p class="strong blue">Alpha version</p>
       </a>
     </div>
@@ -126,11 +126,14 @@
       window.onkeydown = (e) => {
         if (e.keyCode === 27) {
           window.close();
-
-          const { ipcRenderer } = require("electron");
-          ipcRenderer.send("close-window");
         }
       };
+
+      function openNodetoolsWebsite() {
+        const shell = require('electron').shell;
+
+        shell.openExternal("https://www.nodetools.app")
+      }
 
       window.addEventListener("DOMContentLoaded", () => {
         const { ipcRenderer } = require("electron");

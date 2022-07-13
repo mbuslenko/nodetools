@@ -107,3 +107,5 @@ dist
 
 release-builds/
 app/
+
+.idea

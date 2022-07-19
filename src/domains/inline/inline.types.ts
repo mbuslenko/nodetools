@@ -1,5 +1,5 @@
-import { Language } from "../../services/translator/translator.types";
+import { Language } from '../../services/translator/translator.types';
 
 export type TranslateOptions = {
-  to: Language;
+	to: Language;
 };

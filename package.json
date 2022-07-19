@@ -1,12 +1,13 @@
 {
   "name": "Nodetools",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "Personal all-hands assistant.",
   "main": "./app/main.js",
   "compilerOptions": {
     "outDir": "app"
   },
   "scripts": {
+    "format": "prettier --write \"src/**/*.ts\"",
     "build": "tsc",
     "watch": "tsc -w",
     "lint": "eslint -c .eslintrc --ext .ts ./src",
@@ -18,7 +19,7 @@
     "dist-all": "electron-builder -mw",
     "postinstall": "electron-builder install-app-deps",
     "dist-linux": "electron-builder --linux deb"
-    },
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/mbuslenko/nodetools.git"
@@ -46,6 +47,7 @@
     "electron-packager": "^15.5.1",
     "electron-rebuild": "^3.2.3",
     "electron-winstaller": "^5.0.0",
+    "prettier": "^2.7.1",
     "typescript": "^4.7.2"
   },
   "build": {

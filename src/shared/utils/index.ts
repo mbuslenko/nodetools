@@ -1,1 +1,1 @@
-export * from "./humanize-string";
+export * from './humanize-string';

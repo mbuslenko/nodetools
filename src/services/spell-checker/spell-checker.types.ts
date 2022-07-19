@@ -1,16 +1,16 @@
 export type SpellCheckerResponse = {
-  elements: {
-    id: number;
-    errors: {
-      word: string;
-      position: number;
-      suggestions: string[];
-    }[];
-  }[];
+	elements: {
+		id: number;
+		errors: {
+			word: string;
+			position: number;
+			suggestions: string[];
+		}[];
+	}[];
 };
 
 export type SpellCheckerErrorResponse = {
-  errorMessage: string;
-  errorType: string;
-  stackTrace: string[];
+	errorMessage: string;
+	errorType: string;
+	stackTrace: string[];
 };

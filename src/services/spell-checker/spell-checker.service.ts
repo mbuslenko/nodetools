@@ -1,59 +1,59 @@
-import ErrorsHandler from "../../errors/errors.module";
-import { axiosInstance } from "../../shared/axios";
-import * as spellCheckerTypes from "./spell-checker.types";
+import ErrorsHandler from '../../errors/errors.module';
+import { axiosInstance } from '../../shared/axios';
+import * as spellCheckerTypes from './spell-checker.types';
 
 export class SpellCheckerService {
-  protected errorHandler = new ErrorsHandler();
+	protected errorHandler = new ErrorsHandler();
 
-  async check(text: string): Promise<string> {
-    try {
-      const { data: response } = await axiosInstance.request<
-        unknown,
-        { data: spellCheckerTypes.SpellCheckerResponse }
-      >({
-        method: "POST",
-        url: "/spell-check",
-        data: {
-          text,
-        },
-      });
+	async check(text: string): Promise<string> {
+		try {
+			const { data: response } = await axiosInstance.request<
+				unknown,
+				{ data: spellCheckerTypes.SpellCheckerResponse }
+			>({
+				method: 'POST',
+				url: '/spell-check',
+				data: {
+					text,
+				},
+			});
 
-      if (!response.elements) {
-        const errorResponse =
-          response as unknown as spellCheckerTypes.SpellCheckerErrorResponse;
+			if (!response.elements) {
+				const errorResponse =
+					response as unknown as spellCheckerTypes.SpellCheckerErrorResponse;
 
-        if (errorResponse.errorMessage) {
-          return this.handleError(response);
-        }
-      }
+				if (errorResponse.errorMessage) {
+					return this.handleError(response);
+				}
+			}
 
-      const typeErrors = response.elements[0].errors;
-      type errorType =
-        spellCheckerTypes.SpellCheckerResponse["elements"][0]["errors"][0];
+			const typeErrors = response.elements[0].errors;
+			type errorType =
+				spellCheckerTypes.SpellCheckerResponse['elements'][0]['errors'][0];
 
-      typeErrors.forEach((el: errorType) => {
-        text = text.replace(el.word, el.suggestions[0]);
-      });
+			typeErrors.forEach((el: errorType) => {
+				text = text.replace(el.word, el.suggestions[0]);
+			});
 
-      if (!text || text == "undefined") {
-        return this.handleError(new Error("No text was returned"));
-      }
+			if (!text || text == 'undefined') {
+				return this.handleError(new Error('No text was returned'));
+			}
 
-      return text;
-    } catch (e) {
-      return this.handleError(e);
-    }
-  }
+			return text;
+		} catch (e) {
+			return this.handleError(e);
+		}
+	}
 
-  private handleError(e: any): undefined {
-    this.errorHandler.handleError({
-      environment: "Spell checker",
-      date: new Date(),
-      message:
-        "An error occurred while checking the spelling of the text. Note that this feature only works with English.",
-      trace: e,
-    });
+	private handleError(e: any): undefined {
+		this.errorHandler.handleError({
+			environment: 'Spell checker',
+			date: new Date(),
+			message:
+				'An error occurred while checking the spelling of the text. Note that this feature only works with English.',
+			trace: e,
+		});
 
-    return undefined;
-  }
+		return undefined;
+	}
 }

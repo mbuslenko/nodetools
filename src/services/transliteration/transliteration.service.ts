@@ -1,90 +1,91 @@
-import ErrorsHandler from "../../errors/errors.module";
-import { config } from "./config";
+import ErrorsHandler from '../../errors/errors.module';
+import { config } from './config';
 
 export class TransliterationService {
-  protected errorsHandler = new ErrorsHandler();
+	protected errorsHandler = new ErrorsHandler();
 
-  protected normalize(str: string) {
-    str = str
-      .replace(/(Ю\s|Б\s|Ь\s)/g, (s) => {
-        return config.words[s as keyof typeof config.words];
-      })
-      .replace(/\s{2,}/g, " ")
-      .trim();
+	protected normalize(str: string) {
+		str = str
+			.replace(/(Ю\s|Б\s|Ь\s)/g, (s) => {
+				return config.words[s as keyof typeof config.words];
+			})
+			.replace(/\s{2,}/g, ' ')
+			.trim();
 
-    return str;
-  }
+		return str;
+	}
 
-  protected flip(trans: { [key: string]: any }) {
-    let key,
-      tmp: { [key: string]: any } = {};
-    for (key in trans) {
-      tmp[trans[key]] = key;
-    }
+	protected flip(trans: { [key: string]: any }) {
+		let key
+		const tmp: { [key: string]: any } = {};
 
-    return tmp;
-  }
+		for (key in trans) {
+			tmp[trans[key]] = key;
+		}
 
-  transliterate(text: string, normalize?: boolean): string {
-    try {
-      const cyrillicPattern = /^\p{Script=Cyrillic}+$/u;
+		return tmp;
+	}
 
-      let type: string;
-      if (cyrillicPattern.test(text)) {
-        type = "rueng";
-      } else {
-        type = "engru";
-      }
+	transliterate(text: string, normalize?: boolean): string {
+		try {
+			const cyrillicPattern = /^\p{Script=Cyrillic}+$/u;
 
-      // TODO: refactor to not change config.default
-      switch (type) {
-        case "rueng": {
-          if (process.platform == "darwin") {
-            config.default = config.dictionary.macRuEng;
-          } else {
-            config.default = config.dictionary.winRuEn;
-          }
+			let type: string;
+			if (cyrillicPattern.test(text)) {
+				type = 'rueng';
+			} else {
+				type = 'engru';
+			}
 
-          break;
-        }
-        case "engru": {
-          if (process.platform == "darwin") {
-            config.default = this.flip(config.dictionary.macRuEng);
-          } else {
-            config.default = this.flip(config.dictionary.winRuEn);
-          }
+			// TODO: refactor to not change config.default
+			switch (type) {
+				case 'rueng': {
+					if (process.platform == 'darwin') {
+						config.default = config.dictionary.macRuEng;
+					} else {
+						config.default = config.dictionary.winRuEn;
+					}
 
-          break;
-        }
-        default: {
-          config.default = this.flip(config.dictionary.winRuEn);
-          break;
-        }
-      }
+					break;
+				}
+				case 'engru': {
+					if (process.platform == 'darwin') {
+						config.default = this.flip(config.dictionary.macRuEng);
+					} else {
+						config.default = this.flip(config.dictionary.winRuEn);
+					}
 
-      let textToArray = text.split("");
-      const result: any[] = [];
-      let obj = config.default as { [key: string]: any };
+					break;
+				}
+				default: {
+					config.default = this.flip(config.dictionary.winRuEn);
+					break;
+				}
+			}
 
-      textToArray.forEach(function (sym, i) {
-        if (obj.hasOwnProperty(textToArray[i])) {
-          result.push(obj[textToArray[i]]);
-        } else {
-          result.push(sym);
-        }
-      });
+			const textToArray = text.split('');
+			const result: any[] = [];
+			const obj = config.default as { [key: string]: any };
 
-      if (normalize) {
-        return this.normalize(result.join(""));
-      } else {
-        return result.join("");
-      }
-    } catch (e) {
-      this.errorsHandler.handleError({
-        environment: "Transliteration",
-        message: `An error occurred while transliterating the text, got ${text}`,
-        trace: e,
-      });
-    }
-  }
+			textToArray.forEach(function (sym, i) {
+				if (obj.hasOwnProperty(textToArray[i])) {
+					result.push(obj[textToArray[i]]);
+				} else {
+					result.push(sym);
+				}
+			});
+
+			if (normalize) {
+				return this.normalize(result.join(''));
+			} else {
+				return result.join('');
+			}
+		} catch (e) {
+			this.errorsHandler.handleError({
+				environment: 'Transliteration',
+				message: `An error occurred while transliterating the text, got ${text}`,
+				trace: e,
+			});
+		}
+	}
 }

@@ -21,9 +21,9 @@ export class AirAlertDomain {
 	listenToAirAlerts() {
 		const alertsSettings = settings.get('airAlerts');
 		const state = alertsSettings.state;
-		let previousAlertStatus: boolean = true;
+		let previousAlertStatus = false;
 
-		const stateInUkrainian = states[state as 'Kyiv']
+		const stateInUkrainian = states[state as 'Kyiv'];
 
 		const airAlertIsActiveMessage = {
 			title: '🚨 Повітряна тривога',
@@ -35,25 +35,32 @@ export class AirAlertDomain {
 
 		if (state) {
 			setInterval(() => {
-				this.airAlertApi.getInfoAboutAirAlerts().then((data) => {
-					if (data) {
-						const { states } = data;
-						const [desiredState] = states.filter((el) => el.name_en === state);
+				this.airAlertApi
+					.getInfoAboutAirAlerts()
+					.then((data) => {
+						if (data) {
+							const { states } = data;
+							const [desiredState] = states.filter(
+								(el) => el.name_en === state,
+							);
 
-						if (desiredState) {
-							const actualAlertStatus = desiredState.alert;
+							if (desiredState) {
+								const actualAlertStatus = desiredState.alert;
 
-							if (actualAlertStatus !== previousAlertStatus) {
-								previousAlertStatus = actualAlertStatus;
-								this.showNotification(
-									actualAlertStatus
-										? airAlertIsActiveMessage
-										: airAlertIsInactiveMessage,
-								);
+								if (actualAlertStatus !== previousAlertStatus) {
+									previousAlertStatus = actualAlertStatus;
+									this.showNotification(
+										actualAlertStatus
+											? airAlertIsActiveMessage
+											: airAlertIsInactiveMessage,
+									);
+								}
 							}
 						}
-					}
-				});
+					})
+					.catch((e) => {
+						console.error(e);
+					});
 			}, 30000);
 		}
 	}

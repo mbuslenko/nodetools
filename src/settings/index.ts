@@ -35,7 +35,7 @@ const defaultSettings: Settings = {
 const settings = new Store<Settings>();
 
 export const initSettings = async () => {
-	let currentSettings = settings.store as Settings;
+	const currentSettings = settings.store as Settings;
 
 	if (!currentSettings.shortcuts) {
 		settings.store = defaultSettings;

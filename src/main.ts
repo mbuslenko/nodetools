@@ -25,12 +25,14 @@ require('update-electron-app')({
 	repo: 'mbuslenko/nodetools',
 });
 
-
 /**
  * Create window function starts the browser window
  * in native mode
  */
-function createWindow(pathToHtmlFile: string, size?: { height: number, width: number }) {
+function createWindow(
+	pathToHtmlFile: string,
+	size?: { height: number; width: number },
+) {
 	// Create the browser window.
 	const mainWindow = new BrowserWindow({
 		height: size?.height ?? 600,
@@ -53,7 +55,6 @@ function createWindow(pathToHtmlFile: string, size?: { height: number, width: nu
 	}
 }
 
-
 /**
  * Useful stuff that has to be called
  * from the main process
@@ -62,7 +63,6 @@ export const relaunchApp = () => {
 	app.relaunch();
 	app.exit();
 };
-
 
 /**
  * Events between the main and browser processes
@@ -133,7 +133,6 @@ ipcMain.on('change-air-alerts-state', (_event, arg) => {
 
 	changeSetting('airAlerts', { enabled: true, state: arg.state });
 });
-
 
 /**
  * Generate and configure shortcuts
@@ -206,7 +205,6 @@ app.whenReady().then(async () => {
 	});
 });
 
-
 /**
  * Generate and configure context menu
  */
@@ -221,7 +219,7 @@ app.whenReady().then(() => {
 	);
 	tray = new Tray(icon);
 
-	const airAlertsSettings = settings.get('airAlerts')
+	const airAlertsSettings = settings.get('airAlerts');
 
 	const shortcuts = settings.get('shortcuts') as ShortcutsSettings;
 	const InlineDomain = new domains.inline.InlineDomain();
@@ -251,7 +249,15 @@ app.whenReady().then(() => {
 					click: () =>
 						createWindow('../src/views/convert-currencies-settings.html'),
 				},
-				...(airAlertsSettings.enabled === true ? [{ label: 'Air alerts settings', click: () => createWindow('../src/views/air-alerts-settings.html'), }] : []),
+				...(airAlertsSettings.enabled === true
+					? [
+							{
+								label: 'Air alerts settings',
+								click: () =>
+									createWindow('../src/views/air-alerts-settings.html'),
+							},
+					  ]
+					: []),
 				{
 					label: 'Errors',
 					role: 'window',
@@ -324,38 +330,39 @@ app.whenReady().then(() => {
 	tray.setToolTip('Nodetools');
 });
 
-
 /**
  * Air alerts configuration
  */
 app.whenReady().then(() => {
-	const airAlertsSettings = settings.get('airAlerts') as Settings['airAlerts']
+	const airAlertsSettings = settings.get('airAlerts') as Settings['airAlerts'];
 
 	if (airAlertsSettings.enabled === null) {
-		createWindow('../src/views/support-ukraine.html', { height: 420, width: 600 })
+		createWindow('../src/views/support-ukraine.html', {
+			height: 420,
+			width: 600,
+		});
 
 		ipcMain.on('init-alerts', (_event, arg) => {
 			if (arg.enableAlerts === true) {
 				const enabledAirAlertsSettings = {
 					...airAlertsSettings,
 					enabled: true,
-				}
+				};
 
-				changeSetting('airAlerts', enabledAirAlertsSettings)
+				changeSetting('airAlerts', enabledAirAlertsSettings);
 			} else {
 				const disabledAirAlertsSettings = {
 					...airAlertsSettings,
 					enabled: false,
-				}
+				};
 
-				changeSetting('airAlerts', disabledAirAlertsSettings)
+				changeSetting('airAlerts', disabledAirAlertsSettings);
 			}
 		});
 	} else if (airAlertsSettings.enabled === true && airAlertsSettings.state) {
-		new AirAlertDomain().listenToAirAlerts()
+		new AirAlertDomain().listenToAirAlerts();
 	}
-})
-
+});
 
 /**
  * Close window handler for macOS

@@ -16,8 +16,9 @@ export class TransliterationService {
 	}
 
 	protected flip(trans: { [key: string]: any }) {
-		let key,
-			tmp: { [key: string]: any } = {};
+		let key
+		const tmp: { [key: string]: any } = {};
+
 		for (key in trans) {
 			tmp[trans[key]] = key;
 		}
@@ -62,9 +63,9 @@ export class TransliterationService {
 				}
 			}
 
-			let textToArray = text.split('');
+			const textToArray = text.split('');
 			const result: any[] = [];
-			let obj = config.default as { [key: string]: any };
+			const obj = config.default as { [key: string]: any };
 
 			textToArray.forEach(function (sym, i) {
 				if (obj.hasOwnProperty(textToArray[i])) {

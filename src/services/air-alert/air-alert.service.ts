@@ -14,7 +14,7 @@ export class AirAlertApiService {
 	async getInfoAboutAirAlerts(): Promise<AirAlertsApiResponse | null> {
 		const { data } = await axiosInstance
 			.get<unknown, { data: AirAlertsApiResponse }>('/air-alerts')
-			.catch((e) => {
+			.catch(() => {
 				return null;
 			});
 

@@ -25,6 +25,14 @@ require('update-electron-app')({
 	repo: 'mbuslenko/nodetools',
 });
 
+
+/**
+ * This prevents the app to be opened twice
+ */
+const gotTheLock = app.requestSingleInstanceLock()
+if (!gotTheLock) app.quit();
+
+
 /**
  * Create window function starts the browser window
  * in native mode

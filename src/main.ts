@@ -18,6 +18,7 @@ import { ShortcutsSettings } from './settings/settings.types';
 import { openWebURL } from './shared/utils/open-website';
 import { Settings } from './settings/settings.types';
 import { AirAlertDomain } from './domains/air-alert/air-alert.domain';
+import { FilesDomain } from './domains/files/files.domain';
 
 // import { askForAccessibilityAccess, getAuthStatus } from 'node-mac-permissions';
 
@@ -263,6 +264,11 @@ app.whenReady().then(() => {
 					role: 'window',
 					click: () => createWindow('../src/views/errors-list.html'),
 				},
+				{
+					label: 'Errors',
+					role: 'window',
+					click: () => createWindow('../src/views/convert-file.html'),
+				},
 			],
 		},
 		{ label: 'Separator', type: 'separator' },
@@ -362,6 +368,29 @@ app.whenReady().then(() => {
 	} else if (airAlertsSettings.enabled === true && airAlertsSettings.state) {
 		new AirAlertDomain().listenToAirAlerts();
 	}
+});
+
+/**
+ * Convert file
+ */
+let filePath = '/Users/mbuslenko/Desktop/Work/nodetools/src/assets/logo.png';
+
+if (process.platform === 'darwin') {
+	app.on('open-file', (event, path) => {
+		event.preventDefault();
+		
+		filePath = path
+	});
+}
+
+ipcMain.handle('get-file-path', (_event, _arg) => {
+	return filePath
+});
+
+ipcMain.on('convert-file', async (_event, arg) => {
+	const filesDomain = new FilesDomain();
+
+	
 });
 
 /**

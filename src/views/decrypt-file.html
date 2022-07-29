@@ -80,7 +80,7 @@
 				margin-bottom: 5vh;
 			}
 
-			.selectorbox {
+			.password-input {
 				max-width: 25%;
 			}
 		</style>
@@ -139,20 +139,20 @@
 					<path
 						fill-rule="evenodd"
 						clip-rule="evenodd"
-						d="M31 31C31 28.7909 32.7909 27 35 27H51C51.5304 27 52.0391 27.2107 52.4142 27.5858L62.4142 37.5858C62.7893 37.9609 63 38.4696 63 39V63C63 65.2091 61.2091 67 59 67H35C32.7909 67 31 65.2091 31 63V31ZM58.1716 39H51V31.8284L58.1716 39ZM47 31V41C47 42.1046 47.8954 43 49 43H59V63H35V31L47 31Z"
+						d="M46 30C42.7046 30 40 32.7046 40 36V42H58C60.2091 42 62 43.7909 62 46V62C62 64.2091 60.2091 66 58 66H34C31.7909 66 30 64.2091 30 62V46C30 43.7909 31.7909 42 34 42H36V36C36 30.4954 40.4954 26 46 26C51.5046 26 56 30.4954 56 36C56 37.1046 55.1046 38 54 38C52.8954 38 52 37.1046 52 36C52 32.7046 49.2954 30 46 30ZM34 46V62H58V46H34Z"
 						fill="#0058F7"
 					/>
 				</svg>
 			</div>
-			<p>Select the type you want to convert file to</p>
-			<select
-				class="form-select bg-black text-white selectorbox"
-				id="convert-to"
-				aria-label="convert to"
-			></select>
+			<p>Enter the password we use to decrypt the file</p>
+			<input
+				type="password"
+				class="form-control bg-black text-white password-input"
+				placeholder="Enter your password"
+			/>
 			<div class="submit-button">
-				<button type="button" class="btn btn-light" onclick="convertFile()">
-					Convert
+				<button type="button" class="btn btn-light" onclick="decryptFile()">
+					Decrypt
 				</button>
 			</div>
 		</div>
@@ -177,61 +177,14 @@
 				shell.openExternal('https://www.nodetools.app');
 			}
 
-			const FileExtension = {
-				PNG: 'png',
-				JPG: 'jpg',
-				JPEG: 'jpeg',
-				GIF: 'gif',
-				BMP: 'bmp',
-				SVG: 'svg',
-				TIFF: 'tiff',
-				ICO: 'ico',
-				WEBP: 'webp',
-			};
-
 			const { ipcRenderer } = require('electron');
 
-			// needed in the renderer process.
-			const fileExtensions = Object.entries(FileExtension);
+			function decryptFile() {
+				const password =
+					document.getElementsByClassName('password-input')[0].value;
 
-			const selector = [];
+				ipcRenderer.send('decrypt-file', { password });
 
-			ipcRenderer.invoke('get-file-path').then((filePath) => {
-				const fileName = filePath.replace(/^.*[\\\/]/, '');
-				const fileExtension = filePath.split('.')[1].toLowerCase();
-
-				fileExtensions.forEach(([key, value]) => {
-					if (value !== fileExtension) {
-						selector.push({
-							text: key,
-							value,
-						});
-					}
-				});
-
-				const selectorBox = document.getElementById('convert-to');
-
-				for (const o of selector) {
-					const { text, value, selected } = o;
-
-					const option = document.createElement('option');
-					option.innerText = text;
-					option.value = value;
-					option.selected = selected ?? false;
-
-					selectorBox.append(option);
-				}
-
-				const fileNameBox = document.getElementById('file-name');
-				fileNameBox.innerText = fileName;
-			});
-
-			function convertFile() {
-				const selectedType = document.getElementById('convert-to').value;
-
-				ipcRenderer.send('convert-file', { to: selectedType });
-
-				// TODO: add a loading screen
 				window.close();
 			}
 		</script>

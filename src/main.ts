@@ -264,11 +264,6 @@ app.whenReady().then(() => {
 					role: 'window',
 					click: () => createWindow('../src/views/errors-list.html'),
 				},
-				{
-					label: 'Errors',
-					role: 'window',
-					click: () => createWindow('../src/views/convert-file.html'),
-				},
 			],
 		},
 		{ label: 'Separator', type: 'separator' },
@@ -329,6 +324,22 @@ app.whenReady().then(() => {
 			},
 		},
 		{ label: 'Separator', type: 'separator' },
+		{
+			label: 'Convert file',
+			role: 'window',
+			click: () => createWindow('../src/views/upload-file-convert.html'),
+		},
+		{
+			label: 'Encrypt file',
+			role: 'window',
+			click: () => createWindow('../src/views/upload-file-encrypt.html'),
+		},
+		{
+			label: 'Decrypt file',
+			role: 'window',
+			click: () => createWindow('../src/views/upload-file-decrypt.html'),
+		},
+		{ label: 'Separator', type: 'separator' },
 		{ label: 'Quit', role: 'quit', click: () => app.quit() },
 	]);
 	tray.setContextMenu(contextMenu);
@@ -373,15 +384,22 @@ app.whenReady().then(() => {
 /**
  * Convert file
  */
-let filePath = '/Users/mbuslenko/Desktop/Work/nodetools/src/assets/logo.png';
+let filePath: string = null;
 
-if (process.platform === 'darwin') {
-	app.on('open-file', (event, path) => {
-		event.preventDefault();
-		
-		filePath = path
-	});
-}
+ipcMain.on('upload-file', async (_event, arg) => {
+	filePath = arg.filePath;
+
+	switch (arg.task) {
+		case 'convert':
+			createWindow('../src/views/convert-file.html')
+			break;
+		case 'encrypt':
+			createWindow('../src/views/encrypt-file.html')
+			break;
+		case 'decrypt':
+			createWindow('../src/views/decrypt-file.html')
+	}
+});
 
 ipcMain.handle('get-file-path', (_event, _arg) => {
 	return filePath
@@ -392,6 +410,18 @@ ipcMain.on('convert-file', async (_event, arg) => {
 
 	
 });
+
+ipcMain.on('encrypt-file', async (_event, arg) => {
+	const filesDomain = new FilesDomain();
+
+	filesDomain.encryptFile(filePath, arg.password);
+})
+
+ipcMain.on('decrypt-file', async (_event, arg) => {
+	const filesDomain = new FilesDomain();
+
+	filesDomain.decryptFile(filePath, arg.password);
+})
 
 /**
  * Close window handler for macOS

@@ -21,10 +21,6 @@
 			.bodyClass {
 				margin-right: 6vh;
 				margin-left: 6vh;
-				display: flex;
-				flex-direction: column;
-				justify-content: center;
-				align-items: center;
 			}
 
 			.header {
@@ -76,12 +72,33 @@
 				margin-top: 7vh;
 			}
 
-			.convert-icon {
-				margin-bottom: 5vh;
+			.drop-zone {
+				box-sizing: border-box;
+
+				position: absolute;
+				width: 725px;
+				height: 300px;
+
+				background: #050505;
+				border: 1px dashed rgba(0, 88, 247, 0.3);
+				border-radius: 4px;
+				display: flex;
+				justify-content: center;
 			}
 
-			.selectorbox {
-				max-width: 25%;
+			.drag-over {
+				background: #0d0d0d;
+			}
+
+			.column {
+				display: flex;
+				flex-direction: column;
+				justify-content: center;
+				align-items: center;
+			}
+
+			.upload-icon {
+				margin-bottom: 4vh;
 			}
 		</style>
 		<link
@@ -119,41 +136,20 @@
 		</div>
 
 		<div class="bodyClass text-white">
-			<div class="convert-icon">
-				<svg
-					width="60"
-					height="60"
-					viewBox="0 0 93 93"
-					fill="none"
-					xmlns="http://www.w3.org/2000/svg"
-				>
-					<rect
-						x="1"
-						y="1"
-						width="91"
-						height="91"
-						rx="23"
-						stroke="#0058F7"
-						stroke-width="2"
-					/>
-					<path
-						fill-rule="evenodd"
-						clip-rule="evenodd"
-						d="M31 31C31 28.7909 32.7909 27 35 27H51C51.5304 27 52.0391 27.2107 52.4142 27.5858L62.4142 37.5858C62.7893 37.9609 63 38.4696 63 39V63C63 65.2091 61.2091 67 59 67H35C32.7909 67 31 65.2091 31 63V31ZM58.1716 39H51V31.8284L58.1716 39ZM47 31V41C47 42.1046 47.8954 43 49 43H59V63H35V31L47 31Z"
-						fill="#0058F7"
-					/>
-				</svg>
-			</div>
-			<p>Select the type you want to convert file to</p>
-			<select
-				class="form-select bg-black text-white selectorbox"
-				id="convert-to"
-				aria-label="convert to"
-			></select>
-			<div class="submit-button">
-				<button type="button" class="btn btn-light" onclick="convertFile()">
-					Convert
-				</button>
+			<h3 class="five">Encrypt file</h3>
+
+			<div class="drop-zone">
+				<div class="column">
+					<div class="upload-icon">
+						<svg width="38" height="38" viewBox="0 0 38 38" fill="none" xmlns="http://www.w3.org/2000/svg">
+							<path d="M0.85 19.2935C0.85 29.4634 9.12367 37.737 19.2935 37.737C29.4634 37.737 37.737 29.4633 37.737 19.2935C37.737 9.12353 29.4634 0.85 19.2935 0.85C9.12353 0.85 0.85 9.12366 0.85 19.2935ZM2.6138 19.2935C2.6138 10.0966 10.0964 2.6138 19.2935 2.6138C28.4904 2.6138 35.9732 10.0964 35.9732 19.2935C35.9732 28.4904 28.4904 35.9732 19.2935 35.9732C10.0966 35.9732 2.6138 28.4905 2.6138 19.2935Z" fill="#0058F7" stroke="black" stroke-width="0.3"/>
+							<path d="M18.9422 26.6577C18.9422 27.0363 19.2493 27.3434 19.6279 27.3434C20.0065 27.3434 20.3136 27.0367 20.3136 26.6577V12.7291C20.3136 12.3504 20.0066 12.0434 19.6279 12.0434C19.2493 12.0434 18.9422 12.3504 18.9422 12.7291V26.6577Z" fill="#0058F7" stroke="#483EA8" stroke-width="0.3"/>
+							<path d="M19.6279 13.7004L15.8272 17.5011C15.5596 17.7691 15.1251 17.769 14.8573 17.5012C14.5894 17.2333 14.5894 16.7993 14.8573 16.5314L19.1429 12.2458C19.1429 12.2458 19.1429 12.2458 19.143 12.2457C19.4105 11.9778 19.8449 11.9779 20.1127 12.2457L24.3984 16.5314C24.6662 16.7992 24.6663 17.2331 24.3986 17.501C24.2646 17.6354 24.0884 17.702 23.9135 17.702L19.6279 13.7004ZM19.6279 13.7004L23.4286 17.5012C23.5624 17.6349 23.7384 17.702 23.9135 17.702L19.6279 13.7004Z" fill="#0058F7" stroke="#483EA8" stroke-width="0.3"/>
+							</svg>
+					</div>
+					<p>Drag and drop files here</p>
+				</div>
+				
 			</div>
 		</div>
 
@@ -177,63 +173,36 @@
 				shell.openExternal('https://www.nodetools.app');
 			}
 
-			const FileExtension = {
-				PNG: 'png',
-				JPG: 'jpg',
-				JPEG: 'jpeg',
-				GIF: 'gif',
-				BMP: 'bmp',
-				SVG: 'svg',
-				TIFF: 'tiff',
-				ICO: 'ico',
-				WEBP: 'webp',
-			};
-
 			const { ipcRenderer } = require('electron');
 
-			// needed in the renderer process.
-			const fileExtensions = Object.entries(FileExtension);
+			const dropZone = document.getElementsByClassName('drop-zone')[0];
 
-			const selector = [];
+			dropZone.addEventListener('dragover', (e) => {
+				e.preventDefault();
+				e.stopPropagation();
 
-			ipcRenderer.invoke('get-file-path').then((filePath) => {
-				const fileName = filePath.replace(/^.*[\\\/]/, '');
-				const fileExtension = filePath.split('.')[1].toLowerCase();
-
-				fileExtensions.forEach(([key, value]) => {
-					if (value !== fileExtension) {
-						selector.push({
-							text: key,
-							value,
-						});
-					}
-				});
-
-				const selectorBox = document.getElementById('convert-to');
-
-				for (const o of selector) {
-					const { text, value, selected } = o;
-
-					const option = document.createElement('option');
-					option.innerText = text;
-					option.value = value;
-					option.selected = selected ?? false;
-
-					selectorBox.append(option);
-				}
-
-				const fileNameBox = document.getElementById('file-name');
-				fileNameBox.innerText = fileName;
+				dropZone.classList.add('drag-over');
 			});
 
-			function convertFile() {
-				const selectedType = document.getElementById('convert-to').value;
+			dropZone.addEventListener('dragleave', (e) => {
+				e.preventDefault();
+				e.stopPropagation();
 
-				ipcRenderer.send('convert-file', { to: selectedType });
+				dropZone.classList.remove('drag-over');
+			});
 
-				// TODO: add a loading screen
-				window.close();
-			}
+			dropZone.addEventListener('drop', (e) => {
+				e.preventDefault();
+				e.stopPropagation();
+
+				const files = e.dataTransfer.files;
+
+				for (const file of files) {
+					ipcRenderer.send('upload-file', { filePath: file.path, task: 'encrypt' })
+				}
+
+				window.close()
+			})
 		</script>
 		<script
 			src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/js/bootstrap.bundle.min.js"

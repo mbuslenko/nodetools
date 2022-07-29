@@ -408,7 +408,7 @@ ipcMain.handle('get-file-path', (_event, _arg) => {
 ipcMain.on('convert-file', async (_event, arg) => {
 	const filesDomain = new FilesDomain();
 
-	
+	await filesDomain.convertImage(filePath, arg.to);
 });
 
 ipcMain.on('encrypt-file', async (_event, arg) => {

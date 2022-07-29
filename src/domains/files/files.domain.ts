@@ -1,10 +1,10 @@
-import { execa } from 'execa';
 import * as path from 'path';
 import * as fs from 'fs';
 import * as tmp from 'tmp';
 import { FileType, ImagesExtensions } from './files.types';
 //@ts-ignore
 import * as encrypt from 'node-file-encrypt';
+import Jimp = require('jimp')
 
 export class FilesDomain {
 	getFileType(extension: string): FileType {
@@ -25,17 +25,12 @@ export class FilesDomain {
 	}
 
 	async convertImage(filePath: string, to: ImagesExtensions): Promise<void> {
-		const tmpDir = tmp.dirSync().name;
-		const tmpFile = this.duplicateFile(tmpDir, filePath);
-
-		const args = ['convert', '-type', to, '-out', filePath, tmpFile];
-
-		try {
-			// TODO: fix require() of ESM module
-			//await execa(filePath, args)
-		} finally {
-			fs.unlinkSync(tmpDir);
-		}
+		Jimp.read(filePath).then(image => {
+			return image.write(`${filePath.split('.')[0]}.${to}`);
+		})
+		.catch(e => {
+			console.error(e)
+		})
 	}
 
 	async encryptFile(filePath: string, password: string): Promise<void> {

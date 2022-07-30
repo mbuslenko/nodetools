@@ -387,7 +387,7 @@ app.whenReady().then(() => {
  */
 let filePath: string = null;
 
-ipcMain.on('upload-file', async (_event, arg) => {
+ipcMain.on('upload-file', (_event, arg) => {
 	filePath = arg.filePath;
 
 	switch (arg.task) {
@@ -415,7 +415,7 @@ ipcMain.on('convert-file', async (_event, arg) => {
 ipcMain.on('encrypt-file', async (_event, arg) => {
 	const filesDomain = new FilesDomain();
 
-	filesDomain.encryptFile(filePath, arg.password);
+	await filesDomain.encryptFile(filePath, arg.password);
 })
 
 ipcMain.handle('decrypt-file', async (_event, arg) => {

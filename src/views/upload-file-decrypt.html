@@ -100,6 +100,24 @@
 			.upload-icon {
 				margin-bottom: 4vh;
 			}
+
+			.hidden {
+				display: none;
+			}
+
+			.drop-zone-red {
+				background: #050505;
+				border: 1px dashed red;
+			}
+
+			.background-red {
+				background: red;
+			}
+
+			.svg-red {
+				filter: invert(13%) sepia(91%) saturate(6194%) hue-rotate(359deg)
+					brightness(103%) contrast(110%);
+			}
 		</style>
 		<link
 			href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css"
@@ -141,15 +159,39 @@
 			<div class="drop-zone">
 				<div class="column">
 					<div class="upload-icon">
-						<svg width="38" height="38" viewBox="0 0 38 38" fill="none" xmlns="http://www.w3.org/2000/svg">
-							<path d="M0.85 19.2935C0.85 29.4634 9.12367 37.737 19.2935 37.737C29.4634 37.737 37.737 29.4633 37.737 19.2935C37.737 9.12353 29.4634 0.85 19.2935 0.85C9.12353 0.85 0.85 9.12366 0.85 19.2935ZM2.6138 19.2935C2.6138 10.0966 10.0964 2.6138 19.2935 2.6138C28.4904 2.6138 35.9732 10.0964 35.9732 19.2935C35.9732 28.4904 28.4904 35.9732 19.2935 35.9732C10.0966 35.9732 2.6138 28.4905 2.6138 19.2935Z" fill="#0058F7" stroke="black" stroke-width="0.3"/>
-							<path d="M18.9422 26.6577C18.9422 27.0363 19.2493 27.3434 19.6279 27.3434C20.0065 27.3434 20.3136 27.0367 20.3136 26.6577V12.7291C20.3136 12.3504 20.0066 12.0434 19.6279 12.0434C19.2493 12.0434 18.9422 12.3504 18.9422 12.7291V26.6577Z" fill="#0058F7" stroke="#483EA8" stroke-width="0.3"/>
-							<path d="M19.6279 13.7004L15.8272 17.5011C15.5596 17.7691 15.1251 17.769 14.8573 17.5012C14.5894 17.2333 14.5894 16.7993 14.8573 16.5314L19.1429 12.2458C19.1429 12.2458 19.1429 12.2458 19.143 12.2457C19.4105 11.9778 19.8449 11.9779 20.1127 12.2457L24.3984 16.5314C24.6662 16.7992 24.6663 17.2331 24.3986 17.501C24.2646 17.6354 24.0884 17.702 23.9135 17.702L19.6279 13.7004ZM19.6279 13.7004L23.4286 17.5012C23.5624 17.6349 23.7384 17.702 23.9135 17.702L19.6279 13.7004Z" fill="#0058F7" stroke="#483EA8" stroke-width="0.3"/>
-							</svg>
+						<svg
+							width="38"
+							height="38"
+							viewBox="0 0 38 38"
+							fill="none"
+							xmlns="http://www.w3.org/2000/svg"
+						>
+							<path
+								d="M0.85 19.2935C0.85 29.4634 9.12367 37.737 19.2935 37.737C29.4634 37.737 37.737 29.4633 37.737 19.2935C37.737 9.12353 29.4634 0.85 19.2935 0.85C9.12353 0.85 0.85 9.12366 0.85 19.2935ZM2.6138 19.2935C2.6138 10.0966 10.0964 2.6138 19.2935 2.6138C28.4904 2.6138 35.9732 10.0964 35.9732 19.2935C35.9732 28.4904 28.4904 35.9732 19.2935 35.9732C10.0966 35.9732 2.6138 28.4905 2.6138 19.2935Z"
+								fill="#0058F7"
+								stroke="black"
+								stroke-width="0.3"
+							/>
+							<path
+								d="M18.9422 26.6577C18.9422 27.0363 19.2493 27.3434 19.6279 27.3434C20.0065 27.3434 20.3136 27.0367 20.3136 26.6577V12.7291C20.3136 12.3504 20.0066 12.0434 19.6279 12.0434C19.2493 12.0434 18.9422 12.3504 18.9422 12.7291V26.6577Z"
+								fill="#0058F7"
+								stroke="#483EA8"
+								stroke-width="0.3"
+							/>
+							<path
+								d="M19.6279 13.7004L15.8272 17.5011C15.5596 17.7691 15.1251 17.769 14.8573 17.5012C14.5894 17.2333 14.5894 16.7993 14.8573 16.5314L19.1429 12.2458C19.1429 12.2458 19.1429 12.2458 19.143 12.2457C19.4105 11.9778 19.8449 11.9779 20.1127 12.2457L24.3984 16.5314C24.6662 16.7992 24.6663 17.2331 24.3986 17.501C24.2646 17.6354 24.0884 17.702 23.9135 17.702L19.6279 13.7004ZM19.6279 13.7004L23.4286 17.5012C23.5624 17.6349 23.7384 17.702 23.9135 17.702L19.6279 13.7004Z"
+								fill="#0058F7"
+								stroke="#483EA8"
+								stroke-width="0.3"
+							/>
+						</svg>
 					</div>
-					<p>Drag and drop files here</p>
+					<p id="drag-text">Drag and drop files here</p>
+					<p id="drag-text-error" class="hidden">
+						You can only decrypt files that have a .crypt extension, drag the
+						new file here to decrypt
+					</p>
 				</div>
-				
 			</div>
 		</div>
 
@@ -198,11 +240,39 @@
 				const files = e.dataTransfer.files;
 
 				for (const file of files) {
-					ipcRenderer.send('upload-file', { filePath: file.path, task: 'decrypt' })
+					if (!file.path.endsWith('.crypt')) {
+						// change text
+						const dragText = document.getElementById('drag-text');
+						dragText.classList.add('hidden');
+						const dragTextError = document.getElementById('drag-text-error');
+						dragTextError.classList.remove('hidden');
+
+						// change icon color
+						const uploadIcon =
+							document.getElementsByClassName('upload-icon')[0];
+						uploadIcon.classList.add('svg-red');
+
+						// change drop zone color
+						const dropZone = document.getElementsByClassName('drop-zone')[0];
+						dropZone.classList.add('drop-zone-red');
+
+						// change drop zone background color for 0.5s
+						dropZone.classList.add('background-red');
+						setTimeout(() => {
+							dropZone.classList.remove('background-red');
+						}, 50);
+
+						return;
+					} else {
+						ipcRenderer.send('upload-file', {
+							filePath: file.path,
+							task: 'decrypt',
+						});
+					}
 				}
 
-				window.close()
-			})
+				window.close();
+			});
 		</script>
 		<script
 			src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/js/bootstrap.bundle.min.js"

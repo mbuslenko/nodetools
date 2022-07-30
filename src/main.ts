@@ -3,6 +3,7 @@ import {
 	BrowserWindow,
 	globalShortcut,
 	ipcMain,
+	ipcRenderer,
 	Menu,
 	nativeImage,
 	Tray,
@@ -417,10 +418,15 @@ ipcMain.on('encrypt-file', async (_event, arg) => {
 	filesDomain.encryptFile(filePath, arg.password);
 })
 
-ipcMain.on('decrypt-file', async (_event, arg) => {
+ipcMain.handle('decrypt-file', async (_event, arg) => {
 	const filesDomain = new FilesDomain();
 
-	filesDomain.decryptFile(filePath, arg.password);
+	try {
+		await filesDomain.decryptFile(filePath, arg.password);
+		return true;
+	} catch {
+		return false;
+	}
 })
 
 /**

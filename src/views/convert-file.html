@@ -195,7 +195,8 @@
 
 			ipcRenderer.invoke('get-file-path').then((filePath) => {
 				const fileName = filePath.replace(/^.*[\\\/]/, '');
-				const fileExtension = filePath.split('.')[1].toLowerCase();
+				const lastDotIndex = fileName.lastIndexOf('.');
+				const fileExtension = fileName.slice(lastDotIndex + 1);
 
 				fileExtensions.forEach(([key, value]) => {
 					if (value !== fileExtension) {

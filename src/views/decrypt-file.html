@@ -76,12 +76,29 @@
 				margin-top: 7vh;
 			}
 
-			.convert-icon {
+			.unlock-icon {
 				margin-bottom: 5vh;
 			}
 
 			.password-input {
 				max-width: 25%;
+			}
+
+			.hidden {
+				display: none;
+			}
+
+			.drop-zone-red {
+				background: #050505;
+				border: 1px dashed red;
+			}
+
+			.background-red {
+				background: red;
+			}
+
+			.svg-red {
+				filter: invert(13%) sepia(91%) saturate(6194%) hue-rotate(359deg) brightness(103%) contrast(110%);
 			}
 		</style>
 		<link
@@ -91,7 +108,7 @@
 			crossorigin="anonymous"
 		/>
 	</head>
-	<body class="bg-black">
+	<body class="bg-black body">
 		<div class="header">
 			<svg
 				viewBox="0 0 169 32"
@@ -119,7 +136,7 @@
 		</div>
 
 		<div class="bodyClass text-white">
-			<div class="convert-icon">
+			<div class="unlock-icon">
 				<svg
 					width="60"
 					height="60"
@@ -144,11 +161,14 @@
 					/>
 				</svg>
 			</div>
-			<p>Enter the password we use to decrypt the file</p>
+			<p id="title">Enter the password we use to decrypt the file</p>
+			<p id="title-error" class="hidden">Wrong password or file! Please provide new password or try with other file</p>
 			<input
+				id="password-input"
 				type="password"
 				class="form-control bg-black text-white password-input"
 				placeholder="Enter your password"
+				onclick="removeRed()"
 			/>
 			<div class="submit-button">
 				<button type="button" class="btn btn-light" onclick="decryptFile()">
@@ -179,13 +199,48 @@
 
 			const { ipcRenderer } = require('electron');
 
+			function showError() {
+				const title = document.getElementById('title');
+				title.classList.add('hidden')
+				const errorTitle = document.getElementById('title-error')
+				errorTitle.classList.remove('hidden')
+
+				const icon = document.getElementsByClassName('unlock-icon')[0];
+				icon.classList.add('svg-red')
+
+				const passwordInput = document.getElementById('password-input');
+				passwordInput.classList.add('border-danger')
+			}
+
+			function removeRed() {
+				const passwordInput = document.getElementById('password-input');
+				passwordInput.classList.remove('border-danger')
+			}
+
 			function decryptFile() {
+				const passwordInput = document.getElementsByClassName('password-input')[0]
 				const password =
-					document.getElementsByClassName('password-input')[0].value;
+				passwordInput.value;
+				
+				if (password.length < 1) {
+					console.log(1)
+					passwordInput.classList.add('border-danger')
+					setTimeout(() => {
+						passwordInput.classList.remove('border-danger')
+						}, 500);
 
-				ipcRenderer.send('decrypt-file', { password });
+					return;
+				}
 
-				window.close();
+				ipcRenderer.invoke('decrypt-file', { password }).then((result) => {
+					if (result === false) {
+						showError();
+
+						return
+					}
+
+					window.close();
+				})
 			}
 		</script>
 		<script

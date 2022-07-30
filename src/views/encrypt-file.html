@@ -194,8 +194,19 @@
 			const { ipcRenderer } = require('electron');
 
 			function encryptFile() {
+				const passwordInput = document.getElementsByClassName('password-input')[0]
 				const password =
-					document.getElementsByClassName('password-input')[0].value;
+				passwordInput.value;
+				
+				if (password.length < 1) {
+					console.log(1)
+					passwordInput.classList.add('border-danger')
+					setTimeout(() => {
+						passwordInput.classList.remove('border-danger')
+						}, 500);
+
+					return;
+				}
 
 				ipcRenderer.send('encrypt-file', { password });
 

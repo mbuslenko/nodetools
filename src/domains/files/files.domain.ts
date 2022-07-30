@@ -1,6 +1,5 @@
 import * as path from 'path';
 import * as fs from 'fs';
-import * as tmp from 'tmp';
 import { FileType, ImagesExtensions } from './files.types';
 //@ts-ignore
 import * as encrypt from 'node-file-encrypt';
@@ -44,12 +43,16 @@ export class FilesDomain {
 	}
 
 	async decryptFile(filePath: string, password: string): Promise<void> {
-        const file = new encrypt.FileEncrypt(filePath, undefined, undefined, false);
+        try {
+					const file = new encrypt.FileEncrypt(filePath, undefined, undefined, false);
         
         file.openSourceFile();
         file.decrypt(password);
 
         // remove encrypted file
         fs.unlink(filePath, () => {});
+				} catch {
+					throw new Error('Password is incorrect')
+				}
     }
 }

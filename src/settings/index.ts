@@ -37,7 +37,7 @@ const settings = new Store<Settings>();
 export const initSettings = async () => {
 	const currentSettings = settings.store as Settings;
 
-	if (!currentSettings.shortcuts) {
+	//if (!currentSettings.shortcuts) {
 		settings.store = defaultSettings;
 
 		// if settings are not set, so it's a new user
@@ -48,7 +48,7 @@ export const initSettings = async () => {
 				platform: process.platform,
 			},
 		});
-	}
+	//}
 
 	settings.set('restartToApplyChanges', false);
 };

@@ -3,6 +3,7 @@ import {
 	BrowserWindow,
 	globalShortcut,
 	ipcMain,
+	ipcRenderer,
 	Menu,
 	nativeImage,
 	Tray,
@@ -18,6 +19,7 @@ import { ShortcutsSettings } from './settings/settings.types';
 import { openWebURL } from './shared/utils/open-website';
 import { Settings } from './settings/settings.types';
 import { AirAlertDomain } from './domains/air-alert/air-alert.domain';
+import { FilesDomain } from './domains/files/files.domain';
 
 // import { askForAccessibilityAccess, getAuthStatus } from 'node-mac-permissions';
 
@@ -331,6 +333,22 @@ app.whenReady().then(() => {
 			},
 		},
 		{ label: 'Separator', type: 'separator' },
+		{
+			label: 'Convert file',
+			role: 'window',
+			click: () => createWindow('../src/views/upload-file-convert.html'),
+		},
+		{
+			label: 'Encrypt file',
+			role: 'window',
+			click: () => createWindow('../src/views/upload-file-encrypt.html'),
+		},
+		{
+			label: 'Decrypt file',
+			role: 'window',
+			click: () => createWindow('../src/views/upload-file-decrypt.html'),
+		},
+		{ label: 'Separator', type: 'separator' },
 		{ label: 'Quit', role: 'quit', click: () => app.quit() },
 	]);
 	tray.setContextMenu(contextMenu);
@@ -371,6 +389,53 @@ app.whenReady().then(() => {
 		new AirAlertDomain().listenToAirAlerts();
 	}
 });
+
+/**
+ * Convert file
+ */
+let filePath: string = null;
+
+ipcMain.on('upload-file', (_event, arg) => {
+	filePath = arg.filePath;
+
+	switch (arg.task) {
+		case 'convert':
+			createWindow('../src/views/convert-file.html')
+			break;
+		case 'encrypt':
+			createWindow('../src/views/encrypt-file.html')
+			break;
+		case 'decrypt':
+			createWindow('../src/views/decrypt-file.html')
+	}
+});
+
+ipcMain.handle('get-file-path', (_event, _arg) => {
+	return filePath
+});
+
+ipcMain.on('convert-file', async (_event, arg) => {
+	const filesDomain = new FilesDomain();
+
+	await filesDomain.convertImage(filePath, arg.to);
+});
+
+ipcMain.on('encrypt-file', async (_event, arg) => {
+	const filesDomain = new FilesDomain();
+
+	await filesDomain.encryptFile(filePath, arg.password);
+})
+
+ipcMain.handle('decrypt-file', async (_event, arg) => {
+	const filesDomain = new FilesDomain();
+
+	try {
+		await filesDomain.decryptFile(filePath, arg.password);
+		return true;
+	} catch {
+		return false;
+	}
+})
 
 /**
  * Close window handler for macOS

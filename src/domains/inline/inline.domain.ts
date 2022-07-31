@@ -102,8 +102,10 @@ export class InlineDomain {
 		const previousClipboardText = clipboard.readText();
 
 		const selectedText = await this.getSelectedText();
+
+		const { to: selectedLanguage } = settings.get('transliterate');
 		const transliteratedText =
-			this.transliteratorService.transliterate(selectedText);
+			this.transliteratorService.transliterate(selectedText, selectedLanguage);
 
 		if (transliteratedText) {
 			clipboard.writeText(transliteratedText);

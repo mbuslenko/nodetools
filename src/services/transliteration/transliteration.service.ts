@@ -16,7 +16,7 @@ export class TransliterationService {
 	}
 
 	protected flip(trans: { [key: string]: any }) {
-		let key
+		let key;
 		const tmp: { [key: string]: any } = {};
 
 		for (key in trans) {
@@ -26,49 +26,90 @@ export class TransliterationService {
 		return tmp;
 	}
 
-	transliterate(text: string, normalize?: boolean): string {
+	transliterate(
+		text: string,
+		language?: 'ua' | 'ru',
+		normalize?: boolean,
+	): string {
 		try {
 			const cyrillicPattern = /^\p{Script=Cyrillic}+$/u;
+			const ukrainianPattern = /[А-ЩЬЮЯҐЄІЇа-щьюяґєії]/gi;
 
 			let type: string;
-			if (cyrillicPattern.test(text)) {
-				type = 'rueng';
+			if (language) {
+				if (language === 'ua') {
+					if (ukrainianPattern.test(text)) {
+						type = 'uaeng';
+					} else if (cyrillicPattern.test(text)) {
+						type = 'uaeng';
+					} else {
+						type = 'engua';
+					}
+				} else if (language === 'ru') {
+					if (cyrillicPattern.test(text)) {
+						type = 'rueng';
+					} else {
+						type = 'engru';
+					}
+				}
 			} else {
-				type = 'engru';
+				if (cyrillicPattern.test(text)) {
+					type = 'rueng';
+				} else if (ukrainianPattern.test(text)) {
+					console.log('+++++++');
+					type = 'uaeng';
+				} else {
+					type = 'engru';
+				}
 			}
 
-			// TODO: refactor to not change config.default
+			let obj = {};
 			switch (type) {
 				case 'rueng': {
 					if (process.platform == 'darwin') {
-						config.default = config.dictionary.macRuEng;
+						obj = config.dictionary.macRuEng;
 					} else {
-						config.default = config.dictionary.winRuEn;
+						obj = config.dictionary.winRuEn;
 					}
 
 					break;
 				}
 				case 'engru': {
 					if (process.platform == 'darwin') {
-						config.default = this.flip(config.dictionary.macRuEng);
+						obj = this.flip(config.dictionary.macRuEng);
 					} else {
-						config.default = this.flip(config.dictionary.winRuEn);
+						obj = this.flip(config.dictionary.winRuEn);
 					}
 
 					break;
 				}
+				case 'uaeng':
+					if (process.platform == 'darwin') {
+						obj = config.dictionary.winUaEn;
+					} else {
+						obj = config.dictionary.winUaEn;
+					}
+
+					break;
+				case 'engua':
+					if (process.platform == 'darwin') {
+						obj = this.flip(config.dictionary.macUaEn);
+					} else {
+						obj = this.flip(config.dictionary.winUaEn);
+					}
+
+					break;
 				default: {
 					config.default = this.flip(config.dictionary.winRuEn);
 					break;
 				}
 			}
-
 			const textToArray = text.split('');
 			const result: any[] = [];
-			const obj = config.default as { [key: string]: any };
 
 			textToArray.forEach(function (sym, i) {
 				if (obj.hasOwnProperty(textToArray[i])) {
+					//@ts-ignore
 					result.push(obj[textToArray[i]]);
 				} else {
 					result.push(sym);

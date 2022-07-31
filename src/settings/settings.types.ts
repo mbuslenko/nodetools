@@ -11,6 +11,9 @@ export type Settings = {
 	translate: {
 		to: Language;
 	};
+	transliterate: {
+		to: 'ru' | 'ua';
+	},
 	restartToApplyChanges?: boolean;
 	errorsStorage: ErrorStructure[];
 	airAlerts: {

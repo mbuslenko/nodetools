@@ -94,6 +94,18 @@ ipcMain.on('change-language', (_event, arg) => {
 	changeSetting('translate', arg);
 });
 
+ipcMain.on('change-transliteration-language', (_event, arg) => {
+	if (process.platform === 'darwin') {
+		app.dock.hide();
+	}
+
+	if (!arg.to) {
+		return;
+	}
+
+	changeSetting('transliterate', arg);
+})
+
 ipcMain.on('change-convert-currencies-settings', (_event, arg) => {
 	if (process.platform === 'darwin') {
 		app.dock.hide();
@@ -186,7 +198,12 @@ app.whenReady().then(async () => {
 
 	// * transliterator shortcut
 	globalShortcut.register(shortcuts.transliterate.join('+'), async () => {
+		const selectedLanguage = settings.get('transliterate').to;
 		await InlineDomain.transliterateText();
+
+		if (!selectedLanguage) {
+			createWindow('../src/views/transliterate-settings.html')
+		}
 	});
 
 	// * currency convertor shortcut
@@ -252,6 +269,11 @@ app.whenReady().then(() => {
 					label: 'Translate options',
 					role: 'window',
 					click: () => createWindow('../src/views/translate-settings.html'),
+				},
+				{
+					label: 'Transliterate options',
+					role: 'window',
+					click: () => createWindow('../src/views/transliterate-settings.html'),
 				},
 				{
 					label: 'Currency converter options',

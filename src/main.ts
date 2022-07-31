@@ -14,6 +14,7 @@ import settings, {
 	changeSetting,
 	changeSettings,
 	initSettings,
+	setDefaultSettings,
 } from './settings';
 import { ShortcutsSettings } from './settings/settings.types';
 import { openWebURL } from './shared/utils/open-website';
@@ -27,13 +28,11 @@ require('update-electron-app')({
 	repo: 'mbuslenko/nodetools',
 });
 
-
 /**
  * This prevents the app to be opened twice
  */
-const gotTheLock = app.requestSingleInstanceLock()
+const gotTheLock = app.requestSingleInstanceLock();
 if (!gotTheLock) app.quit();
-
 
 /**
  * Create window function starts the browser window
@@ -104,7 +103,7 @@ ipcMain.on('change-transliteration-language', (_event, arg) => {
 	}
 
 	changeSetting('transliterate', arg);
-})
+});
 
 ipcMain.on('change-convert-currencies-settings', (_event, arg) => {
 	if (process.platform === 'darwin') {
@@ -156,6 +155,10 @@ ipcMain.on('change-air-alerts-state', (_event, arg) => {
 	changeSetting('airAlerts', { enabled: true, state: arg.state });
 });
 
+ipcMain.on('set-default-settings', (_event, _arg) => {
+	setDefaultSettings()
+})
+
 /**
  * Generate and configure shortcuts
  * and check for permissions on the macOS
@@ -202,7 +205,7 @@ app.whenReady().then(async () => {
 		await InlineDomain.transliterateText();
 
 		if (!selectedLanguage) {
-			createWindow('../src/views/transliterate-settings.html')
+			createWindow('../src/views/transliterate-settings.html');
 		}
 	});
 
@@ -290,10 +293,21 @@ app.whenReady().then(() => {
 							},
 					  ]
 					: []),
+				{ label: 'Separator', type: 'separator' },
 				{
 					label: 'Errors',
 					role: 'window',
 					click: () => createWindow('../src/views/errors-list.html'),
+				},
+				{ label: 'Separator', type: 'separator' },
+				{
+					label: 'Set default settings',
+					role: 'window',
+					click: () =>
+						createWindow('../src/views/set-default-settings-dialogue.html', {
+							height: 420,
+							width: 600,
+						}),
 				},
 			],
 		},
@@ -422,18 +436,18 @@ ipcMain.on('upload-file', (_event, arg) => {
 
 	switch (arg.task) {
 		case 'convert':
-			createWindow('../src/views/convert-file.html')
+			createWindow('../src/views/convert-file.html');
 			break;
 		case 'encrypt':
-			createWindow('../src/views/encrypt-file.html')
+			createWindow('../src/views/encrypt-file.html');
 			break;
 		case 'decrypt':
-			createWindow('../src/views/decrypt-file.html')
+			createWindow('../src/views/decrypt-file.html');
 	}
 });
 
 ipcMain.handle('get-file-path', (_event, _arg) => {
-	return filePath
+	return filePath;
 });
 
 ipcMain.on('convert-file', async (_event, arg) => {
@@ -446,7 +460,7 @@ ipcMain.on('encrypt-file', async (_event, arg) => {
 	const filesDomain = new FilesDomain();
 
 	await filesDomain.encryptFile(filePath, arg.password);
-})
+});
 
 ipcMain.handle('decrypt-file', async (_event, arg) => {
 	const filesDomain = new FilesDomain();
@@ -457,7 +471,7 @@ ipcMain.handle('decrypt-file', async (_event, arg) => {
 	} catch {
 		return false;
 	}
-})
+});
 
 /**
  * Close window handler for macOS

@@ -37,11 +37,15 @@ const defaultSettings: Settings = {
 
 const settings = new Store<Settings>();
 
+export const setDefaultSettings = () => {
+	settings.store = defaultSettings;
+}
+
 export const initSettings = async () => {
 	const currentSettings = settings.store as Settings;
 
-	//if (!currentSettings.shortcuts) {
-		settings.store = defaultSettings;
+	if (!currentSettings.shortcuts) {
+		setDefaultSettings();
 
 		// if settings are not set, so it's a new user
 		await axios.request({
@@ -51,7 +55,7 @@ export const initSettings = async () => {
 				platform: process.platform,
 			},
 		});
-	//}
+	}
 
 	settings.set('restartToApplyChanges', false);
 };
